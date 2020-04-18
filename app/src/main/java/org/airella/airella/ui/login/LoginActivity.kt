@@ -1,9 +1,7 @@
 package org.airella.airella.ui.login
 
-import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -13,9 +11,11 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import org.airella.airella.MainActivity
 import org.airella.airella.R
 import org.airella.airella.data.model.LoggedInUser
+import org.airella.airella.utils.afterTextChanged
 
 class LoginActivity : AppCompatActivity() {
 
@@ -31,8 +31,7 @@ class LoginActivity : AppCompatActivity() {
         val loginButton = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
-        loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
+        loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
         loginViewModel.registerFormState.observe(this, Observer {
             val loginState = it ?: return@Observer
@@ -48,13 +47,17 @@ class LoginActivity : AppCompatActivity() {
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            } else if (loginResult.success != null) {
-                showLoginSuccess(loginResult.success)
+            when (loginResult) {
+                is LoginResult.Success -> {
+                    showLoginSuccess(loginResult.user)
 
-                setResult(Activity.RESULT_OK)
-                finish()
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                }
+                is LoginResult.Error -> {
+                    showLoginFailed(loginResult.error)
+                }
             }
         })
 
@@ -94,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showLoginSuccess(model: LoggedInUser) {
         val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
+        val displayName = model.username
 
         Toast.makeText(
             applicationContext,
@@ -106,16 +109,4 @@ class LoginActivity : AppCompatActivity() {
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
-}
-
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
 }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="24bf269e-7bea-400d-a537-a7cba1b2e839" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/data/LoginDataSource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/data/LoginDataSource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/data/LoginRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/data/LoginRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/data/Result.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/data/model/LoggedInUser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/data/model/LoggedInUser.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/home/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/home/HomeFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/login/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/login/LoginActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/login/LoginViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/login/LoginViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/login/LoginViewModelFactory.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/map/MapFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/map/MapFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterFormState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterFormState.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterResult.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterResult.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/register/RegisterViewModelFactory.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/org/airella/airella/ui/settings/SettingsFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/org/airella/airella/ui/settings/SettingsFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/activity_register.xml" beforeDir="false" afterPath="$PROJECT_DIR$/activity_register.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../values/strings.xml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="720" />
+    <option name="y" value="30" />
+    <option name="width" value="1020" />
+    <option name="height" value="720" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="layout" type="b2602c69:ProjectViewProjectNode" />
+              <item name="layout" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../MyApplication" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="24bf269e-7bea-400d-a537-a7cba1b2e839" name="Default Changelist" comment="" />
+      <created>1587202649406</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1587202649406</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.32982087" />
+      <window_info id="Structure" side_tool="true" />
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="Resources Explorer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info id="Captures" order="0" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="TODO" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Palette&#9;" />
+    </layout>
+  </component>
+</project>

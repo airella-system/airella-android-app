@@ -1,11 +1,10 @@
 package org.airella.airella.ui.register
 
-import org.airella.airella.data.model.LoggedInUser
 
 /**
  * Authentication result : success (user details) or error message.
  */
-data class RegisterResult(
-    val success: LoggedInUser? = null,
-    val error: Int? = null
-)
+sealed class RegisterResult {
+    data class Success(val success: Boolean) : RegisterResult()
+    data class Error(val error: Int) : RegisterResult()
+}

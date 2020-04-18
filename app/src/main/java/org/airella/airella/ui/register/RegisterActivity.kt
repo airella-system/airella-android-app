@@ -2,8 +2,6 @@ package org.airella.airella.ui.register
 
 import android.app.Activity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -12,9 +10,9 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import org.airella.airella.R
-import org.airella.airella.data.model.LoggedInUser
+import org.airella.airella.utils.afterTextChanged
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -26,12 +24,14 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         val username = findViewById<EditText>(R.id.username)
+        val email = findViewById<EditText>(R.id.email)
         val password = findViewById<EditText>(R.id.password)
+        val passwordConfirm = findViewById<EditText>(R.id.password_confirm)
+
         val loginButton = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
-        registerViewModel = ViewModelProviders.of(this, RegisterViewModelFactory())
-            .get(RegisterViewModel::class.java)
+        registerViewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
 
         registerViewModel.registerFormState.observe(this, Observer {
             val loginState = it ?: return@Observer
@@ -44,16 +44,19 @@ class RegisterActivity : AppCompatActivity() {
 
 
         registerViewModel.registerResult.observe(this, Observer {
-            val loginResult = it ?: return@Observer
+            val registerResult = it ?: return@Observer
 
             loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            } else if (loginResult.success != null) {
-                showLoginSuccess(loginResult.success)
+            when (registerResult) {
+                is RegisterResult.Success -> {
+                    showRegisterSuccess()
 
-                setResult(Activity.RESULT_OK)
-                finish()
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+                is RegisterResult.Error -> {
+                    showRegisterFailed(registerResult.error)
+                }
             }
         })
 
@@ -73,35 +76,24 @@ class RegisterActivity : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             loading.visibility = View.VISIBLE
-            registerViewModel.login(username.text.toString(), password.text.toString())
+            registerViewModel.register(
+                username.text.toString(),
+                email.text.toString(),
+                password.text.toString()
+            )
         }
 
     }
 
-    private fun showLoginSuccess(model: LoggedInUser) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-
+    private fun showRegisterSuccess() {
         Toast.makeText(
             applicationContext,
-            "$welcome $displayName",
+            getString(R.string.register_success),
             Toast.LENGTH_LONG
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
+    private fun showRegisterFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
-}
-
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
 }

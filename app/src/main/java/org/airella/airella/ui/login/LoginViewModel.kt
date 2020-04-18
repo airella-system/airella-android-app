@@ -1,15 +1,17 @@
 package org.airella.airella.ui.login
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.airella.airella.R
 import org.airella.airella.data.LoginRepository
 import org.airella.airella.data.Result
+import org.airella.airella.utils.LoginUtils
 import kotlin.concurrent.thread
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel : ViewModel() {
+
+    private val loginRepository = LoginRepository
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val registerFormState: LiveData<LoginFormState> = _loginForm
@@ -22,16 +24,16 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             val result = loginRepository.login(username, password)
 
             if (result is Result.Success) {
-                _loginResult.postValue(LoginResult(success = result.data))
+                _loginResult.postValue(LoginResult.Success(result.data))
             } else {
-                _loginResult.postValue(LoginResult(error = R.string.login_failed))
+                _loginResult.postValue(LoginResult.Error(R.string.login_failed))
             }
         }
     }
 
     fun usernameChanged(username: String, password: String) {
-        if (isUserNameValid(username)) {
-            if (isPasswordValid(password)) {
+        if (LoginUtils.isUserNameValid(username)) {
+            if (LoginUtils.isPasswordValid(password)) {
                 _loginForm.value = LoginFormState(isDataValid = true)
             }
         } else {
@@ -40,8 +42,8 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     }
 
     fun passwordChanged(username: String, password: String) {
-        if (isPasswordValid(password)) {
-            if (isUserNameValid(username)) {
+        if (LoginUtils.isPasswordValid(password)) {
+            if (LoginUtils.isUserNameValid(username)) {
                 _loginForm.value = LoginFormState(isDataValid = true)
             }
         } else {
@@ -49,15 +51,4 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
-    }
 }

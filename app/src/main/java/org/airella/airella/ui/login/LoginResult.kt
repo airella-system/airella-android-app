@@ -5,7 +5,7 @@ import org.airella.airella.data.model.LoggedInUser
 /**
  * Authentication result : success (user details) or error message.
  */
-data class LoginResult(
-    val success: LoggedInUser? = null,
-    val error: Int? = null
-)
+sealed class LoginResult {
+    data class Success(val user: LoggedInUser) : LoginResult()
+    data class Error(val error: Int) : LoginResult()
+}

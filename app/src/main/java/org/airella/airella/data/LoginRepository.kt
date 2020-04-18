@@ -1,5 +1,6 @@
 package org.airella.airella.data
 
+
 import org.airella.airella.data.model.LoggedInUser
 
 /**
@@ -7,7 +8,9 @@ import org.airella.airella.data.model.LoggedInUser
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository(val dataSource: LoginDataSource) {
+object LoginRepository {
+
+    private val dataSource = LoginDataSource
 
     var user: LoggedInUser? = null
         private set
@@ -27,7 +30,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
     }
 
     fun login(username: String, password: String): Result<LoggedInUser> {
-        user?.let { return Result.Success(data = it) }
+        user?.let { return Result.Success(it) }
 
         val result = dataSource.login(username, password)
 
@@ -36,6 +39,10 @@ class LoginRepository(val dataSource: LoginDataSource) {
         }
 
         return result
+    }
+
+    fun register(username: String, email: String, password: String): Result<Boolean> {
+        return dataSource.register(username, email, password)
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
