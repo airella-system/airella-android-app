@@ -1,54 +1,83 @@
 package org.airella.airella.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.R
-import org.airella.airella.data.LoginRepository
 import org.airella.airella.data.Result
+import org.airella.airella.data.api.ApiException
+import org.airella.airella.data.model.LoginResponse
+import org.airella.airella.data.service.LoginService
 import org.airella.airella.utils.LoginUtils
-import kotlin.concurrent.thread
+import retrofit2.HttpException
 
 class LoginViewModel : ViewModel() {
 
-    private val loginRepository = LoginRepository
+    private val loginService = LoginService
 
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    val registerFormState: LiveData<LoginFormState> = _loginForm
+    private var username: String = ""
+    private var password: String = ""
 
-    private val _loginResult = MutableLiveData<LoginResult>()
-    val registerResult: LiveData<LoginResult> = _loginResult
+    val usernameError = MutableLiveData<Int>(null)
+    val passwordError = MutableLiveData<Int>(null)
 
-    fun login(username: String, password: String) {
-        thread(start = true) {
-            val result = loginRepository.login(username, password)
+    val isDataValid = MutableLiveData<Boolean>(false)
 
-            if (result is Result.Success) {
-                _loginResult.postValue(LoginResult.Success(result.data))
-            } else {
-                _loginResult.postValue(LoginResult.Error(R.string.login_failed))
-            }
+    private val _loginResult = MutableLiveData<Result<LoginResponse, Int>>()
+    val loginResult: LiveData<Result<LoginResponse, Int>> = _loginResult
+
+    fun login() {
+        if (!isFormValid())
+            return
+
+        loginService.login(username, password)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { user ->
+                    _loginResult.value = Result.Success(user)
+                },
+                { error ->
+                    when (error) {
+                        is ApiException -> _loginResult.value = Result.Error(R.string.login_failed)
+                        is HttpException -> {
+                            when (error.code()) {
+                                401, 403 -> _loginResult.value = Result.Error(R.string.login_failed)
+                                else -> _loginResult.value = Result.Error(R.string.login_failed)
+                            }
+                        }
+                        else -> _loginResult.value = Result.Error(R.string.unexpected_error)
+                    }
+                    Log.e("airella", "error", error)
+                })
+    }
+
+    fun usernameChanged(username: String) {
+        this.username = username
+        if (!LoginUtils.isUserNameValid(username)) {
+            usernameError.value = R.string.invalid_username
+        }
+        validateForm()
+    }
+
+    fun passwordChanged(password: String) {
+        this.password = password
+        if (!LoginUtils.isPasswordValid(password)) {
+            passwordError.value = R.string.invalid_password
+        }
+        validateForm()
+    }
+
+    private fun validateForm() {
+        if (isFormValid()) {
+            isDataValid.value = true
         }
     }
 
-    fun usernameChanged(username: String, password: String) {
-        if (LoginUtils.isUserNameValid(username)) {
-            if (LoginUtils.isPasswordValid(password)) {
-                _loginForm.value = LoginFormState(isDataValid = true)
-            }
-        } else {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        }
-    }
-
-    fun passwordChanged(username: String, password: String) {
-        if (LoginUtils.isPasswordValid(password)) {
-            if (LoginUtils.isUserNameValid(username)) {
-                _loginForm.value = LoginFormState(isDataValid = true)
-            }
-        } else {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
-        }
-    }
+    private fun isFormValid() = LoginUtils.isUserNameValid(username) &&
+            LoginUtils.isPasswordValid(password)
 
 }

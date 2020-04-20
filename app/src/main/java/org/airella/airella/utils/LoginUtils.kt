@@ -7,8 +7,8 @@ object LoginUtils {
         return username.isNotBlank()
     }
 
-    fun isEmailValid(username: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    fun isEmailValid(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     fun isPasswordValid(password: String): Boolean {

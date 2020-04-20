@@ -14,7 +14,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.airella.airella.MainActivity
 import org.airella.airella.R
-import org.airella.airella.data.model.LoggedInUser
+import org.airella.airella.data.Result
+import org.airella.airella.data.model.LoginResponse
+import org.airella.airella.ui.register.RegisterActivity
 import org.airella.airella.utils.afterTextChanged
 
 class LoginActivity : AppCompatActivity() {
@@ -29,73 +31,70 @@ class LoginActivity : AppCompatActivity() {
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val loginButton = findViewById<Button>(R.id.login)
+        val registerButton = findViewById<Button>(R.id.register)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
-        loginViewModel.registerFormState.observe(this, Observer {
-            val loginState = it ?: return@Observer
-
-            loginButton.isEnabled = loginState.isDataValid
-
-            username.error = loginState.usernameError?.let { err -> getString(err) }
-            password.error = loginState.passwordError?.let { err -> getString(err) }
+        loginViewModel.usernameError.observe(this, Observer {
+            username.error = it?.let { getString(it) }
         })
 
+        loginViewModel.passwordError.observe(this, Observer {
+            password.error = it?.let { getString(it) }
+        })
 
-        loginViewModel.registerResult.observe(this, Observer {
-            val loginResult = it ?: return@Observer
+        loginViewModel.isDataValid.observe(this, Observer {
+            loginButton.isEnabled = it
+        })
+
+        loginViewModel.loginResult.observe(this, Observer {
+            val loginResult: Result<LoginResponse, Int> = it ?: return@Observer
 
             loading.visibility = View.GONE
             when (loginResult) {
-                is LoginResult.Success -> {
-                    showLoginSuccess(loginResult.user)
+                is Result.Success -> {
+                    showLoginSuccess(loginResult.data)
 
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                 }
-                is LoginResult.Error -> {
-                    showLoginFailed(loginResult.error)
+                is Result.Error -> {
+                    showLoginFailed(loginResult.data)
                 }
             }
         })
 
         username.afterTextChanged {
-            loginViewModel.usernameChanged(
-                username.text.toString(),
-                password.text.toString()
-            )
+            loginViewModel.usernameChanged(username.text.toString())
         }
 
-        password.apply {
-            afterTextChanged {
-                loginViewModel.passwordChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
+        password.afterTextChanged {
+            loginViewModel.passwordChanged(password.text.toString())
+        }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
+        password.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE ->
+                    loginViewModel.login()
             }
+            false
         }
 
         loginButton.setOnClickListener {
             loading.visibility = View.VISIBLE
-            loginViewModel.login(username.text.toString(), password.text.toString())
+            loginViewModel.login()
+        }
+
+        registerButton.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
     }
 
-    private fun showLoginSuccess(model: LoggedInUser) {
+    private fun showLoginSuccess(model: LoginResponse) {
         val welcome = getString(R.string.welcome)
         val displayName = model.username
 

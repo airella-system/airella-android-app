@@ -22,7 +22,11 @@
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="login_failed">"Invalid username or password"</string>
     <string name="title_activity_register">Register</string>
     <string name="register_success">Registration successful</string>
+
+    <string name="check_internet">"Check your internet connection"</string>
+    <string name="unexpected_error">"Unexpected error"</string>
+
 </resources>
