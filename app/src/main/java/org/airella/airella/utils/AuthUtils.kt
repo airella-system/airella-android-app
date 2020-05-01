@@ -2,7 +2,7 @@ package org.airella.airella.utils
 
 import android.util.Patterns
 
-object LoginUtils {
+object AuthUtils {
     fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()
     }

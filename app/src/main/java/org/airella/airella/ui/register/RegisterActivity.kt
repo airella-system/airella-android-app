@@ -1,6 +1,5 @@
 package org.airella.airella.ui.register
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -30,7 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password)
         val passwordConfirm = findViewById<EditText>(R.id.password_confirm)
 
-        val loginButton = findViewById<Button>(R.id.login)
+        val registerButton = findViewById<Button>(R.id.register)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         registerViewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
@@ -52,7 +51,7 @@ class RegisterActivity : AppCompatActivity() {
         })
 
         registerViewModel.isDataValid.observe(this, Observer {
-            loginButton.isEnabled = it
+            registerButton.isEnabled = it
         })
 
         registerViewModel.registerResult.observe(this, Observer {
@@ -62,8 +61,6 @@ class RegisterActivity : AppCompatActivity() {
             when (registerResult) {
                 is Result.Success -> {
                     showRegisterSuccess()
-
-                    setResult(Activity.RESULT_OK)
                     finish()
                 }
                 is Result.Error -> {
@@ -97,7 +94,7 @@ class RegisterActivity : AppCompatActivity() {
             false
         }
 
-        loginButton.setOnClickListener {
+        registerButton.setOnClickListener {
             loading.visibility = View.VISIBLE
             registerViewModel.register()
         }

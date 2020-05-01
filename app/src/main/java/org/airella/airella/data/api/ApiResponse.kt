@@ -1,5 +1,6 @@
 package org.airella.airella.data.api
 
+import android.util.Log
 import com.squareup.moshi.JsonClass
 import io.reactivex.rxjava3.core.Single
 
@@ -22,10 +23,12 @@ fun <T> Single<ApiResponse<T>>.getResponse(): Single<T> =
             else -> {
                 Single.error(
                     ApiException(
-                        "Unexpected Error",
-                        "Unexpected Error"
+                        "Unexpected API Error",
+                        "Unexpected API Error"
                     )
                 )
             }
         }
+    }.doOnError {
+        Log.e("airella", "Error during API request", it)
     }

@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.airella.airella.MainActivity
 import org.airella.airella.R
 import org.airella.airella.data.Result
-import org.airella.airella.data.model.LoginResponse
+import org.airella.airella.data.model.auth.LoginResponse
 import org.airella.airella.ui.register.RegisterActivity
 import org.airella.airella.utils.afterTextChanged
 
@@ -55,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
             when (loginResult) {
                 is Result.Success -> {
                     showLoginSuccess(loginResult.data)
-
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)

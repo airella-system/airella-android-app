@@ -1,6 +1,5 @@
 package org.airella.airella.ui.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,14 +8,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.R
 import org.airella.airella.data.Result
 import org.airella.airella.data.api.ApiException
-import org.airella.airella.data.model.LoginResponse
-import org.airella.airella.data.service.LoginService
-import org.airella.airella.utils.LoginUtils
+import org.airella.airella.data.model.auth.LoginResponse
+import org.airella.airella.data.service.AuthService
+import org.airella.airella.utils.AuthUtils
 import retrofit2.HttpException
 
 class LoginViewModel : ViewModel() {
 
-    private val loginService = LoginService
+    private val loginService = AuthService
 
     private var username: String = ""
     private var password: String = ""
@@ -42,22 +41,23 @@ class LoginViewModel : ViewModel() {
                 },
                 { error ->
                     when (error) {
-                        is ApiException -> _loginResult.value = Result.Error(R.string.login_failed)
+                        is ApiException -> _loginResult.value =
+                            Result.Error(R.string.internal_error)
                         is HttpException -> {
                             when (error.code()) {
-                                401, 403 -> _loginResult.value = Result.Error(R.string.login_failed)
-                                else -> _loginResult.value = Result.Error(R.string.login_failed)
+                                401, 403 -> _loginResult.value =
+                                    Result.Error(R.string.login_failed_error)
+                                else -> _loginResult.value = Result.Error(R.string.internet_error)
                             }
                         }
-                        else -> _loginResult.value = Result.Error(R.string.unexpected_error)
+                        else -> _loginResult.value = Result.Error(R.string.internet_error)
                     }
-                    Log.e("airella", "error", error)
                 })
     }
 
     fun usernameChanged(username: String) {
         this.username = username
-        if (!LoginUtils.isUserNameValid(username)) {
+        if (!AuthUtils.isUserNameValid(username)) {
             usernameError.value = R.string.invalid_username
         }
         validateForm()
@@ -65,7 +65,7 @@ class LoginViewModel : ViewModel() {
 
     fun passwordChanged(password: String) {
         this.password = password
-        if (!LoginUtils.isPasswordValid(password)) {
+        if (!AuthUtils.isPasswordValid(password)) {
             passwordError.value = R.string.invalid_password
         }
         validateForm()
@@ -77,7 +77,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    private fun isFormValid() = LoginUtils.isUserNameValid(username) &&
-            LoginUtils.isPasswordValid(password)
+    private fun isFormValid() = AuthUtils.isUserNameValid(username) &&
+            AuthUtils.isPasswordValid(password)
 
 }

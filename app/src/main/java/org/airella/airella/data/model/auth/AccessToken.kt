@@ -1,4 +1,4 @@
-package org.airella.airella.data.api.auth
+package org.airella.airella.data.model.auth
 
 import com.squareup.moshi.JsonClass
 
