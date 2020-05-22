@@ -25,6 +25,8 @@
     <string name="title_activity_register">Register</string>
     <string name="register_success">Registration successful</string>
 
+    <string name="logout">Logout</string>
+
 
     <string name="login_failed_error">"Invalid username or password"</string>
     <string name="internet_error">"Check your internet connection"</string>

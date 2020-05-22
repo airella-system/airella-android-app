@@ -22,15 +22,22 @@ object AuthService {
         private set
 
     init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-        user = null
+        val username = PreferencesService.getString("username", "")
+        val refreshToken = PreferencesService.getString("refreshToken", "")
+        val stationRegistrationToken = PreferencesService.getString("stationRegistrationToken", "")
+
+        if (username.isNotEmpty() && refreshToken.isNotEmpty() && stationRegistrationToken.isNotEmpty()) {
+            user = LoginResponse(null, refreshToken, stationRegistrationToken, username)
+        }
     }
 
     fun isLoggedIn(): Boolean = user != null
 
     fun logout() {
         user = null
+        PreferencesService.remove("username")
+        PreferencesService.remove("refreshToken")
+        PreferencesService.remove("stationRegistrationToken")
     }
 
     fun login(username: String, password: String): Single<LoginResponse> {
@@ -64,7 +71,11 @@ object AuthService {
 
     private fun setLoggedInUser(loginResponse: LoginResponse) {
         user = loginResponse
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+        PreferencesService.putString("username", loginResponse.username)
+        PreferencesService.putString("refreshToken", loginResponse.refreshToken)
+        PreferencesService.putString(
+            "stationRegistrationToken",
+            loginResponse.stationRegistrationToken
+        )
     }
 }

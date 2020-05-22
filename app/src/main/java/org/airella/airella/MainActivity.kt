@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import org.airella.airella.data.service.AuthService
+import org.airella.airella.data.service.PreferencesService
 import org.airella.airella.ui.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        PreferencesService.init(applicationContext)
 
         if (!AuthService.isLoggedIn()) {
             val intent = Intent(this, LoginActivity::class.java)
