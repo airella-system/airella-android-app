@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Single
 
 @JsonClass(generateAdapter = true)
 open class ApiResponse<T>(
+    val success: Boolean,
     val data: T?,
     val errors: List<ApiError>?
 )

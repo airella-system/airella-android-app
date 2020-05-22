@@ -3,11 +3,9 @@ package org.airella.airella.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.R
-import org.airella.airella.data.Result
 import org.airella.airella.data.api.ApiException
+import org.airella.airella.data.model.Result
 import org.airella.airella.data.model.auth.LoginResponse
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.AuthUtils
@@ -33,8 +31,6 @@ class LoginViewModel : ViewModel() {
             return
 
         loginService.login(username, password)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { user ->
                     _loginResult.value = Result.Success(user)

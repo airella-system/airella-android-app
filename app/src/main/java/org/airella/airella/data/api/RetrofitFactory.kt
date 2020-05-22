@@ -16,7 +16,7 @@ object RetrofitFactory {
 
         retrofit = Retrofit.Builder()
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
     }
 
     fun getBuilder(): Retrofit.Builder = retrofit

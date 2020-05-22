@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.airella.airella.MainActivity
 import org.airella.airella.R
-import org.airella.airella.data.Result
+import org.airella.airella.data.model.Result
 import org.airella.airella.data.model.auth.LoginResponse
 import org.airella.airella.ui.register.RegisterActivity
 import org.airella.airella.utils.afterTextChanged

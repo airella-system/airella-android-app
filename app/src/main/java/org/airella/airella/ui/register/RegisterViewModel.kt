@@ -3,11 +3,9 @@ package org.airella.airella.ui.register
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.R
-import org.airella.airella.data.Result
 import org.airella.airella.data.api.ApiException
+import org.airella.airella.data.model.Result
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.AuthUtils
 import retrofit2.HttpException
@@ -36,8 +34,6 @@ class RegisterViewModel() : ViewModel() {
             return
 
         authService.register(username, email, password)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     _registerResult.value = Result.Success(true)

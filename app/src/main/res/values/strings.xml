@@ -32,4 +32,6 @@
     <string name="internet_error">"Check your internet connection"</string>
     <string name="internal_error">"Internal error. Try again later"</string>
 
+    <string name="x_caiq">"%1$d CAIQ"</string>
+
 </resources>

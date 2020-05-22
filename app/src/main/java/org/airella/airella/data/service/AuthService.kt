@@ -2,7 +2,9 @@ package org.airella.airella.data.service
 
 
 import android.util.Log
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.data.api.auth.AuthApi
 import org.airella.airella.data.api.auth.LoginData
 import org.airella.airella.data.api.auth.RegisterData
@@ -49,6 +51,8 @@ object AuthService {
                 password
             )
         )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .getResponse()
             .map { it.apply { this.username = username } }
             .doOnSuccess {
@@ -65,6 +69,8 @@ object AuthService {
                 password
             )
         )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .getResponse()
             .map { true }
     }

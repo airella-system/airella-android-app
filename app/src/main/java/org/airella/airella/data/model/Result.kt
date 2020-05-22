@@ -1,4 +1,4 @@
-package org.airella.airella.data
+package org.airella.airella.data.model
 
 sealed class Result<out T : Any, out R : Any> {
 

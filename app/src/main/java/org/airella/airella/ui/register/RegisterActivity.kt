@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.airella.airella.R
-import org.airella.airella.data.Result
+import org.airella.airella.data.model.Result
 import org.airella.airella.utils.afterTextChanged
 
 class RegisterActivity : AppCompatActivity() {
