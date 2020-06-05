@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -33,10 +34,16 @@ class HomeFragment : Fragment() {
 
         stations_list.layoutManager = LinearLayoutManager(requireActivity())
 
-        adapter = StationAdapter(arrayListOf())
+        adapter = StationAdapter()
         stations_list.adapter = adapter
 
-        StationService.getStations().subscribe { stations -> adapter.setStations(stations) }
+        homeViewModel.stationsList.observe(requireActivity(), Observer { stations ->
+            adapter.setStations(stations)
+        })
+
+        StationService.getStations().subscribe { stations ->
+            homeViewModel.stationsList.value = stations
+        }
 
         add_sensor_fab.setOnClickListener {
             Snackbar.make(view, "Test fab", Snackbar.LENGTH_SHORT).show()

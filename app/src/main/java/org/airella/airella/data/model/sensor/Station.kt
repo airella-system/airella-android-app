@@ -7,9 +7,9 @@ import org.airella.airella.data.model.common.Location
 @JsonClass(generateAdapter = true)
 data class Station(
     val id: Int,
-    val name: String,
+    val name: String?,
     val address: Address?,
     val location: Location?,
-    val caqi: Int?,
+    val caqi: Double?,
     val sensors: List<Sensor>?
 )
