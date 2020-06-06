@@ -63,7 +63,7 @@ class WifiConfigViewModel : ViewModel() {
                 Log.i("Connected")
                 setStatus("Connected")
                 gatt.discoverServices()
-            } else {
+            } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
                 Log.w("Failed to connect")
                 setErrorStatus("Failed to connect")
             }
