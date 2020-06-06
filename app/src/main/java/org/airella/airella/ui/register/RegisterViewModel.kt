@@ -24,7 +24,7 @@ class RegisterViewModel() : ViewModel() {
     val passwordError = MutableLiveData<Int>(null)
     val passwordConfirmError = MutableLiveData<Int>(null)
 
-    val isDataValid = MutableLiveData<Boolean>(false)
+    val isDataValid = MutableLiveData(false)
 
     private val _registerResult = MutableLiveData<Result<Boolean, Int>>()
     val registerResult: LiveData<Result<Boolean, Int>> = _registerResult
@@ -66,7 +66,7 @@ class RegisterViewModel() : ViewModel() {
     fun emailChanged(email: String) {
         this.email = email
         if (!AuthUtils.isEmailValid(email)) {
-            emailError.value = R.string.invalid_username
+            emailError.value = R.string.invalid_email
         }
         validateForm()
     }
@@ -82,7 +82,7 @@ class RegisterViewModel() : ViewModel() {
     fun passwordConfirmChanged(passwordConfirm: String) {
         this.passwordConfirm = passwordConfirm
         if (!AuthUtils.isPasswordConfirmValid(password, passwordConfirm)) {
-            passwordConfirmError.value = R.string.invalid_password
+            passwordConfirmError.value = R.string.invalid_password_confirm
         }
         validateForm()
     }

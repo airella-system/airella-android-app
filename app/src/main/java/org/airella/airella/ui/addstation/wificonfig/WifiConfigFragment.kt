@@ -17,6 +17,8 @@ class WifiConfigFragment : Fragment() {
 
     private lateinit var viewModel: WifiConfigViewModel
 
+    private val toast: Toast by lazy { Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT) }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,8 +46,13 @@ class WifiConfigFragment : Fragment() {
             viewModel.saveConfig(requireContext())
         }
 
-        viewModel.statusToast.observe(requireActivity(), Observer {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+        viewModel.status.observe(viewLifecycleOwner, Observer {
+            toast.setText(it)
+            toast.show()
+        })
+
+        viewModel.errorStatus.observe(viewLifecycleOwner, Observer {
+            error_status.text = it
         })
     }
 

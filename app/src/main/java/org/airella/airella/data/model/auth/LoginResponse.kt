@@ -7,5 +7,5 @@ data class LoginResponse(
     val accessToken: AccessToken? = null,
     val refreshToken: String,
     val stationRegistrationToken: String,
-    var username: String = ""
+    var email: String = ""
 )

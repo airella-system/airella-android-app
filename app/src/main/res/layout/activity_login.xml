@@ -28,8 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="@string/prompt_login"
-            android:inputType="text"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>

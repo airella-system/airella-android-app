@@ -95,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showLoginSuccess(model: LoginResponse) {
         val welcome = getString(R.string.welcome)
-        val displayName = model.username
+        val displayName = model.email
 
         Toast.makeText(
             applicationContext,

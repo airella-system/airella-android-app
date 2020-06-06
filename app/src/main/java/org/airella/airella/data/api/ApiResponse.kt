@@ -1,7 +1,9 @@
 package org.airella.airella.data.api
 
 import com.squareup.moshi.JsonClass
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.utils.Log
 
 @JsonClass(generateAdapter = true)
@@ -13,7 +15,9 @@ open class ApiResponse<T>(
 
 
 fun <T> Single<ApiResponse<T>>.getResponse(): Single<T> =
-    this.flatMap {
+    this.subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap {
         return@flatMap when {
             it.data != null -> {
                 Single.just(it.data)
@@ -31,5 +35,5 @@ fun <T> Single<ApiResponse<T>>.getResponse(): Single<T> =
             }
         }
     }.doOnError {
-        Log.d("Error during API request: ${it.message}")
+            Log.w("Error during API request: ${it.message}")
     }

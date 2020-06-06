@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
             android:hint="@string/prompt_wifi_password"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionDone"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -61,5 +61,17 @@
         android:text="@string/action_save"
         app:layout_constraintEnd_toEndOf="@+id/wifiPasswordLayout"
         app:layout_constraintTop_toBottomOf="@+id/wifiPasswordLayout" />
+
+    <TextView
+        android:id="@+id/error_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

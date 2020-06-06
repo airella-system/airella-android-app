@@ -8,7 +8,7 @@ import org.airella.airella.R
 import org.airella.airella.data.model.sensor.Station
 import org.airella.airella.utils.inflate
 
-class StationAdapter() : RecyclerView.Adapter<StationAdapter.StationHolder>() {
+class StationAdapter : RecyclerView.Adapter<StationAdapter.StationHolder>() {
 
     private val stations: MutableList<Station> = arrayListOf()
 

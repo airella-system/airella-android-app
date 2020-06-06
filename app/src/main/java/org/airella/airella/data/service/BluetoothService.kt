@@ -23,11 +23,11 @@ object BluetoothService {
                         if (scanning.value!!) {
                             bluetoothAdapter.bluetoothLeScanner.stopScan(callback)
                             scanning.value = false
-                            Log.e("Stop scan")
+                            Log.i("Stop BT scan")
                         }
                     }, scanPeriod)
                     scanning.value = true
-                    Log.e("Start scan")
+                    Log.i("Start BT scan")
                     bluetoothAdapter.bluetoothLeScanner.startScan(callback)
                 }
             }
@@ -35,7 +35,7 @@ object BluetoothService {
                 if (scanning.value!!) {
                     bluetoothAdapter.bluetoothLeScanner.stopScan(callback)
                     scanning.value = false
-                    Log.e("Stop scan")
+                    Log.i("Stop BT scan")
                 }
             }
         }

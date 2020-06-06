@@ -23,8 +23,10 @@
     <string name="action_register_short">Register</string>
     <string name="action_save">Save</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_username">Invalid username</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_password">Password must be at least 6 characters</string>
+    <string name="invalid_password_confirm">Passwords must match</string>
     <string name="title_activity_register">Register</string>
     <string name="register_success">Registration successful</string>
 
@@ -34,6 +36,7 @@
     <string name="login_failed_error">"Invalid username or password"</string>
     <string name="internet_error">"Check your internet connection"</string>
     <string name="internal_error">"Internal error. Try again later"</string>
+    <string name="unexpected_error">"Unexpected Error"</string>
 
     <string name="x_caiq">"%1$f CAIQ"</string>
 

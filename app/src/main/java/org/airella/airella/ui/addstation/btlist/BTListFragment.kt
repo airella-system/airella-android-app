@@ -51,13 +51,13 @@ class BTListFragment : Fragment() {
         bt_list.layoutManager = LinearLayoutManager(requireContext())
         bt_list.adapter = adapter
 
-        viewModel.btDevicesList.observe(requireActivity(), Observer { btDevices ->
+        viewModel.btDevicesList.observe(viewLifecycleOwner, Observer { btDevices ->
             adapter.setDevices(btDevices)
         })
 
-//        BluetoothService.isScanning.observe(requireActivity(), Observer {
-//            loading.visibility = if(it) View.VISIBLE else View.GONE
-//        })
+        BluetoothService.isScanning.observe(viewLifecycleOwner, Observer {
+            loading.visibility = if (it) View.VISIBLE else View.GONE
+        })
 
         checkBtAndScanDevices()
     }

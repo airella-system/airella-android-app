@@ -1,9 +1,7 @@
 package org.airella.airella.data.service
 
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.data.api.auth.AuthApi
 import org.airella.airella.data.api.auth.LoginData
 import org.airella.airella.data.api.auth.RegisterData
@@ -24,7 +22,7 @@ object AuthService {
         private set
 
     init {
-        val username = PreferencesService.getString("username", "")
+        val username = PreferencesService.getString("email", "")
         val refreshToken = PreferencesService.getString("refreshToken", "")
         val stationRegistrationToken = PreferencesService.getString("stationRegistrationToken", "")
 
@@ -42,42 +40,32 @@ object AuthService {
         PreferencesService.remove("stationRegistrationToken")
     }
 
-    fun login(username: String, password: String): Single<LoginResponse> {
+    fun login(email: String, password: String): Single<LoginResponse> {
         user?.let { return Single.just(it) }
 
         return loginApi.login(
             LoginData(
-                username,
-                password
-            )
-        )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .getResponse()
-            .map { it.apply { this.username = username } }
-            .doOnSuccess {
-                setLoggedInUser(it)
-                Log.i("Login successful user: " + it.username)
-            }
-    }
-
-    fun register(username: String, email: String, password: String): Single<Boolean> {
-        return loginApi.register(
-            RegisterData(
-                username,
                 email,
                 password
             )
         )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .getResponse()
+            .map { it.apply { this.email = email } }
+            .doOnSuccess {
+                setLoggedInUser(it)
+                Log.i("Login successful user: " + it.email)
+            }
+    }
+
+    fun register(username: String, email: String, password: String): Single<Boolean> {
+        return loginApi.register(RegisterData(email, password))
             .getResponse()
             .map { true }
     }
 
     private fun setLoggedInUser(loginResponse: LoginResponse) {
         user = loginResponse
-        PreferencesService.putString("username", loginResponse.username)
+        PreferencesService.putString("email", loginResponse.email)
         PreferencesService.putString("refreshToken", loginResponse.refreshToken)
         PreferencesService.putString(
             "stationRegistrationToken",

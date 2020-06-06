@@ -21,7 +21,7 @@ class LoginViewModel : ViewModel() {
     val usernameError = MutableLiveData<Int>(null)
     val passwordError = MutableLiveData<Int>(null)
 
-    val isDataValid = MutableLiveData<Boolean>(false)
+    val isDataValid = MutableLiveData(false)
 
     private val _loginResult = MutableLiveData<Result<LoginResponse, Int>>()
     val loginResult: LiveData<Result<LoginResponse, Int>> = _loginResult

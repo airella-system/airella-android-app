@@ -40,23 +40,27 @@ class HomeFragment : Fragment() {
         adapter = StationAdapter()
         stations_list.adapter = adapter
 
-        homeViewModel.stationsList.observe(requireActivity(), Observer { stations ->
+        homeViewModel.stationsList.observe(viewLifecycleOwner, Observer { stations ->
             adapter.setStations(stations)
         })
 
-        //TODO poprawić obsługe błędów
-        StationService.getStations().subscribe({ stations ->
-            homeViewModel.stationsList.value = stations
-        }, {
-            Log.e(it.message ?: "Unexpected Error")
-            Toast.makeText(requireContext(), getString(R.string.internet_error), Toast.LENGTH_SHORT)
-                .show()
-        })
+        getStations()
 
         add_sensor_fab.setOnClickListener {
             val intent = Intent(requireContext(), AddSensorActivity::class.java)
             startActivity(intent)
         }
+    }
+
+
+    private fun getStations() {
+        StationService.getStations().subscribe({ stations ->
+            homeViewModel.stationsList.value = stations
+        }, {
+            Log.e(it.message ?: getString(R.string.unexpected_error))
+            Toast.makeText(requireContext(), getString(R.string.internet_error), Toast.LENGTH_LONG)
+                .show()
+        })
     }
 
 }
