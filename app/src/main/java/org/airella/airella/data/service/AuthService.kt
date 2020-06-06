@@ -1,7 +1,6 @@
 package org.airella.airella.data.service
 
 
-import android.util.Log
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -10,6 +9,7 @@ import org.airella.airella.data.api.auth.LoginData
 import org.airella.airella.data.api.auth.RegisterData
 import org.airella.airella.data.api.getResponse
 import org.airella.airella.data.model.auth.LoginResponse
+import org.airella.airella.utils.Log
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -57,7 +57,7 @@ object AuthService {
             .map { it.apply { this.username = username } }
             .doOnSuccess {
                 setLoggedInUser(it)
-                Log.i("airella", "Login successful user: " + it.username)
+                Log.i("Login successful user: " + it.username)
             }
     }
 

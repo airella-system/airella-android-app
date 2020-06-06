@@ -1,8 +1,8 @@
 package org.airella.airella.data.api
 
-import android.util.Log
 import com.squareup.moshi.JsonClass
 import io.reactivex.rxjava3.core.Single
+import org.airella.airella.utils.Log
 
 @JsonClass(generateAdapter = true)
 open class ApiResponse<T>(
@@ -31,5 +31,5 @@ fun <T> Single<ApiResponse<T>>.getResponse(): Single<T> =
             }
         }
     }.doOnError {
-        Log.e("airella", "Error during API request", it)
+        Log.d("Error during API request: ${it.message}")
     }

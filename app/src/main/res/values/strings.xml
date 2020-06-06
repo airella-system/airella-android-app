@@ -15,10 +15,13 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_confirm">Confirm Password</string>
+    <string name="prompt_ssid">WIFI name</string>
+    <string name="prompt_wifi_password">WIFI password</string>
     <string name="action_sign_in">Login</string>
     <string name="action_sign_in_short">Login</string>
     <string name="action_register">Register</string>
     <string name="action_register_short">Register</string>
+    <string name="action_save">Save</string>
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>

@@ -1,17 +1,20 @@
 package org.airella.airella.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.airella.airella.R
 import org.airella.airella.data.service.StationService
+import org.airella.airella.ui.addstation.AddSensorActivity
+import org.airella.airella.utils.Log
 
 class HomeFragment : Fragment() {
 
@@ -41,12 +44,18 @@ class HomeFragment : Fragment() {
             adapter.setStations(stations)
         })
 
-        StationService.getStations().subscribe { stations ->
+        //TODO poprawić obsługe błędów
+        StationService.getStations().subscribe({ stations ->
             homeViewModel.stationsList.value = stations
-        }
+        }, {
+            Log.e(it.message ?: "Unexpected Error")
+            Toast.makeText(requireContext(), getString(R.string.internet_error), Toast.LENGTH_SHORT)
+                .show()
+        })
 
         add_sensor_fab.setOnClickListener {
-            Snackbar.make(view, "Test fab", Snackbar.LENGTH_SHORT).show()
+            val intent = Intent(requireContext(), AddSensorActivity::class.java)
+            startActivity(intent)
         }
     }
 
