@@ -18,6 +18,8 @@ class WifiConfigViewModel : ViewModel() {
     private var wifiSSID: String = ""
     private var wifiPassword: String = ""
 
+    private val mtu = 128
+
     val status: MutableLiveData<String> = MutableLiveData()
     val errorStatus: MutableLiveData<String> = MutableLiveData()
 
@@ -31,11 +33,21 @@ class WifiConfigViewModel : ViewModel() {
 
 
     fun saveConfig(context: Context) {
-        Log.i("Connecting")
-        status.value = "Connecting"
+        setStatus("Connecting")
         btDevice.connectGatt(context, false, MyBluetoothGattCallback())
     }
 
+    private val mainThreadHandler = Handler(Looper.getMainLooper())
+
+    private fun setStatus(status: String) {
+        Log.i(status)
+        mainThreadHandler.post { this@WifiConfigViewModel.status.value = status }
+    }
+
+    private fun setErrorStatus(status: String) {
+        Log.w(status)
+        mainThreadHandler.post { this@WifiConfigViewModel.errorStatus.value = status }
+    }
 
     inner class MyBluetoothGattCallback : BluetoothGattCallback() {
 
@@ -60,13 +72,18 @@ class WifiConfigViewModel : ViewModel() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             super.onConnectionStateChange(gatt, status, newState)
             if (newState == BluetoothGatt.STATE_CONNECTED) {
-                Log.i("Connected")
                 setStatus("Connected")
-                gatt.discoverServices()
+                gatt.requestMtu(mtu)
             } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
                 Log.w("Failed to connect")
                 setErrorStatus("Failed to connect")
             }
+        }
+
+        override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
+            Log.i("New MTU: $mtu - status: $status")
+            gatt.discoverServices()
+            super.onMtuChanged(gatt, mtu, status)
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
@@ -114,25 +131,16 @@ class WifiConfigViewModel : ViewModel() {
                             setStatus("Configuring in progress: 80%")
                         }
                         Config.REFRESH_DEVICE_CHARACTERISTIC_UUID -> {
-                            Log.i("SUCCESS CONFIGURATION")
                             setStatus("Configuring successful")
                             gatt.disconnect()
                         }
                     }
                 }
                 BluetoothGatt.GATT_FAILURE -> Log.w("FAIL")
-                BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION -> Log.w("AUTH_REQ")
+                BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION, BluetoothGatt.GATT_INSUFFICIENT_ENCRYPTION -> Log.w(
+                    "AUTH_REQ"
+                )
             }
-        }
-
-        private val mainThreadHandler = Handler(Looper.getMainLooper())
-
-        private fun setStatus(status: String) {
-            mainThreadHandler.post { this@WifiConfigViewModel.status.value = status }
-        }
-
-        private fun setErrorStatus(status: String) {
-            mainThreadHandler.post { this@WifiConfigViewModel.errorStatus.value = status }
         }
     }
 }
