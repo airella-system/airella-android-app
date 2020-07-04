@@ -30,6 +30,9 @@
     <string name="title_activity_register">Register</string>
     <string name="register_success">Registration successful</string>
 
+    <string name="action_wifi_config">Configure WiFi</string>
+    <string name="action_change_password">Change password</string>
+
     <string name="logout">Logout</string>
 
 
@@ -39,5 +42,8 @@
     <string name="unexpected_error">"Unexpected Error"</string>
 
     <string name="x_caiq">"%1$f CAIQ"</string>
+    <string name="status">"Status: "</string>
+    <string name="bond_device">Bond with device</string>
+    <string name="hard_reset">Hard reset</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package org.airella.airella.ui.addstation.wificonfig
+package org.airella.airella.ui.station.wificonfig
 
 import android.bluetooth.*
 import android.content.Context
@@ -51,22 +51,22 @@ class WifiConfigViewModel : ViewModel() {
 
     inner class MyBluetoothGattCallback : BluetoothGattCallback() {
 
-        private var gattService: BluetoothGattService? = null
+        private lateinit var gattService: BluetoothGattService
 
         private val ssidCharacteristic: BluetoothGattCharacteristic by lazy {
-            (gattService!!.getCharacteristic(Config.SSID_CHARACTERISTIC_UUID))
+            (gattService.getCharacteristic(Config.SSID_CHARACTERISTIC_UUID))
         }
         private val passCharacteristic: BluetoothGattCharacteristic by lazy {
-            (gattService!!.getCharacteristic(Config.WIFI_PASSWORD_CHARACTERISTIC_UUID))
+            (gattService.getCharacteristic(Config.WIFI_PASSWORD_CHARACTERISTIC_UUID))
         }
         private val registrationTokenCharacteristic: BluetoothGattCharacteristic by lazy {
-            (gattService!!.getCharacteristic(Config.REGISTRATION_TOKEN_UUID))
+            (gattService.getCharacteristic(Config.REGISTRATION_TOKEN_UUID))
         }
         private val apiUrlCharacteristic: BluetoothGattCharacteristic by lazy {
-            (gattService!!.getCharacteristic(Config.API_URL_UUID))
+            (gattService.getCharacteristic(Config.API_URL_UUID))
         }
         private val refreshCharacteristic: BluetoothGattCharacteristic by lazy {
-            (gattService!!.getCharacteristic(Config.REFRESH_DEVICE_CHARACTERISTIC_UUID))
+            (gattService.getCharacteristic(Config.REFRESH_DEVICE_CHARACTERISTIC_UUID))
         }
 
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
@@ -88,13 +88,14 @@ class WifiConfigViewModel : ViewModel() {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             Log.i("Discovered services")
-            gattService = gatt.getService(Config.SERVICE_UUID)
+            val gattService = gatt.getService(Config.SERVICE_UUID)
             if (gattService == null) {
                 setStatus("Configuring failed")
                 setErrorStatus("This device isn't an Airella Station")
                 Log.e("This device isn't an Airella Station")
                 return
             }
+            this.gattService = gattService
             ssidCharacteristic.setValue(wifiSSID)
             gatt.writeCharacteristic(ssidCharacteristic)
             super.onServicesDiscovered(gatt, status)

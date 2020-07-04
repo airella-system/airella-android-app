@@ -1,4 +1,4 @@
-package org.airella.airella.ui.addstation.wificonfig
+package org.airella.airella.ui.station.wificonfig
 
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle

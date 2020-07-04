@@ -1,4 +1,4 @@
-package org.airella.airella.ui.addstation.btlist
+package org.airella.airella.ui.station.btlist
 
 import android.bluetooth.BluetoothDevice
 import androidx.lifecycle.MutableLiveData

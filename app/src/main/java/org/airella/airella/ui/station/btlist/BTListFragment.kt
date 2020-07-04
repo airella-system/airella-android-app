@@ -1,4 +1,4 @@
-package org.airella.airella.ui.addstation.btlist
+package org.airella.airella.ui.station.btlist
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -73,7 +73,6 @@ class BTListFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-//        parentFragmentManager.
         bluetoothAdapter?.let { BluetoothService.scanBTDevices(it, MyScanCallback(), false) }
     }
 

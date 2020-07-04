@@ -1,4 +1,4 @@
-package org.airella.airella.ui.addstation.btlist
+package org.airella.airella.ui.station.btlist
 
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.bt_device_list_item.view.*
 import org.airella.airella.R
-import org.airella.airella.ui.addstation.wificonfig.WifiConfigFragment
+import org.airella.airella.ui.station.config.StationConfigFragment
 import org.airella.airella.utils.inflate
 
 
@@ -54,15 +54,15 @@ class BTDeviceAdapter : RecyclerView.Adapter<BTDeviceAdapter.BtDeviceView>() {
 
         override fun onClick(v: View?) {
             v?.let {
-                val wifiConfigFragment: Fragment = WifiConfigFragment()
+                val configFragment: Fragment = StationConfigFragment()
                 val transaction: FragmentTransaction =
                     (v.context as FragmentActivity).supportFragmentManager.beginTransaction()
 
                 val bundle = Bundle()
                 bundle.putParcelable("bt_device", btDevice)
-                wifiConfigFragment.arguments = bundle
+                configFragment.arguments = bundle
 
-                transaction.replace(R.id.container, wifiConfigFragment)
+                transaction.replace(R.id.container, configFragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
             }

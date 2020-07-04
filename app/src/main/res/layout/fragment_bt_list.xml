@@ -5,7 +5,7 @@
     android:id="@+id/addsensor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.addstation.btlist.BTListFragment">
+    tools:context=".ui.station.btlist.BTListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bt_list"
