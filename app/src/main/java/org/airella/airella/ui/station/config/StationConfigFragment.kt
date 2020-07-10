@@ -1,6 +1,5 @@
 package org.airella.airella.ui.station.config
 
-import android.app.AlertDialog
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -22,7 +22,17 @@ import org.airella.airella.utils.Log
 
 class StationConfigFragment : Fragment() {
 
-    private val btBondBroadcastReceiver: BtBondBroadcastReceiver = BtBondBroadcastReceiver()
+    private val btBondBroadcastReceiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent) {
+            updateBondState()
+            when (intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR)) {
+                BluetoothDevice.BOND_NONE -> Log.i("Bonding Failed")
+                BluetoothDevice.BOND_BONDING -> Log.i("Bonding...")
+                BluetoothDevice.BOND_BONDED -> Log.i("Bonded!")
+            }
+        }
+    }
 
     private lateinit var viewModel: StationConfigViewModel
 
@@ -59,7 +69,7 @@ class StationConfigFragment : Fragment() {
         }
 
         change_password.setOnClickListener {
-            AlertDialog.Builder(context)
+            AlertDialog.Builder(requireContext())
                 .setMessage(
                     """Co ty myślałeś że sobie tak hasło możesz zmienić? xDDDD
                         >No chyba nie""".trimMargin(">")
@@ -68,13 +78,11 @@ class StationConfigFragment : Fragment() {
         }
 
         hard_reset.setOnClickListener {
-            AlertDialog.Builder(context)
+            AlertDialog.Builder(requireContext())
                 .setTitle("HARD RESET")
                 .setMessage("Are you sure you want to reset all configuration?")
                 .setPositiveButton(android.R.string.yes) { _, _ ->
-                    AlertDialog.Builder(context)
-                        .setMessage("A tego mi się nie chciało implementować")
-                        .show()
+                    viewModel.hardResetDevice(requireContext())
                 }
                 .setNegativeButton(android.R.string.no, null)
                 .show()
@@ -126,18 +134,6 @@ class StationConfigFragment : Fragment() {
         wifi_config.isEnabled = viewModel.isBonded()
         change_password.isEnabled = viewModel.isBonded()
         hard_reset.isEnabled = viewModel.isBonded()
-    }
-
-    private inner class BtBondBroadcastReceiver : BroadcastReceiver() {
-
-        override fun onReceive(context: Context?, intent: Intent) {
-            updateBondState()
-            when (intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR)) {
-                BluetoothDevice.BOND_NONE -> Log.i("Bonding Failed")
-                BluetoothDevice.BOND_BONDING -> Log.i("Bonding...")
-                BluetoothDevice.BOND_BONDED -> Log.i("Bonded!")
-            }
-        }
     }
 
 }

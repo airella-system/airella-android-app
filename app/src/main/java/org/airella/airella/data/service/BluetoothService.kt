@@ -35,7 +35,7 @@ object BluetoothService {
                 if (scanning.value!!) {
                     bluetoothAdapter.bluetoothLeScanner.stopScan(callback)
                     scanning.value = false
-                    Log.i("Stop BT scan")
+                    Log.i("Force stop BT scan")
                 }
             }
         }
