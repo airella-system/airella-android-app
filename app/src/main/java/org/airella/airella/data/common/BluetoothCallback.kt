@@ -18,8 +18,9 @@ open class BluetoothCallback : BluetoothGattCallback() {
     protected val passCharacteristic by lazy { getCharacteristic(Config.WIFI_PASSWORD_UUID) }
     protected val registrationTokenCharacteristic by lazy { getCharacteristic(Config.REGISTRATION_TOKEN_UUID) }
     protected val apiUrlCharacteristic by lazy { getCharacteristic(Config.API_URL_UUID) }
-    protected val refreshCharacteristic by lazy { getCharacteristic(Config.REFRESH_DEVICE_UUID) }
-    protected val clearDataCharacteristic by lazy { getCharacteristic(Config.CLEAR_DATA_CHARACTERISTIC_UUID) }
+    protected val refreshDeviceCharacteristic by lazy { getCharacteristic(Config.REFRESH_DEVICE_UUID) }
+    protected val clearDataCharacteristic by lazy { getCharacteristic(Config.CLEAR_DATA_UUID) }
+    protected val devicePasswordCharacteristic by lazy { getCharacteristic(Config.DEVICE_PASSWORD_UUID) }
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)

@@ -1,5 +1,6 @@
 package org.airella.airella.ui.station.config
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,17 +11,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.R
-import org.airella.airella.ui.station.wificonfig.WifiConfigFragment
 import org.airella.airella.utils.Log
 
 class StationConfigFragment : Fragment() {
+
+    private val toast by lazy { Toast.makeText(requireContext(), "", Toast.LENGTH_LONG) }
 
     private val btBondBroadcastReceiver = object : BroadcastReceiver() {
 
@@ -49,10 +54,16 @@ class StationConfigFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_station_config, container, false)
     }
 
+    @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         updateBondState()
+
+        viewModel.status.observe(viewLifecycleOwner, Observer {
+            toast.setText(it)
+            toast.show()
+        })
 
         bond_device.setOnClickListener {
             viewModel.btDevice.createBond()
@@ -64,27 +75,41 @@ class StationConfigFragment : Fragment() {
         }
 
         wifi_config.setOnClickListener { v ->
-            val fragment: Fragment = WifiConfigFragment()
-            switchFragment(v, fragment)
+            val form =
+                requireActivity().layoutInflater.inflate(R.layout.view_device_wifi_config, null)
+            AlertDialog.Builder(requireContext())
+                .setMessage("Wifi config")
+                .setView(form)
+                .setPositiveButton(R.string.action_save) { _, _ ->
+                    val ssid = form.findViewById<EditText>(R.id.wifiSSID).text.toString()
+                    val pass = form.findViewById<EditText>(R.id.wifiPassword).text.toString()
+                    viewModel.saveWiFiConfig(requireContext(), ssid, pass)
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
         }
 
         change_password.setOnClickListener {
+            val form = requireActivity().layoutInflater.inflate(R.layout.view_device_password, null)
             AlertDialog.Builder(requireContext())
-                .setMessage(
-                    """Co ty myślałeś że sobie tak hasło możesz zmienić? xDDDD
-                        >No chyba nie""".trimMargin(">")
-                )
+                .setMessage("Password change")
+                .setView(form)
+                .setPositiveButton(R.string.action_save) { _, _ ->
+                    val newPass = form.findViewById<EditText>(R.id.password).text.toString()
+                    viewModel.saveStationPassword(requireContext(), newPass)
+                }
+                .setNegativeButton(R.string.cancel, null)
                 .show()
         }
 
         hard_reset.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("HARD RESET")
+                .setTitle("Hard Reset")
                 .setMessage("Are you sure you want to reset all configuration?")
                 .setPositiveButton(android.R.string.yes) { _, _ ->
                     viewModel.hardResetDevice(requireContext())
                 }
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show()
         }
     }

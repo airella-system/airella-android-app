@@ -10,7 +10,8 @@ object Config {
     val REFRESH_DEVICE_UUID = uuid("2ca7df70-42df-482e-81cf-468e0fcec5dc")
     val REGISTRATION_TOKEN_UUID = uuid("cb520851-1fd3-446e-a590-e777ddd0232c")
     val API_URL_UUID = uuid("20418184-e336-4409-a04d-61d7cf31f56b")
-    val CLEAR_DATA_CHARACTERISTIC_UUID = uuid("9023e6f3-223d-4c6c-bd39-ebca35d7e8d0")
+    val CLEAR_DATA_UUID = uuid("9023e6f3-223d-4c6c-bd39-ebca35d7e8d0")
+    val DEVICE_PASSWORD_UUID = uuid("126b5b11-6590-4229-8026-ba30ad032133")
 
     private fun uuid(uuid: String): UUID = UUID.fromString(uuid)
 }
