@@ -1,5 +1,6 @@
 package org.airella.airella.ui.login
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,10 +24,10 @@ class LoginViewModel : ViewModel() {
 
     val isDataValid = MutableLiveData(false)
 
-    private val _loginResult = MutableLiveData<Result<LoginResponse, Int>>()
-    val loginResult: LiveData<Result<LoginResponse, Int>> = _loginResult
+    private val _loginResult = MutableLiveData<Result<LoginResponse, String>>()
+    val loginResult: LiveData<Result<LoginResponse, String>> = _loginResult
 
-    fun login() {
+    fun login(context: Context) {
         if (!isFormValid())
             return
 
@@ -37,16 +38,21 @@ class LoginViewModel : ViewModel() {
                 },
                 { error ->
                     when (error) {
-                        is ApiException -> _loginResult.value =
-                            Result.Error(R.string.internal_error)
+                        is ApiException ->
+                            _loginResult.value = Result.Error(error.message)
                         is HttpException -> {
                             when (error.code()) {
-                                401, 403 -> _loginResult.value =
-                                    Result.Error(R.string.login_failed_error)
-                                else -> _loginResult.value = Result.Error(R.string.internet_error)
+                                401, 403 ->
+                                    _loginResult.value =
+                                        Result.Error(context.getString(R.string.login_failed_error))
+                                else ->
+                                    _loginResult.value =
+                                        Result.Error(context.getString(R.string.internet_error))
                             }
                         }
-                        else -> _loginResult.value = Result.Error(R.string.internet_error)
+                        else ->
+                            _loginResult.value =
+                                Result.Error(context.getString(R.string.internet_error))
                     }
                 })
     }

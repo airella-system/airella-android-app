@@ -4,46 +4,39 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.utils.Log
 
 class BTListViewModel : ViewModel() {
 
-    val btDevicesList: MutableLiveData<List<BluetoothDevice>> = MutableLiveData()
+    private val btDevicesList: MutableList<BluetoothDevice> = mutableListOf()
+
+    val adapter: BTDeviceAdapter by lazy { BTDeviceAdapter(btDevicesList) }
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanFailed(errorCode: Int) {
             super.onScanFailed(errorCode)
             Log.e("Scan failed with code $errorCode")
+            // TODO message dla usera
         }
 
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+        override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
-            val devices = btDevicesList.value?.toMutableList() ?: arrayListOf()
-            result?.device?.let { devices.add(it) }
-            btDevicesList.value = devices.distinct()
+            result.device?.let { addDevice(it) }
         }
 
-        override fun onBatchScanResults(results: MutableList<ScanResult>?) {
+        override fun onBatchScanResults(results: MutableList<ScanResult>) {
             super.onBatchScanResults(results)
-            results?.apply {
-                addAllDevices(map { it.device })
-            }
+            results.map { it.device }.forEach { addDevice(it) }
         }
     }
 
     fun addDevice(btDevice: BluetoothDevice) {
-        val devices = btDevicesList.value?.toMutableList() ?: arrayListOf()
-        devices.add(btDevice)
-        btDevicesList.value = devices.distinct()
-    }
-
-    fun addAllDevices(btDevices: Collection<BluetoothDevice>) {
-        val devices = btDevicesList.value?.toMutableList() ?: arrayListOf()
-        devices.addAll(btDevices)
-        btDevicesList.value = devices.distinct()
+        if (!btDevicesList.contains(btDevice)) {
+            btDevicesList.add(btDevice)
+            adapter.notifyItemChanged(btDevicesList.lastIndex)
+        }
     }
 
     fun startBtScan(bluetoothAdapter: BluetoothAdapter) {

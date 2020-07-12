@@ -28,6 +28,7 @@ fun <T> Single<ApiResponse<T>>.getResponse(): Single<T> =
             else -> {
                 Single.error(
                     ApiException(
+                        "",
                         "Unexpected API Error",
                         "Unexpected API Error"
                     )
@@ -35,5 +36,5 @@ fun <T> Single<ApiResponse<T>>.getResponse(): Single<T> =
             }
         }
     }.doOnError {
-            Log.w("Error during API request: ${it.message}")
+            Log.w("Error during API request: [$it]")
     }

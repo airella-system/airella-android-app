@@ -1,5 +1,6 @@
 package org.airella.airella.ui.register
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,10 +27,10 @@ class RegisterViewModel() : ViewModel() {
 
     val isDataValid = MutableLiveData(false)
 
-    private val _registerResult = MutableLiveData<Result<Boolean, Int>>()
-    val registerResult: LiveData<Result<Boolean, Int>> = _registerResult
+    private val _registerResult = MutableLiveData<Result<Boolean, String>>()
+    val registerResult: LiveData<Result<Boolean, String>> = _registerResult
 
-    fun register() {
+    fun register(context: Context) {
         if (!isFormValid())
             return
 
@@ -40,17 +41,13 @@ class RegisterViewModel() : ViewModel() {
                 },
                 { error ->
                     when (error) {
-                        is ApiException -> _registerResult.value =
-                            Result.Error(R.string.login_failed_error)
-                        is HttpException -> {
-                            when (error.code()) {
-                                401, 403 -> _registerResult.value =
-                                    Result.Error(R.string.login_failed_error)
-                                else -> _registerResult.value =
-                                    Result.Error(R.string.login_failed_error)
-                            }
-                        }
-                        else -> _registerResult.value = Result.Error(R.string.internet_error)
+                        is ApiException ->
+                            _registerResult.value = Result.Error(error.message)
+                        is HttpException ->
+                            _registerResult.value = Result.Error(error.message())
+                        else ->
+                            _registerResult.value =
+                                Result.Error(context.getString(R.string.internet_error))
                     }
                 })
     }

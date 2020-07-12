@@ -14,15 +14,8 @@ import org.airella.airella.ui.station.config.StationConfigFragment
 import org.airella.airella.utils.inflate
 
 
-class BTDeviceAdapter : RecyclerView.Adapter<BTDeviceAdapter.BtDeviceView>() {
-
-    private val btDevices: MutableList<BluetoothDevice> = arrayListOf()
-
-    fun setDevices(btDevices: List<BluetoothDevice>) {
-        this.btDevices.clear()
-        this.btDevices.addAll(btDevices)
-        this.notifyDataSetChanged()
-    }
+class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
+    RecyclerView.Adapter<BTDeviceAdapter.BtDeviceView>() {
 
     override fun getItemCount(): Int = btDevices.size
 
@@ -39,7 +32,7 @@ class BTDeviceAdapter : RecyclerView.Adapter<BTDeviceAdapter.BtDeviceView>() {
     class BtDeviceView(private var view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
 
-        private lateinit var btDevice: BluetoothDevice
+        private var btDevice: BluetoothDevice? = null
 
         init {
             view.setOnClickListener(this)
@@ -52,20 +45,22 @@ class BTDeviceAdapter : RecyclerView.Adapter<BTDeviceAdapter.BtDeviceView>() {
             view.mac.text = btDevice.address
         }
 
-        override fun onClick(v: View?) {
-            v?.let {
-                val configFragment: Fragment = StationConfigFragment()
-                val transaction: FragmentTransaction =
-                    (v.context as FragmentActivity).supportFragmentManager.beginTransaction()
-
-                val bundle = Bundle()
-                bundle.putParcelable("bt_device", btDevice)
-                configFragment.arguments = bundle
-
-                transaction.replace(R.id.container, configFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+        override fun onClick(v: View) {
+            if (btDevice == null) {
+                return
             }
+
+            val configFragment: Fragment = StationConfigFragment()
+            val transaction: FragmentTransaction =
+                (v.context as FragmentActivity).supportFragmentManager.beginTransaction()
+
+            val bundle = Bundle()
+            bundle.putParcelable("bt_device", btDevice)
+            configFragment.arguments = bundle
+
+            transaction.replace(R.id.container, configFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
     }
