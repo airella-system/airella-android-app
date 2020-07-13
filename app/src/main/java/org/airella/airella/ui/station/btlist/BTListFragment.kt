@@ -61,19 +61,28 @@ class BTListFragment : Fragment() {
         checkBtAndScanDevices()
     }
 
+    override fun onStop() {
+        super.onStop()
+        bluetoothAdapter?.let { viewModel.stopBtScan(it) }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == BT_ENABLE) {
             when (resultCode) {
-                Activity.RESULT_OK -> checkBtAndScanDevices()
+                Activity.RESULT_OK -> {
+                    checkBtAndScanDevices()
+                }
+                else -> {
+                    startActivityForResult(
+                        Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                        BT_ENABLE
+                    )
+                }
             }
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        bluetoothAdapter?.let { viewModel.stopBtScan(it) }
-    }
 
     private fun checkBtAndScanDevices() {
         if (!checkLocationPermission()) return
@@ -83,11 +92,15 @@ class BTListFragment : Fragment() {
                 Toast.makeText(requireContext(), "BT error", Toast.LENGTH_SHORT).show()
                 Log.e("Null BT adapter")
             }
-            bluetoothAdapter!!.isEnabled -> viewModel.startBtScan(bluetoothAdapter!!)
-            else -> startActivityForResult(
-                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                BT_ENABLE
-            )
+            bluetoothAdapter!!.isEnabled -> {
+                viewModel.startBtScan(bluetoothAdapter!!)
+            }
+            else -> {
+                startActivityForResult(
+                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                    BT_ENABLE
+                )
+            }
         }
     }
 
@@ -98,7 +111,6 @@ class BTListFragment : Fragment() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            location_denied.visibility = View.GONE
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
             ) {
                 AlertDialog.Builder(requireContext())
@@ -136,6 +148,7 @@ class BTListFragment : Fragment() {
                 if (grantResults.isNotEmpty()
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
+                    location_error.visibility = View.INVISIBLE
                     if (ContextCompat.checkSelfPermission(
                             requireContext(),
                             Manifest.permission.ACCESS_FINE_LOCATION
@@ -146,7 +159,7 @@ class BTListFragment : Fragment() {
                 } else {
                     // user checked Never ask again
                     if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        location_denied.visibility = View.VISIBLE
+                        location_error.visibility = View.VISIBLE
                     } else {
                         checkBtAndScanDevices()
                     }
