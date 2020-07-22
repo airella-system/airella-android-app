@@ -1,5 +1,6 @@
 package org.airella.airella
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -10,7 +11,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import org.airella.airella.data.service.AuthService
 import org.airella.airella.data.service.PreferencesService
+import org.airella.airella.ui.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,11 +23,11 @@ class MainActivity : AppCompatActivity() {
 
         PreferencesService.init(applicationContext)
 
-//        if (!AuthService.isLoggedIn()) {
-//            val intent = Intent(this, LoginActivity::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-//            startActivity(intent)
-//        }
+        if (!AuthService.isLoggedIn()) {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
