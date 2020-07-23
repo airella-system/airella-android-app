@@ -1,4 +1,4 @@
-package org.airella.airella.data.common
+package org.airella.airella.data.bluetooth
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
@@ -23,13 +23,22 @@ open class BluetoothCallback(
             onConnected()
         } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
             onFailToConnect()
+            gatt.disconnect()
         }
     }
 
     override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
         super.onMtuChanged(gatt, mtu, status)
-        Log.i("New MTU: $mtu - status: $status")
-        gatt.discoverServices()
+        when (status) {
+            BluetoothGatt.GATT_SUCCESS -> {
+                Log.i("New MTU: $mtu - status: $status")
+                gatt.discoverServices()
+            }
+            else -> {
+                onFailure()
+                gatt.disconnect()
+            }
+        }
     }
 
     override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {

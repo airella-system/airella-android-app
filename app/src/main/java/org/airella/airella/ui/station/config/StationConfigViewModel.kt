@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.airella.airella.data.common.BluetoothCallback
+import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log

@@ -23,7 +23,6 @@ class RegisterActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_register)
 
-        val username = findViewById<EditText>(R.id.username)
         val email = findViewById<EditText>(R.id.email)
         val password = findViewById<EditText>(R.id.password)
         val passwordConfirm = findViewById<EditText>(R.id.password_confirm)
@@ -32,10 +31,6 @@ class RegisterActivity : AppCompatActivity() {
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         registerViewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
-
-        registerViewModel.usernameError.observe(this, Observer {
-            username.error = it?.let { getString(it) }
-        })
 
         registerViewModel.emailError.observe(this, Observer {
             email.error = it?.let { getString(it) }
@@ -67,11 +62,6 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         })
-
-
-        username.afterTextChanged {
-            registerViewModel.usernameChanged(username.text.toString())
-        }
 
         email.afterTextChanged {
             registerViewModel.emailChanged(email.text.toString())

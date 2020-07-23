@@ -14,7 +14,7 @@ interface AuthApi {
     fun login(@Body loginData: LoginData): Single<ApiResponse<LoginResponse>>
 
     @POST("register-user")
-    fun register(@Body registerData: RegisterData): Single<ApiResponse<LoginResponse>>
+    fun register(@Body registerData: RegisterData): Single<ApiResponse<Any>>
 
     companion object {
 

@@ -10,7 +10,6 @@ import org.airella.airella.data.model.Result
 import org.airella.airella.data.model.auth.LoginResponse
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.AuthUtils
-import retrofit2.HttpException
 
 class LoginViewModel : ViewModel() {
 
@@ -40,16 +39,6 @@ class LoginViewModel : ViewModel() {
                     when (error) {
                         is ApiException ->
                             _loginResult.value = Result.Error(error.message)
-                        is HttpException -> {
-                            when (error.code()) {
-                                401, 403 ->
-                                    _loginResult.value =
-                                        Result.Error(context.getString(R.string.login_failed_error))
-                                else ->
-                                    _loginResult.value =
-                                        Result.Error(context.getString(R.string.internet_error))
-                            }
-                        }
                         else ->
                             _loginResult.value =
                                 Result.Error(context.getString(R.string.internet_error))

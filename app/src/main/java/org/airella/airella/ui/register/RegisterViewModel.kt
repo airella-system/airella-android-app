@@ -9,18 +9,15 @@ import org.airella.airella.data.api.ApiException
 import org.airella.airella.data.model.Result
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.AuthUtils
-import retrofit2.HttpException
 
 class RegisterViewModel() : ViewModel() {
 
     private val authService = AuthService
 
-    private var username: String = ""
     private var email: String = ""
     private var password: String = ""
     private var passwordConfirm: String = ""
 
-    val usernameError = MutableLiveData<Int>(null)
     val emailError = MutableLiveData<Int>(null)
     val passwordError = MutableLiveData<Int>(null)
     val passwordConfirmError = MutableLiveData<Int>(null)
@@ -34,7 +31,7 @@ class RegisterViewModel() : ViewModel() {
         if (!isFormValid())
             return
 
-        authService.register(username, email, password)
+        authService.register(email, password)
             .subscribe(
                 {
                     _registerResult.value = Result.Success(true)
@@ -43,21 +40,11 @@ class RegisterViewModel() : ViewModel() {
                     when (error) {
                         is ApiException ->
                             _registerResult.value = Result.Error(error.message)
-                        is HttpException ->
-                            _registerResult.value = Result.Error(error.message())
                         else ->
                             _registerResult.value =
                                 Result.Error(context.getString(R.string.internet_error))
                     }
                 })
-    }
-
-    fun usernameChanged(username: String) {
-        this.username = username
-        if (!AuthUtils.isUserNameValid(username)) {
-            usernameError.value = R.string.invalid_username
-        }
-        validateForm()
     }
 
     fun emailChanged(email: String) {
@@ -90,8 +77,7 @@ class RegisterViewModel() : ViewModel() {
         }
     }
 
-    private fun isFormValid() = AuthUtils.isUserNameValid(username) &&
-            AuthUtils.isEmailValid(email) &&
+    private fun isFormValid() = AuthUtils.isEmailValid(email) &&
             AuthUtils.isPasswordValid(password) &&
             AuthUtils.isPasswordConfirmValid(password, passwordConfirm)
 
