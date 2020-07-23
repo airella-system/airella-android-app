@@ -54,6 +54,22 @@
             android:text="@string/action_wifi_config" />
 
         <Button
+            android:id="@+id/address_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="16dp"
+            android:text="Set up address" />
+
+        <Button
+            android:id="@+id/location_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="16dp"
+            android:text="Set up location" />
+
+        <Button
             android:id="@+id/change_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

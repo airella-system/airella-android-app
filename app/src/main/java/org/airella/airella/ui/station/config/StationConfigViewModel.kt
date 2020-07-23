@@ -1,8 +1,6 @@
 package org.airella.airella.ui.station.config
 
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +10,7 @@ import org.airella.airella.data.common.BluetoothCallback
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
+import java.util.*
 
 class StationConfigViewModel : ViewModel() {
 
@@ -23,165 +22,98 @@ class StationConfigViewModel : ViewModel() {
 
     fun saveWiFiConfig(context: Context, wifiSSID: String, wifiPassword: String) {
         Log.i("Save wifi config start")
-        setStatus("Connecting")
-        btDevice.connectGatt(context, false, object : BluetoothCallback() {
-            override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-                super.onConnectionStateChange(gatt, status, newState)
-                if (newState == BluetoothGatt.STATE_CONNECTED) {
-                    setStatus("Connected")
-                } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
-                    setStatus("Failed to connect")
-                }
-            }
+        val characteristicWriteQueue = LinkedList(
+            listOf(
+                Pair(Config.WIFI_SSID_UUID, wifiSSID),
+                Pair(Config.WIFI_PASSWORD_UUID, wifiPassword),
+                Pair(Config.REFRESH_ACTION_UUID, Config.WIFI_ACTION),
+                Pair(Config.API_URL_UUID, "http://airella.cyfrogen.com/api"),
+                Pair(Config.WIFI_SSID_UUID, wifiSSID),
+                Pair(Config.REGISTRATION_TOKEN_UUID, AuthService.user!!.stationRegistrationToken),
+                Pair(Config.REFRESH_ACTION_UUID, Config.REGISTER_ACTION)
+            )
+        )
+        btDevice.connectGatt(context, false, object : BluetoothCallback(characteristicWriteQueue) {
+            override fun onConnected() = setStatus("Connected")
+            override fun onFailToConnect() = setStatus("Failed to connect")
+            override fun onProgress() = setStatus("Configuring in progress...")
+            override fun onSuccess() = setStatus("Success")
+            override fun onFailure() = setStatus("Configuration failed")
+        })
+    }
 
-            override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-                super.onServicesDiscovered(gatt, status)
-                if (gattService == null) {
-                    setStatus("Configuring failed")
-                    return
-                }
-                ssidCharacteristic.setValue(wifiSSID)
-                gatt.writeCharacteristic(ssidCharacteristic)
-            }
+    fun saveAddress(
+        context: Context,
+        stationName: String,
+        country: String,
+        city: String,
+        street: String,
+        houseNo: String
+    ) {
+        Log.i("Save address start")
+        val characteristicWriteQueue = LinkedList(
+            listOf(
+                Pair(Config.STATION_NAME_UUID, stationName),
+                Pair(Config.STATION_COUNTRY_UUID, country),
+                Pair(Config.STATION_CITY_UUID, city),
+                Pair(Config.STATION_STREET_UUID, street),
+                Pair(Config.STATION_HOUSE_NO_UUID, houseNo),
+                Pair(Config.REFRESH_ACTION_UUID, Config.ADDRESS_ACTION)
+            )
+        )
+        btDevice.connectGatt(context, false,
+            object : BluetoothCallback(characteristicWriteQueue) {
+                override fun onConnected() = setStatus("Connected")
+                override fun onFailToConnect() = setStatus("Failed to connect")
+                override fun onProgress() = setStatus("Saving address in progress...")
+                override fun onSuccess() = setStatus("Success")
+                override fun onFailure() = setStatus("Saving address failed")
+            })
+    }
 
-            override fun onCharacteristicWrite(
-                gatt: BluetoothGatt,
-                characteristic: BluetoothGattCharacteristic,
-                status: Int
-            ) {
-                super.onCharacteristicWrite(gatt, characteristic, status)
-                Log.i("${characteristic.uuid}, $status")
-                when (status) {
-                    BluetoothGatt.GATT_SUCCESS -> {
-                        when (characteristic.uuid) {
-                            Config.SSID_UUID -> {
-                                passCharacteristic.setValue(wifiPassword)
-                                gatt.writeCharacteristic(passCharacteristic)
-                                setStatus("Configuring in progress: 20%")
-                            }
-                            Config.WIFI_PASSWORD_UUID -> {
-                                registrationTokenCharacteristic.setValue(AuthService.user!!.stationRegistrationToken)
-                                gatt.writeCharacteristic(registrationTokenCharacteristic)
-                                setStatus("Configuring in progress: 40%")
-                            }
-                            Config.REGISTRATION_TOKEN_UUID -> {
-                                apiUrlCharacteristic.setValue("http://airella.cyfrogen.com/api")
-                                gatt.writeCharacteristic(apiUrlCharacteristic)
-                                setStatus("Configuring in progress: 60%")
-                            }
-                            Config.API_URL_UUID -> {
-                                refreshDeviceCharacteristic.setValue("")
-                                gatt.writeCharacteristic(refreshDeviceCharacteristic)
-                                setStatus("Configuring in progress: 80%")
-                            }
-                            Config.REFRESH_DEVICE_UUID -> {
-                                setStatus("Configuring successful")
-                                gatt.disconnect()
-                            }
-                        }
-                    }
-                    else -> {
-                        setStatus("Configuring failed")
-                        gatt.disconnect()
-                    }
-                }
-            }
+    fun saveLocation(context: Context, latitude: String, longitude: String) {
+        Log.i("Save location start")
+        val characteristicWriteQueue = LinkedList(
+            listOf(
+                Pair(Config.LOCATION_LATITUDE_UUID, latitude),
+                Pair(Config.LOCATION_LONGITUDE_UUID, longitude),
+                Pair(Config.LOCATION_MANUALLY_UUID, "1"),
+                Pair(Config.REFRESH_ACTION_UUID, Config.LOCATION_ACTION)
+            )
+        )
+        btDevice.connectGatt(context, false, object : BluetoothCallback(characteristicWriteQueue) {
+            override fun onConnected() = setStatus("Connected")
+            override fun onFailToConnect() = setStatus("Failed to connect")
+            override fun onProgress() = setStatus("Saving location in progress...")
+            override fun onSuccess() = setStatus("Success")
+            override fun onFailure() = setStatus("Saving location failed")
         })
     }
 
     fun saveStationPassword(context: Context, newPassword: String) {
         Log.i("Change password start")
         Log.i("New password: $newPassword")
-        setStatus("Connecting")
-        btDevice.connectGatt(context, false, object : BluetoothCallback() {
-            override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-                super.onConnectionStateChange(gatt, status, newState)
-                if (newState != BluetoothGatt.STATE_CONNECTED && newState != BluetoothGatt.STATE_DISCONNECTED) {
-                    Log.w("Failed to connect")
-                }
-            }
-
-            override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-                super.onServicesDiscovered(gatt, status)
-                if (gattService == null) {
-                    setStatus("Connecting failed")
-                    return
-                }
-                setStatus("Changing password...")
-                devicePasswordCharacteristic.setValue(newPassword)
-                gatt.writeCharacteristic(devicePasswordCharacteristic)
-            }
-
-            override fun onCharacteristicWrite(
-                gatt: BluetoothGatt,
-                characteristic: BluetoothGattCharacteristic,
-                status: Int
-            ) {
-                super.onCharacteristicWrite(gatt, characteristic, status)
-                Log.i("${characteristic.uuid}, $status")
-                when (status) {
-                    BluetoothGatt.GATT_SUCCESS -> {
-                        when (characteristic.uuid) {
-                            Config.DEVICE_PASSWORD_UUID -> {
-                                setStatus("Saving...")
-                                refreshDeviceCharacteristic.setValue("")
-                                gatt.writeCharacteristic(refreshDeviceCharacteristic)
-                            }
-                            Config.REFRESH_DEVICE_UUID -> {
-                                setStatus("Change password successful")
-                                gatt.disconnect()
-                            }
-                        }
-                    }
-                    else -> {
-                        setStatus("Change password failed")
-                        gatt.disconnect()
-                    }
-                }
-            }
-        })
+        setStatus("Not implemented")
+//        val characteristicWriteQueue = LinkedList<Pair<UUID, String>>().apply {
+//            add(Pair(Config.LOCATION_LATITUDE_UUID, newPassword))
+//            add(Pair(Config.REFRESH_DEVICE_UUID, "location"))
+//        }
+//        btDevice.connectGatt(context, false, object : BluetoothCallback() {
+//        })
     }
 
     fun hardResetDevice(context: Context) {
         Log.i("Hard reset started")
         setStatus("Connecting")
-        btDevice.connectGatt(context, false, object : BluetoothCallback() {
-            override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-                super.onConnectionStateChange(gatt, status, newState)
-                if (newState != BluetoothGatt.STATE_CONNECTED && newState != BluetoothGatt.STATE_DISCONNECTED) {
-                    Log.w("Failed to connect")
-                }
-            }
+        val characteristicWriteQueue = LinkedList(listOf(Pair(Config.CLEAR_DATA_UUID, "")))
 
-            override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-                super.onServicesDiscovered(gatt, status)
-                if (gattService == null) {
-                    setStatus("Connecting failed")
-                    return
-                }
-                clearDataCharacteristic.setValue("")
-                gatt.writeCharacteristic(clearDataCharacteristic)
-            }
-
-            override fun onCharacteristicWrite(
-                gatt: BluetoothGatt,
-                characteristic: BluetoothGattCharacteristic,
-                status: Int
-            ) {
-                super.onCharacteristicWrite(gatt, characteristic, status)
-                Log.i("${characteristic.uuid}, $status")
-                when (status) {
-                    BluetoothGatt.GATT_SUCCESS -> {
-                        setStatus("Hard reset successful")
-                        gatt.disconnect()
-                    }
-                    else -> {
-                        setStatus("Hard reset failed")
-                        gatt.disconnect()
-                    }
-                }
-            }
-        })
+        btDevice.connectGatt(context,
+            false,
+            object : BluetoothCallback(characteristicWriteQueue) {
+                override fun onFailToConnect() = setStatus("Failed to connect")
+                override fun onSuccess() = setStatus("Hard reset successful")
+                override fun onFailure() = setStatus("Hard reset failed")
+            })
     }
 
     private val mainThreadHandler = Handler(Looper.getMainLooper())
