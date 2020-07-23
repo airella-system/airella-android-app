@@ -23,12 +23,16 @@ fun Single<ApiResponse<Any>>.isSuccess(): Single<Boolean> =
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext {
             if (it is HttpException) {
-                val type = Types.newParameterizedType(ApiResponse::class.java, Any::class.java)
-                val adapter: JsonAdapter<ApiResponse<Any>> = Moshi.Builder().build().adapter(type)
-                val response =
-                    it.response()?.errorBody()?.string()?.let { body -> adapter.fromJson(body) }
-                if (response != null) {
-                    return@onErrorResumeNext Single.just(response)
+                try {
+                    val type = Types.newParameterizedType(ApiResponse::class.java, Any::class.java)
+                    val adapter: JsonAdapter<ApiResponse<Any>> =
+                        Moshi.Builder().build().adapter(type)
+                    val response =
+                        it.response()?.errorBody()?.string()?.let { body -> adapter.fromJson(body) }
+                    if (response != null) {
+                        return@onErrorResumeNext Single.just(response)
+                    }
+                } catch (_: Throwable) {
                 }
             }
             return@onErrorResumeNext Single.error(it)
@@ -60,12 +64,15 @@ inline fun <reified T> Single<ApiResponse<T>>.getResponse(): Single<T> =
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext {
             if (it is HttpException) {
-                val type = Types.newParameterizedType(ApiResponse::class.java, T::class.java)
-                val adapter: JsonAdapter<ApiResponse<T>> = Moshi.Builder().build().adapter(type)
-                val response =
-                    it.response()?.errorBody()?.string()?.let { body -> adapter.fromJson(body) }
-                if (response != null) {
-                    return@onErrorResumeNext Single.just(response)
+                try {
+                    val type = Types.newParameterizedType(ApiResponse::class.java, T::class.java)
+                    val adapter: JsonAdapter<ApiResponse<T>> = Moshi.Builder().build().adapter(type)
+                    val response =
+                        it.response()?.errorBody()?.string()?.let { body -> adapter.fromJson(body) }
+                    if (response != null) {
+                        return@onErrorResumeNext Single.just(response)
+                    }
+                } catch (_: Throwable) {
                 }
             }
             return@onErrorResumeNext Single.error(it)
