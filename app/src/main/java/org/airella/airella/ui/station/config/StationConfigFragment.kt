@@ -7,7 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +23,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_station_config.*
@@ -31,6 +36,8 @@ import org.airella.airella.utils.Log
 class StationConfigFragment : Fragment() {
 
     private val toast by lazy { Toast.makeText(requireContext(), "", Toast.LENGTH_LONG) }
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val btBondBroadcastReceiver = object : BroadcastReceiver() {
 
@@ -62,6 +69,9 @@ class StationConfigFragment : Fragment() {
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
 
         updateBondState()
 
@@ -125,17 +135,7 @@ class StationConfigFragment : Fragment() {
             val autoLoc: CheckBox = form.findViewById(R.id.locationAuto)
             val latitude: TextInputEditText = form.findViewById(R.id.latitude)
             val longitude: TextInputEditText = form.findViewById(R.id.longitude)
-            autoLoc.setOnCheckedChangeListener { _, isChecked ->
-                form.findViewById<TextInputLayout>(R.id.latitudeLayout).isEnabled = !isChecked
-                form.findViewById<TextInputLayout>(R.id.longitudeLayout).isEnabled = !isChecked
-                latitude.isEnabled = !isChecked
-                longitude.isEnabled = !isChecked
-                if (isChecked) {
-                    latitude.setText("50.064")
-                    longitude.setText("19.944")
-                }
-            }
-            AlertDialog.Builder(requireContext())
+            val dialog = AlertDialog.Builder(requireContext())
                 .setMessage("Location config")
                 .setView(form)
                 .setPositiveButton(R.string.action_save) { _, _ ->
@@ -146,7 +146,44 @@ class StationConfigFragment : Fragment() {
                     )
                 }
                 .setNegativeButton(R.string.cancel, null)
-                .show()
+                .create()
+            autoLoc.setOnCheckedChangeListener { _, isChecked ->
+                form.findViewById<TextInputLayout>(R.id.latitudeLayout).isEnabled = !isChecked
+                form.findViewById<TextInputLayout>(R.id.longitudeLayout).isEnabled = !isChecked
+                latitude.isEnabled = !isChecked
+                longitude.isEnabled = !isChecked
+                if (latitude.text.toString().toDoubleOrNull() == null) {
+                    latitude.setText("")
+                }
+                if (longitude.text.toString().toDoubleOrNull() == null) {
+                    longitude.setText("")
+                }
+                if (isChecked) {
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                        if (location != null) {
+                            latitude.setText(location.latitude.toString())
+                            longitude.setText(location.longitude.toString())
+                        } else {
+                            latitude.setText("Can't get location")
+                            longitude.setText("Please enter location manually")
+                        }
+                    }
+                }
+            }
+            dialog.show()
+            val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            okButton.isEnabled = false
+            val textWatcher: TextWatcher = object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    okButton.isEnabled = latitude.text.toString().toDoubleOrNull() != null &&
+                            longitude.text.toString().toDoubleOrNull() != null
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
+                override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
+            }
+            latitude.addTextChangedListener(textWatcher)
+            longitude.addTextChangedListener(textWatcher)
         }
 
         register_station.setOnClickListener {
