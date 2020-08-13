@@ -24,6 +24,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.R
+import org.airella.airella.data.service.AuthService
+import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 
 class StationConfigFragment : Fragment() {
@@ -100,14 +102,12 @@ class StationConfigFragment : Fragment() {
                 .setMessage("Address config")
                 .setView(form)
                 .setPositiveButton(R.string.action_save) { _, _ ->
-                    val stationName = form.findViewById<EditText>(R.id.stationName).text.toString()
                     val country = form.findViewById<EditText>(R.id.country).text.toString()
                     val city = form.findViewById<EditText>(R.id.city).text.toString()
                     val street = form.findViewById<EditText>(R.id.street).text.toString()
                     val houseNo = form.findViewById<EditText>(R.id.houseNo).text.toString()
                     viewModel.saveAddress(
                         requireContext(),
-                        stationName,
                         country,
                         city,
                         street,
@@ -144,6 +144,23 @@ class StationConfigFragment : Fragment() {
                         latitude.text.toString(),
                         longitude.text.toString()
                     )
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+
+        register_station.setOnClickListener {
+            val form =
+                requireActivity().layoutInflater.inflate(R.layout.view_device_register_config, null)
+            form.findViewById<EditText>(R.id.apiUrl).setText(Config.DEFAULT_API_URL)
+            form.findViewById<EditText>(R.id.registrationToken)
+                .setText(AuthService.user!!.stationRegistrationToken)
+            AlertDialog.Builder(requireContext())
+                .setMessage("Wifi config")
+                .setView(form)
+                .setPositiveButton(R.string.action_save) { _, _ ->
+                    val stationName = form.findViewById<EditText>(R.id.stationName).text.toString()
+                    viewModel.registerStation(requireContext(), stationName)
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
@@ -221,14 +238,6 @@ class StationConfigFragment : Fragment() {
         location_config.isEnabled = viewModel.isBonded()
         change_password.isEnabled = viewModel.isBonded()
         hard_reset.isEnabled = viewModel.isBonded()
-
-//        bond_device.isEnabled = false
-//
-//        wifi_config.isEnabled = true
-//        address_config.isEnabled = true
-//        location_config.isEnabled = true
-//        change_password.isEnabled = true
-//        hard_reset.isEnabled = true
     }
 
 }

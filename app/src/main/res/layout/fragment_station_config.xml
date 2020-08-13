@@ -70,6 +70,14 @@
             android:text="Set up location" />
 
         <Button
+            android:id="@+id/register_station"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="16dp"
+            android:text="Register station" />
+
+        <Button
             android:id="@+id/change_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

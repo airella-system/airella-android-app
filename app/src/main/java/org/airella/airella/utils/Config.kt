@@ -29,6 +29,8 @@ object Config {
     const val WIFI_ACTION = "wifi"
     const val ADDRESS_ACTION = "address"
     const val LOCATION_ACTION = "location"
+
+    const val DEFAULT_API_URL = "http://airella.cyfrogen.com/api"
     
 
     private fun uuid(uuid: String): UUID = UUID.fromString(uuid)

@@ -26,11 +26,7 @@ class StationConfigViewModel : ViewModel() {
             listOf(
                 Pair(Config.WIFI_SSID_UUID, wifiSSID),
                 Pair(Config.WIFI_PASSWORD_UUID, wifiPassword),
-                Pair(Config.REFRESH_ACTION_UUID, Config.WIFI_ACTION),
-                Pair(Config.API_URL_UUID, "http://airella.cyfrogen.com/api"),
-                Pair(Config.WIFI_SSID_UUID, wifiSSID),
-                Pair(Config.REGISTRATION_TOKEN_UUID, AuthService.user!!.stationRegistrationToken),
-                Pair(Config.REFRESH_ACTION_UUID, Config.REGISTER_ACTION)
+                Pair(Config.REFRESH_ACTION_UUID, Config.WIFI_ACTION)
             )
         )
         btDevice.connectGatt(context, false, object : BluetoothCallback(characteristicWriteQueue) {
@@ -44,7 +40,6 @@ class StationConfigViewModel : ViewModel() {
 
     fun saveAddress(
         context: Context,
-        stationName: String,
         country: String,
         city: String,
         street: String,
@@ -53,7 +48,6 @@ class StationConfigViewModel : ViewModel() {
         Log.i("Save address start")
         val characteristicWriteQueue = LinkedList(
             listOf(
-                Pair(Config.STATION_NAME_UUID, stationName),
                 Pair(Config.STATION_COUNTRY_UUID, country),
                 Pair(Config.STATION_CITY_UUID, city),
                 Pair(Config.STATION_STREET_UUID, street),
@@ -87,6 +81,25 @@ class StationConfigViewModel : ViewModel() {
             override fun onProgress() = setStatus("Saving location in progress...")
             override fun onSuccess() = setStatus("Success")
             override fun onFailure() = setStatus("Saving location failed")
+        })
+    }
+
+    fun registerStation(context: Context, stationName: String) {
+        Log.i("Register station start")
+        val characteristicWriteQueue = LinkedList(
+            listOf(
+                Pair(Config.STATION_NAME_UUID, stationName),
+                Pair(Config.REGISTRATION_TOKEN_UUID, AuthService.user!!.stationRegistrationToken),
+                Pair(Config.API_URL_UUID, Config.DEFAULT_API_URL),
+                Pair(Config.REFRESH_ACTION_UUID, Config.REGISTER_ACTION)
+            )
+        )
+        btDevice.connectGatt(context, false, object : BluetoothCallback(characteristicWriteQueue) {
+            override fun onConnected() = setStatus("Connected")
+            override fun onFailToConnect() = setStatus("Failed to connect")
+            override fun onProgress() = setStatus("Configuring in progress...")
+            override fun onSuccess() = setStatus("Success")
+            override fun onFailure() = setStatus("Registration failed")
         })
     }
 

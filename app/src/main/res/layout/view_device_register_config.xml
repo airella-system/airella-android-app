@@ -5,7 +5,7 @@
     android:layout_width="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/countryLayout"
+        android:id="@+id/stationNameLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -17,18 +17,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/country"
+            android:id="@+id/stationName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="Country"
+            android:hint="Station name"
             android:inputType="text"
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/cityLayout"
+        android:id="@+id/apiUrlLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,21 +37,21 @@
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/countryLayout">
+        app:layout_constraintTop_toBottomOf="@id/stationNameLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/city"
+            android:id="@+id/apiUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
 
-            android:hint="City"
-            android:inputType="text"
+            android:hint="Api url"
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/streetLayout"
+        android:id="@+id/registrationTokenLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -60,38 +60,15 @@
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cityLayout">
+        app:layout_constraintTop_toBottomOf="@id/apiUrlLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/street"
+            android:id="@+id/registrationToken"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
 
-            android:hint="Street"
-            android:inputType="text"
-            android:selectAllOnFocus="true" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/houseNoLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/streetLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/houseNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:hint="House No"
-            android:inputType="text"
+            android:hint="Registration token"
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
