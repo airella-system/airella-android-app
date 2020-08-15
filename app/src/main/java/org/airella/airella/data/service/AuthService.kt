@@ -6,6 +6,7 @@ import org.airella.airella.data.api.auth.AuthApi
 import org.airella.airella.data.api.auth.LoginData
 import org.airella.airella.data.api.auth.RegisterData
 import org.airella.airella.data.api.getResponse
+import org.airella.airella.data.api.isSuccess
 import org.airella.airella.data.model.auth.LoginResponse
 import org.airella.airella.utils.Log
 
@@ -57,9 +58,9 @@ object AuthService {
             }
     }
 
-    fun register(username: String, email: String, password: String): Single<Boolean> {
+    fun register(email: String, password: String): Single<Boolean> {
         return loginApi.register(RegisterData(email, password))
-            .getResponse()
+            .isSuccess()
             .map { true }
     }
 

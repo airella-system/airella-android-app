@@ -5,7 +5,7 @@
     android:id="@+id/addsensor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.addstation.btlist.BTListFragment">
+    tools:context=".ui.station.btlist.BTListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bt_list"
@@ -27,5 +27,21 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/location_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:text="@string/location_required_rejected"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

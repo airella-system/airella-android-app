@@ -12,7 +12,7 @@ object AuthUtils {
     }
 
     fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+        return password.length >= 6
     }
 
     fun isPasswordConfirmValid(password: String, passwordConfirm: String): Boolean {

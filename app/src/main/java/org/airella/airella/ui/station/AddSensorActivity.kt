@@ -1,14 +1,11 @@
-package org.airella.airella.ui.addstation
+package org.airella.airella.ui.station
 
-import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import org.airella.airella.R
-import org.airella.airella.ui.addstation.btlist.BTListFragment
+import org.airella.airella.ui.station.btlist.BTListFragment
 
 class AddSensorActivity : AppCompatActivity() {
-
-    lateinit var selectedBtDevice: BluetoothDevice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -49,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
         })
 
         loginViewModel.loginResult.observe(this, Observer {
-            val loginResult: Result<LoginResponse, Int> = it ?: return@Observer
+            val loginResult: Result<LoginResponse, String> = it ?: return@Observer
 
             loading.visibility = View.GONE
             when (loginResult) {
@@ -76,14 +75,14 @@ class LoginActivity : AppCompatActivity() {
         password.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE ->
-                    loginViewModel.login()
+                    loginViewModel.login(this)
             }
             false
         }
 
         loginButton.setOnClickListener {
             loading.visibility = View.VISIBLE
-            loginViewModel.login()
+            loginViewModel.login(this)
         }
 
         registerButton.setOnClickListener {
@@ -104,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
+    private fun showLoginFailed(errorString: String) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
 }
