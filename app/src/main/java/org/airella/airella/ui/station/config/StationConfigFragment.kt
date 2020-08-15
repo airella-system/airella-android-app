@@ -197,24 +197,39 @@ class StationConfigFragment : Fragment() {
                 .setView(form)
                 .setPositiveButton(R.string.action_save) { _, _ ->
                     val stationName = form.findViewById<EditText>(R.id.stationName).text.toString()
-                    viewModel.registerStation(requireContext(), stationName)
+                    val apiUrl = form.findViewById<EditText>(R.id.apiUrl).text.toString()
+                    viewModel.registerStation(requireContext(), stationName, apiUrl)
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
         }
 
-        change_password.setOnClickListener {
-            val form = requireActivity().layoutInflater.inflate(R.layout.view_device_password, null)
+        test_chunk.setOnClickListener {
+            val form =
+                requireActivity().layoutInflater.inflate(R.layout.view_device_test_chunk, null)
             AlertDialog.Builder(requireContext())
-                .setMessage("Password change")
+                .setMessage("Test chunk")
                 .setView(form)
                 .setPositiveButton(R.string.action_save) { _, _ ->
-                    val newPass = form.findViewById<EditText>(R.id.password).text.toString()
-                    viewModel.saveStationPassword(requireContext(), newPass)
+                    val testString = form.findViewById<EditText>(R.id.chunk_test).text.toString()
+                    viewModel.testChunk(requireContext(), testString)
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
         }
+
+//        change_password.setOnClickListener {
+//            val form = requireActivity().layoutInflater.inflate(R.layout.view_device_password, null)
+//            AlertDialog.Builder(requireContext())
+//                .setMessage("Password change")
+//                .setView(form)
+//                .setPositiveButton(R.string.action_save) { _, _ ->
+//                    val newPass = form.findViewById<EditText>(R.id.password).text.toString()
+//                    viewModel.saveStationPassword(requireContext(), newPass)
+//                }
+//                .setNegativeButton(R.string.cancel, null)
+//                .show()
+//        }
 
         hard_reset.setOnClickListener {
             AlertDialog.Builder(requireContext())
@@ -273,7 +288,8 @@ class StationConfigFragment : Fragment() {
         wifi_config.isEnabled = viewModel.isBonded()
         address_config.isEnabled = viewModel.isBonded()
         location_config.isEnabled = viewModel.isBonded()
-        change_password.isEnabled = viewModel.isBonded()
+        test_chunk.isEnabled = viewModel.isBonded()
+//        change_password.isEnabled = viewModel.isBonded()
         hard_reset.isEnabled = viewModel.isBonded()
     }
 

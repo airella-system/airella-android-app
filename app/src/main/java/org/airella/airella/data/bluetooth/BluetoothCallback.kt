@@ -7,19 +7,36 @@ import android.bluetooth.BluetoothGattService
 import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import java.util.*
+import kotlin.math.ceil
 
-open class BluetoothCallback(
-    private val characteristicWriteRequests: Queue<Pair<UUID, String>>
-) : BluetoothGattCallback() {
+open class BluetoothCallback(requests: Queue<Pair<UUID, String>>) : BluetoothGattCallback() {
 
-    private val mtu = 128
+    private val mtu = 20
 
     private var gattService: BluetoothGattService? = null
+
+    private val characteristicWriteRequests: Queue<Pair<UUID, ByteArray>>
+
+    init {
+        characteristicWriteRequests = LinkedList()
+        requests.forEach {
+            var bytes = it.second.toByteArray()
+            val chunkCount: Int = ceil((bytes.size + 1) / mtu.toDouble()).toInt()
+            bytes = byteArrayOf(chunkCount.toByte()) + bytes
+            while (bytes.isNotEmpty()) {
+                val endIndex = if (bytes.size > mtu) mtu else bytes.size
+                val chunk = bytes.copyOfRange(0, endIndex)
+                bytes = bytes.copyOfRange(endIndex, bytes.size)
+                characteristicWriteRequests.add(Pair(it.first, chunk))
+            }
+        }
+    }
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
         if (newState == BluetoothGatt.STATE_CONNECTED) {
-            gatt.requestMtu(mtu)
+//            gatt.requestMtu(mtu)
+            gatt.discoverServices()
             onConnected()
         } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
             onFailToConnect()
@@ -27,19 +44,19 @@ open class BluetoothCallback(
         }
     }
 
-    override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
-        super.onMtuChanged(gatt, mtu, status)
-        when (status) {
-            BluetoothGatt.GATT_SUCCESS -> {
-                Log.i("New MTU: $mtu - status: $status")
-                gatt.discoverServices()
-            }
-            else -> {
-                onFailure()
-                gatt.disconnect()
-            }
-        }
-    }
+//    override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
+//        super.onMtuChanged(gatt, mtu, status)
+//        when (status) {
+//            BluetoothGatt.GATT_SUCCESS -> {
+//                Log.i("New MTU: $mtu - status: $status")
+//                gatt.discoverServices()
+//            }
+//            else -> {
+//                onFailure()
+//                gatt.disconnect()
+//            }
+//        }
+//    }
 
     override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
         super.onServicesDiscovered(gatt, status)
@@ -58,7 +75,7 @@ open class BluetoothCallback(
         status: Int
     ) {
         super.onCharacteristicWrite(gatt, characteristic, status)
-        Log.i("${characteristic.uuid}, $status")
+        Log.i("Saving ${characteristic.uuid} finished with status " + if (status == 0) "Success" else "Failed with code $status")
         when (status) {
             BluetoothGatt.GATT_SUCCESS -> {
                 saveNextCharacteristic(gatt)
@@ -90,13 +107,18 @@ open class BluetoothCallback(
         }
     }
 
-    private fun saveCharacteristic(gatt: BluetoothGatt, request: Pair<UUID, String>) {
+    private fun saveCharacteristic(gatt: BluetoothGatt, request: Pair<UUID, ByteArray>) {
         saveCharacteristic(gatt, request.first, request.second)
     }
 
-    private fun saveCharacteristic(gatt: BluetoothGatt, characteristicUUID: UUID, value: String) {
+    private fun saveCharacteristic(
+        gatt: BluetoothGatt,
+        characteristicUUID: UUID,
+        value: ByteArray
+    ) {
         val characteristic = gattService!!.getCharacteristic(characteristicUUID)
-        characteristic.setValue(value)
+        Log.d("Saving ${String(value)} to $characteristicUUID")
+        characteristic.value = value
         gatt.writeCharacteristic(characteristic)
     }
 

@@ -84,13 +84,13 @@ class StationConfigViewModel : ViewModel() {
         })
     }
 
-    fun registerStation(context: Context, stationName: String) {
+    fun registerStation(context: Context, stationName: String, apiUrl: String) {
         Log.i("Register station start")
         val characteristicWriteQueue = LinkedList(
             listOf(
                 Pair(Config.STATION_NAME_UUID, stationName),
                 Pair(Config.REGISTRATION_TOKEN_UUID, AuthService.user!!.stationRegistrationToken),
-                Pair(Config.API_URL_UUID, Config.DEFAULT_API_URL),
+                Pair(Config.API_URL_UUID, apiUrl),
                 Pair(Config.REFRESH_ACTION_UUID, Config.REGISTER_ACTION)
             )
         )
@@ -103,17 +103,17 @@ class StationConfigViewModel : ViewModel() {
         })
     }
 
-    fun saveStationPassword(context: Context, newPassword: String) {
-        Log.i("Change password start")
-        Log.i("New password: $newPassword")
-        setStatus("Not implemented")
-//        val characteristicWriteQueue = LinkedList<Pair<UUID, String>>().apply {
-//            add(Pair(Config.LOCATION_LATITUDE_UUID, newPassword))
-//            add(Pair(Config.REFRESH_DEVICE_UUID, "location"))
-//        }
-//        btDevice.connectGatt(context, false, object : BluetoothCallback() {
-//        })
-    }
+//    fun saveStationPassword(context: Context, newPassword: String) {
+//        Log.i("Change password start")
+//        Log.i("New password: $newPassword")
+//        setStatus("Not implemented")
+////        val characteristicWriteQueue = LinkedList<Pair<UUID, String>>().apply {
+////            add(Pair(Config.LOCATION_LATITUDE_UUID, newPassword))
+////            add(Pair(Config.REFRESH_DEVICE_UUID, "location"))
+////        }
+////        btDevice.connectGatt(context, false, object : BluetoothCallback() {
+////        })
+//    }
 
     fun hardResetDevice(context: Context) {
         Log.i("Hard reset started")
@@ -126,6 +126,20 @@ class StationConfigViewModel : ViewModel() {
                 override fun onFailToConnect() = setStatus("Failed to connect")
                 override fun onSuccess() = setStatus("Hard reset successful")
                 override fun onFailure() = setStatus("Hard reset failed")
+            })
+    }
+
+    fun testChunk(context: Context, testString: String) {
+        Log.i("Test chunk")
+        setStatus("Connecting")
+        val characteristicWriteQueue = LinkedList(listOf(Pair(Config.TEST_CHUNK_UUID, testString)))
+
+        btDevice.connectGatt(context,
+            false,
+            object : BluetoothCallback(characteristicWriteQueue) {
+                override fun onFailToConnect() = setStatus("Failed to connect")
+                override fun onSuccess() = setStatus("Failed")
+                override fun onFailure() = setStatus("Failed")
             })
     }
 
