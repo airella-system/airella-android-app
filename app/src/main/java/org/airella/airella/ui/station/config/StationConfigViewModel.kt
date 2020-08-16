@@ -138,7 +138,7 @@ class StationConfigViewModel : ViewModel() {
             false,
             object : BluetoothCallback(characteristicWriteQueue) {
                 override fun onFailToConnect() = setStatus("Failed to connect")
-                override fun onSuccess() = setStatus("Failed")
+                override fun onSuccess() = setStatus("Success")
                 override fun onFailure() = setStatus("Failed")
             })
     }
