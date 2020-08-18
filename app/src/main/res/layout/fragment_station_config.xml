@@ -86,14 +86,6 @@
         <!--            android:text="@string/action_change_password" />-->
 
         <Button
-            android:id="@+id/test_chunk"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="16dp"
-            android:text="Test chunk" />
-
-        <Button
             android:id="@+id/hard_reset"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

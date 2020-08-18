@@ -204,20 +204,6 @@ class StationConfigFragment : Fragment() {
                 .show()
         }
 
-        test_chunk.setOnClickListener {
-            val form =
-                requireActivity().layoutInflater.inflate(R.layout.view_device_test_chunk, null)
-            AlertDialog.Builder(requireContext())
-                .setMessage("Test chunk")
-                .setView(form)
-                .setPositiveButton(R.string.action_save) { _, _ ->
-                    val testString = form.findViewById<EditText>(R.id.chunk_test).text.toString()
-                    viewModel.testChunk(requireContext(), testString)
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
-        }
-
 //        change_password.setOnClickListener {
 //            val form = requireActivity().layoutInflater.inflate(R.layout.view_device_password, null)
 //            AlertDialog.Builder(requireContext())
@@ -288,7 +274,6 @@ class StationConfigFragment : Fragment() {
         wifi_config.isEnabled = viewModel.isBonded()
         address_config.isEnabled = viewModel.isBonded()
         location_config.isEnabled = viewModel.isBonded()
-        test_chunk.isEnabled = viewModel.isBonded()
 //        change_password.isEnabled = viewModel.isBonded()
         hard_reset.isEnabled = viewModel.isBonded()
     }

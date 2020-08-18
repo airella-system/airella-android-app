@@ -25,8 +25,6 @@ object Config {
     val REFRESH_ACTION_UUID = uuid("2ca7df70-42df-482e-81cf-468e0fcec5dc")
     val CLEAR_DATA_UUID = uuid("9023e6f3-223d-4c6c-bd39-ebca35d7e8d0")
 
-    val TEST_CHUNK_UUID = uuid("9023e6f3-223d-4c6c-bd39-ebca35d7e8d1")
-
     const val REGISTER_ACTION = "register"
     const val WIFI_ACTION = "wifi"
     const val ADDRESS_ACTION = "address"

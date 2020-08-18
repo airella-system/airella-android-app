@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
-import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.Config
@@ -141,29 +140,6 @@ class StationConfigViewModel : ViewModel() {
             override fun onFailToConnect() = setStatus("Failed to connect")
             override fun onSuccess() = setStatus("Hard reset successful")
             override fun onFailure() = setStatus("Hard reset failed")
-        })
-    }
-
-    fun testChunk(context: Context, testString: String) {
-        Log.i("Test chunk")
-        setStatus("Connecting")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
-            listOf(
-                WriteRequest(Config.TEST_CHUNK_UUID, testString),
-                ReadRequest(Config.TEST_CHUNK_UUID)
-            )
-        )
-        btDevice.connectGatt(context, false, object : BluetoothCallback(bluetoothRequests) {
-            override fun onFailToConnect() = setStatus("Failed to connect")
-            override fun onSuccess() = setStatus("Success")
-            override fun onFailure() = setStatus("Failed")
-            override fun onCharacteristicWrite(characteristicUUID: UUID) {
-                Log.w("Write successful")
-            }
-
-            override fun onCharacteristicRead(characteristicUUID: UUID, result: String) {
-                Log.w("Read successful: $result")
-            }
         })
     }
 
