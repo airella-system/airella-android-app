@@ -8,18 +8,19 @@ import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import java.util.*
 
-open class BluetoothCallback(
-    private val characteristicWriteRequests: Queue<Pair<UUID, String>>
-) : BluetoothGattCallback() {
+const val BT_MTU = 20
 
-    private val mtu = 128
+open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
+    BluetoothGattCallback() {
 
-    private var gattService: BluetoothGattService? = null
+    private lateinit var gattService: BluetoothGattService
+
+    private lateinit var currentRequest: BluetoothRequest
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
         if (newState == BluetoothGatt.STATE_CONNECTED) {
-            gatt.requestMtu(mtu)
+            gatt.discoverServices()
             onConnected()
         } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
             onFailToConnect()
@@ -27,28 +28,17 @@ open class BluetoothCallback(
         }
     }
 
-    override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
-        super.onMtuChanged(gatt, mtu, status)
-        when (status) {
-            BluetoothGatt.GATT_SUCCESS -> {
-                Log.i("New MTU: $mtu - status: $status")
-                gatt.discoverServices()
-            }
-            else -> {
-                onFailure()
-                gatt.disconnect()
-            }
-        }
-    }
 
     override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
         super.onServicesDiscovered(gatt, status)
         Log.i("Discovered services")
-        gattService = gatt.getService(Config.SERVICE_UUID)
-        if (gattService != null) {
-            saveNextCharacteristic(gatt)
-        } else {
-            onFailure()
+        gatt.getService(Config.SERVICE_UUID).let {
+            if (it != null) {
+                gattService = it
+                executeNextRequest(gatt)
+            } else {
+                onFailure()
+            }
         }
     }
 
@@ -58,10 +48,40 @@ open class BluetoothCallback(
         status: Int
     ) {
         super.onCharacteristicWrite(gatt, characteristic, status)
-        Log.i("${characteristic.uuid}, $status")
+        Log.i("Saving ${characteristic.uuid} finished with status " + if (status == 0) "Success" else "Failed with code $status")
         when (status) {
             BluetoothGatt.GATT_SUCCESS -> {
-                saveNextCharacteristic(gatt)
+                if (currentRequest.isFinished()) {
+                    onCharacteristicWrite(characteristic.uuid)
+                    executeNextRequest(gatt)
+                } else {
+                    currentRequest.execute(gatt, gattService)
+                }
+            }
+            else -> {
+                gatt.disconnect()
+                onFailure()
+            }
+        }
+    }
+
+    override fun onCharacteristicRead(
+        gatt: BluetoothGatt,
+        characteristic: BluetoothGattCharacteristic,
+        status: Int
+    ) {
+        super.onCharacteristicRead(gatt, characteristic, status)
+        when (status) {
+            BluetoothGatt.GATT_SUCCESS -> {
+                val characteristicValue = characteristic.value
+                val readRequest = currentRequest as ReadRequest
+                readRequest.appendResult(characteristicValue)
+                if (readRequest.isFinished()) {
+                    onCharacteristicRead(readRequest.characteristicUUID, readRequest.getValue())
+                    executeNextRequest(gatt)
+                } else {
+                    readRequest.execute(gatt, gattService)
+                }
             }
             else -> {
                 gatt.disconnect()
@@ -74,30 +94,22 @@ open class BluetoothCallback(
 
     protected open fun onFailToConnect() {}
 
-    protected open fun onProgress() {}
+    protected open fun onCharacteristicWrite(characteristicUUID: UUID) {}
+
+    protected open fun onCharacteristicRead(characteristicUUID: UUID, result: String) {}
 
     protected open fun onSuccess() {}
 
     protected open fun onFailure() {}
 
-    protected open fun saveNextCharacteristic(gatt: BluetoothGatt) {
-        if (characteristicWriteRequests.isNotEmpty()) {
-            onProgress()
-            saveCharacteristic(gatt, characteristicWriteRequests.remove())
+    private fun executeNextRequest(gatt: BluetoothGatt) {
+        if (requests.isNotEmpty()) {
+            currentRequest = requests.remove()
+            currentRequest.execute(gatt, gattService)
         } else {
             gatt.disconnect()
             onSuccess()
         }
-    }
-
-    private fun saveCharacteristic(gatt: BluetoothGatt, request: Pair<UUID, String>) {
-        saveCharacteristic(gatt, request.first, request.second)
-    }
-
-    private fun saveCharacteristic(gatt: BluetoothGatt, characteristicUUID: UUID, value: String) {
-        val characteristic = gattService!!.getCharacteristic(characteristicUUID)
-        characteristic.setValue(value)
-        gatt.writeCharacteristic(characteristic)
     }
 
 
