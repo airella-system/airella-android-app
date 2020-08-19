@@ -3,6 +3,12 @@ package org.airella.airella.utils
 import java.util.*
 
 object Config {
+    const val BT_MTU = 20
+
+
+    const val BT_ENABLE_CONST = 4
+    const val REQUEST_FINE_LOCATION_CONST = 99
+
     val SERVICE_UUID: UUID = UUID.fromString("f1eb6601-af50-4cf3-9f6e-4e1c6fb8e88c")
 
     val WIFI_SSID_UUID = uuid("45bee5c6-8043-4c6e-b497-fad68a340b70")

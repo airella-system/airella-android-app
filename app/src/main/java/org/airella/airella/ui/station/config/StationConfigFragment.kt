@@ -19,8 +19,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -32,6 +30,7 @@ import org.airella.airella.R
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
+import org.airella.airella.utils.PermissionUtils.requestBtIfDisabled
 
 class StationConfigFragment : Fragment() {
 
@@ -59,6 +58,8 @@ class StationConfigFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        requestBtIfDisabled()
+
         viewModel = ViewModelProvider(this).get(StationConfigViewModel::class.java)
 
         viewModel.btDevice = requireArguments().getParcelable("bt_device") as BluetoothDevice
@@ -71,7 +72,6 @@ class StationConfigFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
 
         updateBondState()
 
@@ -89,7 +89,7 @@ class StationConfigFragment : Fragment() {
             )
         }
 
-        wifi_config.setOnClickListener { v ->
+        wifi_config.setOnClickListener {
             val form =
                 requireActivity().layoutInflater.inflate(R.layout.view_device_wifi_config, null)
             AlertDialog.Builder(requireContext())
@@ -242,20 +242,9 @@ class StationConfigFragment : Fragment() {
         }
     }
 
-    private fun switchFragment(view: View, fragment: Fragment) {
-        val transaction: FragmentTransaction =
-            (view.context as FragmentActivity).supportFragmentManager.beginTransaction()
-
-        val bundle = Bundle()
-        bundle.putParcelable("bt_device", viewModel.btDevice)
-        fragment.arguments = bundle
-
-        transaction.replace(R.id.container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
-
     private fun updateBondState() {
+        if (requestBtIfDisabled()) return
+
         bond_status.text = when (viewModel.btDevice.bondState) {
             BluetoothDevice.BOND_NONE -> "NOT BONDED"
             BluetoothDevice.BOND_BONDING -> "BONDING"

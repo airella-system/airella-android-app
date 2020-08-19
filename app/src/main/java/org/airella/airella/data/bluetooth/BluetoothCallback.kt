@@ -8,8 +8,6 @@ import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import java.util.*
 
-const val BT_MTU = 20
-
 open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
     BluetoothGattCallback() {
 

@@ -8,7 +8,7 @@
     <string name="action_settings">Settings</string>
     <string name="cancel">Cancel</string>
 
-    <string name="menu_home">Home</string>
+    <string name="menu_home">Stations</string>
     <string name="menu_map">Map</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_login">Login</string>
@@ -49,5 +49,9 @@
     <string name="bond_device">Bond with device</string>
     <string name="hard_reset">Hard reset</string>
     <string name="location_required_rejected">You must allow Location permission to scan nearby BT devices</string>
+    <string name="turn_on_bluetooth">Turn on Bluetooth</string>
+    <string name="turn_on_bluetooth_long">Please turn on Bluetooth in order to connect ot station</string>
+    <string name="turn_on_location">Turn on location</string>
+    <string name="turn_on_location_long">Please turn on Location in order to scan for Bluetooth devices</string>
 
 </resources>

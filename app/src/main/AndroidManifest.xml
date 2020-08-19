@@ -21,7 +21,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="org.airella.airella.ui.station.AddSensorActivity" />
+        <activity
+            android:name="org.airella.airella.ui.station.AddSensorActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
