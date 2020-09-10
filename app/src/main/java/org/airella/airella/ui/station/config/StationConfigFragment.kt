@@ -83,52 +83,6 @@ class StationConfigFragment : Fragment() {
 
         location_config.setOnClickListener {
             goToConfigFragment(LocationFragment())
-//            val form =
-//                requireActivity().layoutInflater.inflate(R.layout.view_device_location_config, null)
-//            val autoLoc: CheckBox = form.findViewById(R.id.locationAuto)
-//            val latitude: TextInputEditText = form.findViewById(R.id.latitude)
-//            val longitude: TextInputEditText = form.findViewById(R.id.longitude)
-//            val dialog = AlertDialog.Builder(requireContext())
-//                .setMessage("Location config")
-//                .setView(form)
-//                .setPositiveButton(R.string.action_save) { _, _ ->
-//                    viewModel.saveLocation(
-//                        requireContext(),
-//                        latitude.text.toString(),
-//                        longitude.text.toString()
-//                    )
-//                }
-//                .setNegativeButton(R.string.cancel, null)
-//                .create()
-//            autoLoc.setOnCheckedChangeListener { _, isChecked ->
-//                form.findViewById<TextInputLayout>(R.id.latitudeLayout).isEnabled = !isChecked
-//                form.findViewById<TextInputLayout>(R.id.longitudeLayout).isEnabled = !isChecked
-//                latitude.isEnabled = !isChecked
-//                longitude.isEnabled = !isChecked
-//                if (latitude.text.toString().toDoubleOrNull() == null) {
-//                    latitude.setText("")
-//                }
-//                if (longitude.text.toString().toDoubleOrNull() == null) {
-//                    longitude.setText("")
-//                }
-//                if (isChecked) {
-//
-//                }
-//            }
-//            dialog.show()
-//            val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-//            okButton.isEnabled = false
-//            val textWatcher: TextWatcher = object : TextWatcher {
-//                override fun afterTextChanged(s: Editable?) {
-//                    okButton.isEnabled = latitude.text.toString().toDoubleOrNull() != null &&
-//                            longitude.text.toString().toDoubleOrNull() != null
-//                }
-//
-//                override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
-//                override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
-//            }
-//            latitude.addTextChangedListener(textWatcher)
-//            longitude.addTextChangedListener(textWatcher)
         }
 
         register_station.setOnClickListener {
