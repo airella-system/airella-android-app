@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.permission.BluetoothEnableFragment">
 
+    <org.airella.airella.ui.template.HeaderTemplate
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:image="@drawable/ic_account_box_white_70dp"
+        app:text="@string/set_up_address" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -15,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/header"
         app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
