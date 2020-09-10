@@ -24,7 +24,6 @@
     <string name="action_register_short">Register</string>
     <string name="action_save">Save</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Invalid username</string>
     <string name="invalid_email">Invalid email</string>
     <string name="invalid_password">Password must be at least 6 characters</string>
     <string name="invalid_password_confirm">Passwords must match</string>
@@ -38,20 +37,42 @@
     <string name="logout">Logout</string>
 
 
-    <string name="login_failed_error">"Invalid username or password"</string>
+    <string name="login_failed_error">"Invalid email or password"</string>
     <string name="internet_error">"Check your internet connection"</string>
     <string name="internal_error">"Internal error. Try again later"</string>
     <string name="unexpected_error">"Unexpected Error"</string>
     <string name="location_permission_required_scan">Location permission is required to scan Bluetooth devices</string>
 
-    <string name="x_caiq">"%1$f CAIQ"</string>
     <string name="status">"Status: "</string>
     <string name="bond_device">Bond with device</string>
     <string name="hard_reset">Hard reset</string>
     <string name="location_required_rejected">You must allow Location permission to scan nearby BT devices</string>
     <string name="turn_on_bluetooth">Turn on Bluetooth</string>
-    <string name="turn_on_bluetooth_long">Please turn on Bluetooth in order to connect ot station</string>
+    <string name="turn_on_bluetooth_long">Please turn on Bluetooth in order to connect to station</string>
     <string name="turn_on_location">Turn on location</string>
     <string name="turn_on_location_long">Please turn on Location in order to scan for Bluetooth devices</string>
+    <string name="search_for_station">Search for station</string>
+    <string name="enable_internet_to_show_your_stations">Enable Internet to show your stations</string>
+    <string name="register_stations_to_see_them">Register stations to see them here</string>
+    <string name="choose_wifi_network">Choose WIFI network</string>
+    <string name="set_additional_info">Set additional information</string>
+    <string name="continue_text">Continue</string>
+    <string name="configure_station">Configure station</string>
+    <string name="set_station_location">Set station location</string>
+    <string name="your_location">Your location:</string>
+    <string name="refresh_location">Refresh location</string>
+    <string name="set_location_manually">Set location manually</string>
+    <string name="logo">Logo</string>
+    <string name="loading_text">Patience! This is difficult, you know...</string>
+    <string name="station_name">Station name</string>
+    <string name="country">Country</string>
+    <string name="city">City</string>
+    <string name="street">Street</string>
+    <string name="house_number">Number</string>
+    <string name="set_up_location">Set up location</string>
+    <string name="set_up_address">Set up address</string>
+    <string name="register_station">Register station</string>
+    <string name="wifi">WiFi</string>
+    <string name="type_password">Type password:</string>
 
 </resources>

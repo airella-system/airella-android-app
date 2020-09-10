@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import org.airella.airella.R
 import org.airella.airella.data.api.ApiException
 import org.airella.airella.data.model.Result
-import org.airella.airella.data.model.auth.LoginResponse
+import org.airella.airella.data.model.auth.User
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.AuthUtils
 
@@ -15,22 +15,22 @@ class LoginViewModel : ViewModel() {
 
     private val loginService = AuthService
 
-    private var username: String = ""
+    private var email: String = ""
     private var password: String = ""
 
-    val usernameError = MutableLiveData<Int>(null)
+    val emailError = MutableLiveData<Int>(null)
     val passwordError = MutableLiveData<Int>(null)
 
     val isDataValid = MutableLiveData(false)
 
-    private val _loginResult = MutableLiveData<Result<LoginResponse, String>>()
-    val loginResult: LiveData<Result<LoginResponse, String>> = _loginResult
+    private val _loginResult = MutableLiveData<Result<User, String>>()
+    val loginResult: LiveData<Result<User, String>> = _loginResult
 
     fun login(context: Context) {
         if (!isFormValid())
             return
 
-        loginService.login(username, password)
+        loginService.login(email, password)
             .subscribe(
                 { user ->
                     _loginResult.value = Result.Success(user)
@@ -46,10 +46,10 @@ class LoginViewModel : ViewModel() {
                 })
     }
 
-    fun usernameChanged(username: String) {
-        this.username = username
-        if (!AuthUtils.isUserNameValid(username)) {
-            usernameError.value = R.string.invalid_username
+    fun emailChanged(email: String) {
+        this.email = email
+        if (!AuthUtils.isEmailValid(email)) {
+            emailError.value = R.string.invalid_email
         }
         validateForm()
     }
@@ -68,7 +68,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    private fun isFormValid() = AuthUtils.isUserNameValid(username) &&
+    private fun isFormValid() = AuthUtils.isEmailValid(email) &&
             AuthUtils.isPasswordValid(password)
 
 }

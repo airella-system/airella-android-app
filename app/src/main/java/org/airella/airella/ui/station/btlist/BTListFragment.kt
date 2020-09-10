@@ -42,7 +42,7 @@ class BTListFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopBtScan(this)
+        viewModel.stopBtScan()
     }
 
     override fun onResume() {

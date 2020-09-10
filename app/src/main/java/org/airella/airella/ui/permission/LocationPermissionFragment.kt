@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_location_enable.*
 import org.airella.airella.R
 import org.airella.airella.utils.Config.REQUEST_FINE_LOCATION_CONST
-import org.airella.airella.utils.FragmentUtils.switchFragmentNoBackStack
+import org.airella.airella.utils.FragmentUtils.switchFragment
 import org.airella.airella.utils.PermissionUtils
 
 class LocationPermissionFragment(private val nextFragment: Fragment) : Fragment() {
@@ -28,7 +28,7 @@ class LocationPermissionFragment(private val nextFragment: Fragment) : Fragment(
 
         enable_location_button.setOnClickListener {
             if (checkAndAskForLocationPermission(this)) {
-                switchFragmentNoBackStack(R.id.container, nextFragment)
+                switchFragment(R.id.container, nextFragment)
             }
         }
     }
@@ -44,7 +44,7 @@ class LocationPermissionFragment(private val nextFragment: Fragment) : Fragment(
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     if (PermissionUtils.checkLocationPermission(requireContext())) {
-                        switchFragmentNoBackStack(R.id.container, nextFragment)
+                        switchFragment(R.id.container, nextFragment)
                     }
                 } else {
                     // user checked Never ask again

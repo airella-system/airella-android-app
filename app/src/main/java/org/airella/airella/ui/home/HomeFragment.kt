@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.airella.airella.R
-import org.airella.airella.data.service.StationService
+import org.airella.airella.data.model.sensor.Station
+import org.airella.airella.data.service.UserService
 import org.airella.airella.ui.station.AddSensorActivity
 import org.airella.airella.utils.Log
 
@@ -44,22 +44,41 @@ class HomeFragment : Fragment() {
             adapter.setStations(stations)
         })
 
-        getStations()
+        val stations = listOf(
+            Station("1", "test", null, null, 9.0, listOf()),
+            Station("1", "test", null, null, 11.0, listOf())
+        )
+        homeViewModel.stationsList.value = stations
+
+//        getStations()
 
         add_sensor_fab.setOnClickListener {
             val intent = Intent(requireContext(), AddSensorActivity::class.java)
             startActivity(intent)
         }
+
+        station_list_refresh.setOnClickListener {
+            getStations()
+        }
     }
 
 
     private fun getStations() {
-        StationService.getStations().subscribe({ stations ->
+        UserService.getUserStations().subscribe({ stations ->
+            Log.i("Loaded user stations")
+            station_list_info.visibility = View.GONE
+            station_list_refresh.visibility = View.GONE
             homeViewModel.stationsList.value = stations
+            if (stations.isNullOrEmpty()) {
+                station_list_info.setText(R.string.register_stations_to_see_them)
+                station_list_info.visibility = View.VISIBLE
+            }
         }, {
+            Log.e(it.toString())
             Log.e(it.message ?: getString(R.string.unexpected_error))
-            Toast.makeText(requireContext(), getString(R.string.internet_error), Toast.LENGTH_LONG)
-                .show()
+            station_list_info.setText(R.string.enable_internet_to_show_your_stations)
+            station_list_info.visibility = View.VISIBLE
+            station_list_refresh.visibility = View.VISIBLE
         })
     }
 

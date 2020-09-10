@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="Station name"
+            android:hint="@string/station_name"
             android:inputType="text"
             android:selectAllOnFocus="true" />
 

@@ -43,7 +43,6 @@ class StationAdapter : RecyclerView.Adapter<StationAdapter.StationHolder>() {
             this.station = station
 
             view.station_name.text = station.name
-            view.caiq_text.text = view.context.getString(R.string.x_caiq, station.caqi)
         }
 
         override fun onClick(v: View?) {

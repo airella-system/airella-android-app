@@ -4,10 +4,9 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.airella.airella.utils.Log
+import org.airella.airella.utils.RxUtils.runAsync
 import retrofit2.HttpException
 
 @JsonClass(generateAdapter = true)
@@ -19,8 +18,7 @@ open class ApiResponse<T>(
 
 
 fun Single<ApiResponse<Any>>.isSuccess(): Single<Boolean> {
-    return this.subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    return this.runAsync()
         .errorToResponse()
         .flatMap {
             return@flatMap when {
@@ -42,8 +40,7 @@ fun Single<ApiResponse<Any>>.isSuccess(): Single<Boolean> {
 }
 
 inline fun <reified T> Single<ApiResponse<T>>.getResponse(): Single<T> {
-    return this.subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    return this.runAsync()
         .errorToResponse()
         .flatMap {
             return@flatMap when {

@@ -9,7 +9,7 @@ import org.airella.airella.R
 import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.exception.BluetoothDisabledException
 import org.airella.airella.ui.permission.BluetoothEnableFragment
-import org.airella.airella.utils.FragmentUtils.switchFragmentNoBackStack
+import org.airella.airella.utils.FragmentUtils.switchFragment
 import org.airella.airella.utils.Log
 
 class BTListViewModel : ViewModel() {
@@ -47,11 +47,11 @@ class BTListViewModel : ViewModel() {
         try {
             BluetoothService.scanBTDevices(scanCallback, true)
         } catch (e: BluetoothDisabledException) {
-            fragment.switchFragmentNoBackStack(R.id.container, BluetoothEnableFragment(fragment))
+            fragment.switchFragment(R.id.container, BluetoothEnableFragment(fragment))
         }
     }
 
-    fun stopBtScan(fragment: Fragment) {
+    fun stopBtScan() {
         try {
             BluetoothService.scanBTDevices(scanCallback, false)
         } catch (e: BluetoothDisabledException) {

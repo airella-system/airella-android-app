@@ -13,6 +13,7 @@ class AddSensorActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, BTListFragment())
+//                .replace(R.id.container, AddressFragment())
                 .commitNow()
         }
     }

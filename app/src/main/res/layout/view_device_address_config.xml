@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="Country"
+            android:hint="@string/country"
             android:inputType="text"
             android:selectAllOnFocus="true" />
 
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="City"
+            android:hint="@string/city"
             android:inputType="text"
             android:selectAllOnFocus="true" />
 
@@ -67,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="Street"
+            android:hint="@string/street"
             android:inputType="text"
             android:selectAllOnFocus="true" />
 
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:hint="House No"
+            android:hint="@string/house_number"
             android:inputType="text"
             android:selectAllOnFocus="true" />
 

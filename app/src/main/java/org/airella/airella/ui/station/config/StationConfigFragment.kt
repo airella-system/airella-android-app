@@ -7,36 +7,26 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.R
 import org.airella.airella.data.service.AuthService
+import org.airella.airella.ui.station.address.AddressFragment
+import org.airella.airella.ui.station.location.LocationFragment
+import org.airella.airella.ui.station.wifilist.WifiListFragment
 import org.airella.airella.utils.Config
+import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils.requestBtIfDisabled
 
 class StationConfigFragment : Fragment() {
-
-    private val toast by lazy { Toast.makeText(requireContext(), "", Toast.LENGTH_LONG) }
-
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val btBondBroadcastReceiver = object : BroadcastReceiver() {
 
@@ -71,14 +61,7 @@ class StationConfigFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
         updateBondState()
-
-        viewModel.status.observe(viewLifecycleOwner, Observer {
-            toast.setText(it)
-            toast.show()
-        })
 
         bond_device.setOnClickListener {
             viewModel.btDevice.createBond()
@@ -90,100 +73,62 @@ class StationConfigFragment : Fragment() {
         }
 
         wifi_config.setOnClickListener {
-            val form =
-                requireActivity().layoutInflater.inflate(R.layout.view_device_wifi_config, null)
-            AlertDialog.Builder(requireContext())
-                .setMessage("Wifi config")
-                .setView(form)
-                .setPositiveButton(R.string.action_save) { _, _ ->
-                    val ssid = form.findViewById<EditText>(R.id.wifiSSID).text.toString()
-                    val pass = form.findViewById<EditText>(R.id.wifiPassword).text.toString()
-                    viewModel.saveWiFiConfig(requireContext(), ssid, pass)
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            goToConfigFragment(WifiListFragment())
         }
 
-
         address_config.setOnClickListener {
-            val form =
-                requireActivity().layoutInflater.inflate(R.layout.view_device_address_config, null)
-            AlertDialog.Builder(requireContext())
-                .setMessage("Address config")
-                .setView(form)
-                .setPositiveButton(R.string.action_save) { _, _ ->
-                    val country = form.findViewById<EditText>(R.id.country).text.toString()
-                    val city = form.findViewById<EditText>(R.id.city).text.toString()
-                    val street = form.findViewById<EditText>(R.id.street).text.toString()
-                    val houseNo = form.findViewById<EditText>(R.id.houseNo).text.toString()
-                    viewModel.saveAddress(
-                        requireContext(),
-                        country,
-                        city,
-                        street,
-                        houseNo
-                    )
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            goToConfigFragment(AddressFragment())
         }
 
 
         location_config.setOnClickListener {
-            val form =
-                requireActivity().layoutInflater.inflate(R.layout.view_device_location_config, null)
-            val autoLoc: CheckBox = form.findViewById(R.id.locationAuto)
-            val latitude: TextInputEditText = form.findViewById(R.id.latitude)
-            val longitude: TextInputEditText = form.findViewById(R.id.longitude)
-            val dialog = AlertDialog.Builder(requireContext())
-                .setMessage("Location config")
-                .setView(form)
-                .setPositiveButton(R.string.action_save) { _, _ ->
-                    viewModel.saveLocation(
-                        requireContext(),
-                        latitude.text.toString(),
-                        longitude.text.toString()
-                    )
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-            autoLoc.setOnCheckedChangeListener { _, isChecked ->
-                form.findViewById<TextInputLayout>(R.id.latitudeLayout).isEnabled = !isChecked
-                form.findViewById<TextInputLayout>(R.id.longitudeLayout).isEnabled = !isChecked
-                latitude.isEnabled = !isChecked
-                longitude.isEnabled = !isChecked
-                if (latitude.text.toString().toDoubleOrNull() == null) {
-                    latitude.setText("")
-                }
-                if (longitude.text.toString().toDoubleOrNull() == null) {
-                    longitude.setText("")
-                }
-                if (isChecked) {
-                    fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                        if (location != null) {
-                            latitude.setText(location.latitude.toString())
-                            longitude.setText(location.longitude.toString())
-                        } else {
-                            latitude.setText("Can't get location")
-                            longitude.setText("Please enter location manually")
-                        }
-                    }
-                }
-            }
-            dialog.show()
-            val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            okButton.isEnabled = false
-            val textWatcher: TextWatcher = object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    okButton.isEnabled = latitude.text.toString().toDoubleOrNull() != null &&
-                            longitude.text.toString().toDoubleOrNull() != null
-                }
-
-                override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
-                override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
-            }
-            latitude.addTextChangedListener(textWatcher)
-            longitude.addTextChangedListener(textWatcher)
+            goToConfigFragment(LocationFragment())
+//            val form =
+//                requireActivity().layoutInflater.inflate(R.layout.view_device_location_config, null)
+//            val autoLoc: CheckBox = form.findViewById(R.id.locationAuto)
+//            val latitude: TextInputEditText = form.findViewById(R.id.latitude)
+//            val longitude: TextInputEditText = form.findViewById(R.id.longitude)
+//            val dialog = AlertDialog.Builder(requireContext())
+//                .setMessage("Location config")
+//                .setView(form)
+//                .setPositiveButton(R.string.action_save) { _, _ ->
+//                    viewModel.saveLocation(
+//                        requireContext(),
+//                        latitude.text.toString(),
+//                        longitude.text.toString()
+//                    )
+//                }
+//                .setNegativeButton(R.string.cancel, null)
+//                .create()
+//            autoLoc.setOnCheckedChangeListener { _, isChecked ->
+//                form.findViewById<TextInputLayout>(R.id.latitudeLayout).isEnabled = !isChecked
+//                form.findViewById<TextInputLayout>(R.id.longitudeLayout).isEnabled = !isChecked
+//                latitude.isEnabled = !isChecked
+//                longitude.isEnabled = !isChecked
+//                if (latitude.text.toString().toDoubleOrNull() == null) {
+//                    latitude.setText("")
+//                }
+//                if (longitude.text.toString().toDoubleOrNull() == null) {
+//                    longitude.setText("")
+//                }
+//                if (isChecked) {
+//
+//                }
+//            }
+//            dialog.show()
+//            val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+//            okButton.isEnabled = false
+//            val textWatcher: TextWatcher = object : TextWatcher {
+//                override fun afterTextChanged(s: Editable?) {
+//                    okButton.isEnabled = latitude.text.toString().toDoubleOrNull() != null &&
+//                            longitude.text.toString().toDoubleOrNull() != null
+//                }
+//
+//                override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
+//                override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
+//            }
+//            latitude.addTextChangedListener(textWatcher)
+//            longitude.addTextChangedListener(textWatcher)
         }
 
         register_station.setOnClickListener {
@@ -191,7 +136,7 @@ class StationConfigFragment : Fragment() {
                 requireActivity().layoutInflater.inflate(R.layout.view_device_register_config, null)
             form.findViewById<EditText>(R.id.apiUrl).setText(Config.DEFAULT_API_URL)
             form.findViewById<EditText>(R.id.registrationToken)
-                .setText(AuthService.user!!.stationRegistrationToken)
+                .setText(AuthService.getUser().stationRegistrationToken)
             AlertDialog.Builder(requireContext())
                 .setMessage("Wifi config")
                 .setView(form)
@@ -204,19 +149,6 @@ class StationConfigFragment : Fragment() {
                 .show()
         }
 
-//        change_password.setOnClickListener {
-//            val form = requireActivity().layoutInflater.inflate(R.layout.view_device_password, null)
-//            AlertDialog.Builder(requireContext())
-//                .setMessage("Password change")
-//                .setView(form)
-//                .setPositiveButton(R.string.action_save) { _, _ ->
-//                    val newPass = form.findViewById<EditText>(R.id.password).text.toString()
-//                    viewModel.saveStationPassword(requireContext(), newPass)
-//                }
-//                .setNegativeButton(R.string.cancel, null)
-//                .show()
-//        }
-
         hard_reset.setOnClickListener {
             AlertDialog.Builder(requireContext())
                 .setTitle("Hard Reset")
@@ -227,6 +159,14 @@ class StationConfigFragment : Fragment() {
                 .setNegativeButton(R.string.cancel, null)
                 .show()
         }
+    }
+
+    private fun goToConfigFragment(newFragment: Fragment) {
+        val bundle = Bundle()
+        bundle.putParcelable("bt_device", viewModel.btDevice)
+
+        newFragment.arguments = bundle
+        switchFragmentWithBackStack(R.id.container, newFragment)
     }
 
     override fun onResume() {
@@ -263,7 +203,6 @@ class StationConfigFragment : Fragment() {
         wifi_config.isEnabled = viewModel.isBonded()
         address_config.isEnabled = viewModel.isBonded()
         location_config.isEnabled = viewModel.isBonded()
-//        change_password.isEnabled = viewModel.isBonded()
         hard_reset.isEnabled = viewModel.isBonded()
     }
 

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_bt_enable.*
 import org.airella.airella.R
 import org.airella.airella.utils.Config.BT_ENABLE_CONST
-import org.airella.airella.utils.FragmentUtils.switchFragmentNoBackStack
+import org.airella.airella.utils.FragmentUtils.switchFragment
 
 class BluetoothEnableFragment(private val nextFragment: Fragment) : Fragment() {
 
@@ -38,7 +38,7 @@ class BluetoothEnableFragment(private val nextFragment: Fragment) : Fragment() {
         if (requestCode == BT_ENABLE_CONST) {
             when (resultCode) {
                 Activity.RESULT_OK -> {
-                    switchFragmentNoBackStack(R.id.container, nextFragment)
+                    switchFragment(R.id.container, nextFragment)
                 }
             }
         }
@@ -47,7 +47,7 @@ class BluetoothEnableFragment(private val nextFragment: Fragment) : Fragment() {
 
     private fun checkBt() {
         if (bluetoothAdapter != null && bluetoothAdapter!!.isEnabled) {
-            switchFragmentNoBackStack(R.id.container, nextFragment)
+            switchFragment(R.id.container, nextFragment)
         } else {
             startActivityForResult(
                 Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),

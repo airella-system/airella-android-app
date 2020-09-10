@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import org.airella.airella.R
 import org.airella.airella.ui.permission.BluetoothEnableFragment
 import org.airella.airella.ui.permission.LocationPermissionFragment
-import org.airella.airella.utils.FragmentUtils.switchFragmentNoBackStack
+import org.airella.airella.utils.FragmentUtils.switchFragment
 
 object PermissionUtils {
 
@@ -34,7 +34,7 @@ object PermissionUtils {
     fun Fragment.requestLocationIfDisabled(): Boolean {
         val locationPermission = checkLocationPermission(requireContext())
         if (!locationPermission) {
-            switchFragmentNoBackStack(R.id.container, LocationPermissionFragment(this))
+            switchFragment(R.id.container, LocationPermissionFragment(this))
         }
         return locationPermission
     }
@@ -44,7 +44,7 @@ object PermissionUtils {
 
         val btEnabled = checkBTEnabled(requireContext())
         if (!btEnabled) {
-            switchFragmentNoBackStack(R.id.container, BluetoothEnableFragment(this))
+            switchFragment(R.id.container, BluetoothEnableFragment(this))
         }
         return !btEnabled
     }

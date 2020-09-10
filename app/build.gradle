@@ -61,4 +61,5 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.2"
 
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
 }

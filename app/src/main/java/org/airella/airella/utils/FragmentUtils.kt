@@ -5,10 +5,16 @@ import androidx.fragment.app.FragmentActivity
 
 object FragmentUtils {
 
-    fun Fragment.switchFragmentNoBackStack(containerID: Int, newFragment: Fragment) {
+    fun Fragment.switchFragment(containerID: Int, newFragment: Fragment) {
         (context as FragmentActivity).supportFragmentManager.beginTransaction()
             .replace(containerID, newFragment)
-//            .addToBackStack(null)
+            .commit()
+    }
+
+    fun Fragment.switchFragmentWithBackStack(containerID: Int, newFragment: Fragment) {
+        (context as FragmentActivity).supportFragmentManager.beginTransaction()
+            .replace(containerID, newFragment)
+            .addToBackStack(null)
             .commit()
     }
 }
