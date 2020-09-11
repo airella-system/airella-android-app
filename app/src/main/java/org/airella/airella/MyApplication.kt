@@ -4,12 +4,14 @@ import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import org.airella.airella.data.service.PreferencesService
 
 
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        PreferencesService.init(applicationContext)
     }
 
     companion object {

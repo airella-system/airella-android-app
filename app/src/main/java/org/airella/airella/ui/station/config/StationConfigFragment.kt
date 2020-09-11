@@ -11,17 +11,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.R
-import org.airella.airella.data.service.AuthService
 import org.airella.airella.ui.station.address.AddressFragment
 import org.airella.airella.ui.station.location.LocationFragment
+import org.airella.airella.ui.station.register.RegisterFragment
 import org.airella.airella.ui.station.wifilist.WifiListFragment
-import org.airella.airella.utils.Config
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils.requestBtIfDisabled
@@ -86,21 +84,7 @@ class StationConfigFragment : Fragment() {
         }
 
         register_station.setOnClickListener {
-            val form =
-                requireActivity().layoutInflater.inflate(R.layout.view_device_register_config, null)
-            form.findViewById<EditText>(R.id.apiUrl).setText(Config.DEFAULT_API_URL)
-            form.findViewById<EditText>(R.id.registrationToken)
-                .setText(AuthService.getUser().stationRegistrationToken)
-            AlertDialog.Builder(requireContext())
-                .setMessage("Wifi config")
-                .setView(form)
-                .setPositiveButton(R.string.action_save) { _, _ ->
-                    val stationName = form.findViewById<EditText>(R.id.stationName).text.toString()
-                    val apiUrl = form.findViewById<EditText>(R.id.apiUrl).text.toString()
-                    viewModel.registerStation(requireContext(), stationName, apiUrl)
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            goToConfigFragment(RegisterFragment())
         }
 
         hard_reset.setOnClickListener {
@@ -157,6 +141,7 @@ class StationConfigFragment : Fragment() {
         wifi_config.isEnabled = viewModel.isBonded()
         address_config.isEnabled = viewModel.isBonded()
         location_config.isEnabled = viewModel.isBonded()
+        register_station.isEnabled = viewModel.isBonded()
         hard_reset.isEnabled = viewModel.isBonded()
     }
 

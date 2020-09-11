@@ -52,6 +52,10 @@ class WifiListFragment : Fragment() {
         requireContext().registerReceiver(wifiScanReceiver, intentFilter)
 
         updateWifiList()
+
+        refresh_wifi_fab.setOnClickListener {
+            startWifiScan()
+        }
     }
 
     override fun onStart() {

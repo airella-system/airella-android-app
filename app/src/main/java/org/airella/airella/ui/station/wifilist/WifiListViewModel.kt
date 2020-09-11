@@ -2,7 +2,6 @@ package org.airella.airella.ui.station.wifilist
 
 import android.net.wifi.ScanResult
 import androidx.fragment.app.Fragment
-import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.AbstractConfigViewModel
@@ -26,17 +25,10 @@ class WifiListViewModel : AbstractConfigViewModel() {
         btDevice.connectGatt(
             fragment.requireContext(),
             false,
-            object : BluetoothCallback(bluetoothRequests) {
-                override fun onConnected() = setStatus("Connected")
-                override fun onFailToConnect() = setStatus("Failed to connect")
-                override fun onFailure() = setStatus("Configuration failed")
-                override fun onCharacteristicWrite(characteristicUUID: UUID) {
-                    setStatus("Configuring in progress...")
-                }
-
+            object : DefaultConfigBluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     setStatus("Success")
-                    if (fragment.isAdded) {
+                    if (fragment.isVisible) {
                         fragment.parentFragmentManager.popBackStack()
                     }
                 }

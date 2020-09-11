@@ -4,7 +4,10 @@ import android.bluetooth.BluetoothDevice
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import org.airella.airella.MyApplication
+import org.airella.airella.data.bluetooth.BluetoothCallback
+import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.utils.Log
+import java.util.*
 
 abstract class AbstractConfigViewModel : ViewModel() {
 
@@ -17,6 +20,20 @@ abstract class AbstractConfigViewModel : ViewModel() {
         MyApplication.runOnUIThread {
             toast.setText(status)
             toast.show()
+        }
+    }
+
+    open inner class DefaultConfigBluetoothCallback(bluetoothRequests: Queue<BluetoothRequest>) :
+        BluetoothCallback(bluetoothRequests) {
+        override fun onConnected() = setStatus("Connected")
+        override fun onFailToConnect() = setStatus("Failed to connect")
+        override fun onFailure() = setStatus("Saving failed")
+        override fun onCharacteristicWrite(characteristicUUID: UUID) {
+            setStatus("Saving in progress...")
+        }
+
+        override fun onSuccess() {
+            setStatus("Success")
         }
     }
 }

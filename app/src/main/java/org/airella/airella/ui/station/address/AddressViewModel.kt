@@ -1,7 +1,6 @@
 package org.airella.airella.ui.station.address
 
 import androidx.fragment.app.Fragment
-import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.AbstractConfigViewModel
@@ -31,17 +30,10 @@ class AddressViewModel : AbstractConfigViewModel() {
         btDevice.connectGatt(
             fragment.requireContext(),
             false,
-            object : BluetoothCallback(bluetoothRequests) {
-                override fun onConnected() = setStatus("Connected")
-                override fun onFailToConnect() = setStatus("Failed to connect")
-                override fun onFailure() = setStatus("Saving address failed")
-                override fun onCharacteristicWrite(characteristicUUID: UUID) {
-                    setStatus("Saving address in progress...")
-                }
-
+            object : DefaultConfigBluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     setStatus("Success")
-                    if (fragment.isAdded) {
+                    if (fragment.isVisible) {
                         fragment.parentFragmentManager.popBackStack()
                     }
                 }
