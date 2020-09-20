@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.bt_device_list_item.view.*
+import kotlinx.android.synthetic.main.item_bt_device_list.view.*
 import org.airella.airella.R
 import org.airella.airella.ui.station.config.StationConfigFragment
 import org.airella.airella.utils.inflate
@@ -20,7 +20,7 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
     override fun getItemCount(): Int = btDevices.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BtDeviceView {
-        val view = parent.inflate(R.layout.bt_device_list_item, false)
+        val view = parent.inflate(R.layout.item_bt_device_list, false)
         return BtDeviceView(view)
     }
 

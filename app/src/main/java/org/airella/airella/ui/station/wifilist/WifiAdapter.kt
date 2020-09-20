@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.bt_device_list_item.view.*
+import kotlinx.android.synthetic.main.item_bt_device_list.view.*
 import org.airella.airella.R
 import org.airella.airella.utils.inflate
 
@@ -19,7 +19,7 @@ class WifiAdapter(val fragment: WifiListFragment, private val wifiList: MutableL
     override fun getItemCount(): Int = wifiList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BtDeviceView {
-        val view = parent.inflate(R.layout.wifi_list_item, false)
+        val view = parent.inflate(R.layout.item_wifi_list, false)
         return BtDeviceView(view)
     }
 

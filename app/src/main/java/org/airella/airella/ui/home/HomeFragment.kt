@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.airella.airella.R
-import org.airella.airella.data.model.sensor.Station
 import org.airella.airella.data.service.UserService
 import org.airella.airella.ui.station.AddSensorActivity
 import org.airella.airella.utils.Log
@@ -44,14 +43,6 @@ class HomeFragment : Fragment() {
             adapter.setStations(stations)
         })
 
-        val stations = listOf(
-            Station("1", "test", null, null, 9.0, listOf()),
-            Station("1", "test", null, null, 11.0, listOf())
-        )
-        homeViewModel.stationsList.value = stations
-
-//        getStations()
-
         add_sensor_fab.setOnClickListener {
             val intent = Intent(requireContext(), AddSensorActivity::class.java)
             startActivity(intent)
@@ -60,6 +51,11 @@ class HomeFragment : Fragment() {
         station_list_refresh.setOnClickListener {
             getStations()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getStations()
     }
 
 
@@ -76,6 +72,7 @@ class HomeFragment : Fragment() {
         }, {
             Log.e(it.toString())
             Log.e(it.message ?: getString(R.string.unexpected_error))
+            homeViewModel.stationsList.value = listOf()
             station_list_info.setText(R.string.enable_internet_to_show_your_stations)
             station_list_info.visibility = View.VISIBLE
             station_list_refresh.visibility = View.VISIBLE
