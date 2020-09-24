@@ -28,9 +28,12 @@ object AuthService {
     fun getUser(): User = user ?: throw UserNotLoggedException()
 
     fun getAccessToken(): Single<String> =
-        getUser().accessToken?.token
-            ?.let { Single.just(it) } ?: refreshToken().map { it.token }
-            .runAsync()
+        getUser().accessToken?.token?.let { Single.just(it) }
+            ?: refreshToken().map { it.token }.runAsync()
+
+    fun clearAccessToken() {
+        getUser().accessToken = null
+    }
 
     init {
         val email = PreferencesService.getString("email", "")
@@ -52,6 +55,7 @@ object AuthService {
     }
 
     fun refreshToken(): Single<AccessToken> {
+        clearAccessToken()
         return try {
             authApi.refreshToken(getUser().refreshToken).getResponse()
                 .map { it.accessToken }

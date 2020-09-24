@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.reactivex.rxjava3.core.Single
+import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.RxUtils.runAsync
 import retrofit2.HttpException
@@ -56,8 +57,8 @@ inline fun <reified T> Single<ApiResponse<T>>.getResponse(): Single<T> {
                     )
                 }
             }
-        }.doOnError {
-            Log.w("Error during API request: [$it]")
+        }.retry(2) { throwable ->
+            isWrongAccessToken(throwable).also { if (it) AuthService.clearAccessToken() }
         }
 }
 
@@ -78,3 +79,6 @@ inline fun <reified T> Single<ApiResponse<T>>.errorToResponse(): Single<ApiRespo
         return@onErrorResumeNext Single.error(it)
     }
 }
+
+fun isWrongAccessToken(throwable: Throwable): Boolean =
+    throwable is ApiException && (throwable.status == "400" || throwable.status == "403")

@@ -23,7 +23,7 @@ interface AuthApi {
     companion object {
 
         private val retrofit: Retrofit by lazy {
-            RetrofitFactory.getBuilder()
+            RetrofitFactory.getBuilder(withAuthorization = false)
                 .baseUrl(RetrofitFactory.baseUrl + "auth/")
                 .build()
         }

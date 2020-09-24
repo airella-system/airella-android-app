@@ -9,10 +9,6 @@ object UserService {
 
     private val userApi = UserApi.create()
 
-    //TODO przerobic autoryzacje
-    fun getUserStations(): Single<List<Station>> =
-        AuthService.getAccessToken().flatMap {
-            userApi.getUserStations("Bearer $it").getResponse()
-        }
+    fun getUserStations(): Single<List<Station>> = userApi.getUserStations().getResponse()
 
 }
