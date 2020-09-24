@@ -37,6 +37,8 @@ fun Single<ApiResponse<Any>>.isSuccess(): Single<Boolean> {
             }
         }.doOnError {
             Log.w("Error during API request: [$it]")
+        }.retry(2) { throwable ->
+            isWrongAccessToken(throwable).also { if (it) AuthService.clearAccessToken() }
         }
 }
 
@@ -57,6 +59,8 @@ inline fun <reified T> Single<ApiResponse<T>>.getResponse(): Single<T> {
                     )
                 }
             }
+        }.doOnError {
+            Log.w("Error during API request: [$it]")
         }.retry(2) { throwable ->
             isWrongAccessToken(throwable).also { if (it) AuthService.clearAccessToken() }
         }
