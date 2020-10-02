@@ -11,18 +11,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.R
-import org.airella.airella.ui.station.address.AddressFragment
-import org.airella.airella.ui.station.location.LocationFragment
-import org.airella.airella.ui.station.register.RegisterFragment
-import org.airella.airella.ui.station.wifilist.WifiListFragment
+import org.airella.airella.ui.station.config.address.AddressFragment
+import org.airella.airella.ui.station.config.location.LocationFragment
+import org.airella.airella.ui.station.config.register.RegisterFragment
+import org.airella.airella.ui.station.config.wifilist.WifiListFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
-import org.airella.airella.utils.PermissionUtils.requestBtIfDisabled
+import org.airella.airella.utils.PermissionUtils
 
 class StationConfigFragment : Fragment() {
 
@@ -46,7 +46,7 @@ class StationConfigFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        requestBtIfDisabled()
+        PermissionUtils.requestBtIfDisabled(this)
 
         viewModel = ViewModelProvider(this).get(StationConfigViewModel::class.java)
 
@@ -88,7 +88,7 @@ class StationConfigFragment : Fragment() {
         }
 
         hard_reset.setOnClickListener {
-            AlertDialog.Builder(requireContext())
+            MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Hard Reset")
                 .setMessage("Are you sure you want to reset all configuration?")
                 .setPositiveButton(android.R.string.yes) { _, _ ->
@@ -121,7 +121,7 @@ class StationConfigFragment : Fragment() {
     }
 
     private fun updateBondState() {
-        if (requestBtIfDisabled()) return
+        if (PermissionUtils.requestBtIfDisabled(this)) return
 
         bond_status.text = when (viewModel.btDevice.bondState) {
             BluetoothDevice.BOND_NONE -> "NOT BONDED"

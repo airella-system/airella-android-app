@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_bt_list.*
 import org.airella.airella.R
 import org.airella.airella.data.service.BluetoothService
-import org.airella.airella.utils.PermissionUtils.requestBtIfDisabled
+import org.airella.airella.utils.PermissionUtils
 
 class BTListFragment : Fragment() {
 
@@ -22,7 +22,7 @@ class BTListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        requestBtIfDisabled()
+        PermissionUtils.requestBtIfDisabled(this)
 
         viewModel = ViewModelProvider(this).get(BTListViewModel::class.java)
 
@@ -47,7 +47,7 @@ class BTListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (requestBtIfDisabled()) return
+        if (PermissionUtils.requestBtIfDisabled(this)) return
         viewModel.startBtScan(this)
     }
 

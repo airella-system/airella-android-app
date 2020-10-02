@@ -1,4 +1,4 @@
-package org.airella.airella.ui.station.wifilist
+package org.airella.airella.ui.station.config.wifilist
 
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver

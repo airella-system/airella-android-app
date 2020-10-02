@@ -1,4 +1,4 @@
-package org.airella.airella.ui.station.wifilist
+package org.airella.airella.ui.station.config.wifilist
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -6,8 +6,8 @@ import android.net.wifi.ScanResult
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.item_bt_device_list.view.*
 import org.airella.airella.R
 import org.airella.airella.utils.inflate
@@ -53,7 +53,8 @@ class WifiAdapter(val fragment: WifiListFragment, private val wifiList: MutableL
             )
             val wifiPassword: EditText = form.findViewById(R.id.wifiPassword)
 
-            AlertDialog.Builder(view.context)
+            MaterialAlertDialogBuilder(view.context)
+                .setTitle("Type WIFI password:")
                 .setView(form)
                 .setPositiveButton(R.string.action_save) { _, _ ->
                     fragment.saveWifiConfig(
@@ -62,7 +63,6 @@ class WifiAdapter(val fragment: WifiListFragment, private val wifiList: MutableL
                     )
                 }
                 .setNegativeButton(R.string.cancel, null)
-                .create()
                 .show()
         }
 

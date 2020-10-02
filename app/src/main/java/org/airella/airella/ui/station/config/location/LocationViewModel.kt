@@ -1,25 +1,27 @@
-package org.airella.airella.ui.station.wifilist
+package org.airella.airella.ui.station.config.location
 
-import android.net.wifi.ScanResult
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
+import org.airella.airella.data.model.common.Location
 import org.airella.airella.ui.station.AbstractConfigViewModel
 import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import java.util.*
 
-class WifiListViewModel : AbstractConfigViewModel() {
+class LocationViewModel : AbstractConfigViewModel() {
 
-    val wifiList: MutableList<ScanResult> = mutableListOf()
+    var location: MutableLiveData<Location> = MutableLiveData()
 
-    fun saveWiFiConfig(fragment: Fragment, wifiSSID: String, wifiPassword: String) {
-        Log.i("Save wifi config start")
+    fun saveLocation(fragment: Fragment, latitude: String, longitude: String) {
+        Log.i("Save location start")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                WriteRequest(Config.WIFI_SSID_UUID, wifiSSID),
-                WriteRequest(Config.WIFI_PASSWORD_UUID, wifiPassword),
-                WriteRequest(Config.REFRESH_ACTION_UUID, Config.WIFI_ACTION)
+                WriteRequest(Config.LOCATION_LATITUDE_UUID, latitude),
+                WriteRequest(Config.LOCATION_LONGITUDE_UUID, longitude),
+                WriteRequest(Config.LOCATION_MANUALLY_UUID, "1"),
+                WriteRequest(Config.REFRESH_ACTION_UUID, Config.LOCATION_ACTION)
             )
         )
         btDevice.connectGatt(
@@ -34,5 +36,4 @@ class WifiListViewModel : AbstractConfigViewModel() {
                 }
             })
     }
-
 }

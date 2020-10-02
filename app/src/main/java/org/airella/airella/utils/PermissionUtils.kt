@@ -31,20 +31,20 @@ object PermissionUtils {
         return bluetoothAdapter != null && bluetoothAdapter!!.isEnabled
     }
 
-    fun Fragment.requestLocationIfDisabled(): Boolean {
-        val locationPermission = checkLocationPermission(requireContext())
+    fun requestLocationIfDisabled(fragment: Fragment): Boolean {
+        val locationPermission = checkLocationPermission(fragment.requireContext())
         if (!locationPermission) {
-            switchFragment(R.id.container, LocationPermissionFragment(this))
+            fragment.switchFragment(R.id.container, LocationPermissionFragment(fragment))
         }
         return locationPermission
     }
 
-    fun Fragment.requestBtIfDisabled(): Boolean {
-        if (!requestLocationIfDisabled()) return true
+    fun requestBtIfDisabled(fragment: Fragment): Boolean {
+        if (!requestLocationIfDisabled(fragment)) return true
 
-        val btEnabled = checkBTEnabled(requireContext())
+        val btEnabled = checkBTEnabled(fragment.requireContext())
         if (!btEnabled) {
-            switchFragment(R.id.container, BluetoothEnableFragment(this))
+            fragment.switchFragment(R.id.container, BluetoothEnableFragment(fragment))
         }
         return !btEnabled
     }
