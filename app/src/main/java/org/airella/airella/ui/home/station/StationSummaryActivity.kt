@@ -9,7 +9,7 @@ import org.airella.airella.R
 import org.airella.airella.data.model.sensor.Station
 import org.airella.airella.data.service.StationService
 
-class StationSummaryActivity() : AppCompatActivity() {
+class StationSummaryActivity : AppCompatActivity() {
 
     private lateinit var viewModel: StationSummaryViewModel
 
@@ -22,10 +22,15 @@ class StationSummaryActivity() : AppCompatActivity() {
         viewModel.station = intent.extras!!.getSerializable("station") as Station
 
         name.text = viewModel.station.name
-        aqi.text = getString(R.string.station_aqi_1, viewModel.station.aqi.toString())
+        aqi.text = viewModel.station.aqi.toString()
         address.text = viewModel.station.address.toString()
 
+        station_connect_button.setOnClickListener {
+            Toast.makeText(this, "Connection to a station", Toast.LENGTH_SHORT).show()
+        }
+
         remove_station_button.setOnClickListener {
+            Toast.makeText(this, "Removing a station", Toast.LENGTH_SHORT).show()
             StationService.removeStation(viewModel.station.id).subscribe({
                 Toast.makeText(this, "Removed a station", Toast.LENGTH_LONG).show()
                 finish()

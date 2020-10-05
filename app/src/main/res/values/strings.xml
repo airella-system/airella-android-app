@@ -74,7 +74,7 @@
     <string name="register_station">Register station</string>
     <string name="wifi">WiFi</string>
     <string name="type_password">Type password:</string>
-    <string name="remove_station">Remove a station</string>
+    <string name="remove_station">Remove</string>
     <string name="station_aqi_1">AQI: %1$s</string>
     <string name="icon">icon</string>
 </resources>

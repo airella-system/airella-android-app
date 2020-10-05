@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.airella.airella.data.service.AuthService
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 object RetrofitFactory {
@@ -20,6 +21,8 @@ object RetrofitFactory {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
         val httpClientBuilder = OkHttpClient.Builder()
         httpClientBuilder.addNetworkInterceptor(logging)
+        httpClientBuilder.readTimeout(15, TimeUnit.SECONDS)
+        httpClientBuilder.connectTimeout(15, TimeUnit.SECONDS)
 
         if (isAuthorization) {
             httpClientBuilder.addInterceptor(object : Interceptor {

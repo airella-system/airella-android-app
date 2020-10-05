@@ -11,6 +11,6 @@ data class Address(
     val number: String
 ) : Serializable {
     override fun toString(): String {
-        return "$street $number - $city - $country"
+        return "$street $number $city - $country"
     }
 }

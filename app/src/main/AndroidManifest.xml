@@ -24,7 +24,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.home.station.StationSummaryActivity"></activity>
+        <activity
+            android:name=".ui.home.station.StationSummaryActivity"
+            android:theme="@style/AppTheme"
+            android:label="Station Info" />
         <activity
             android:name=".ui.station.AddSensorActivity"
             android:theme="@style/AppTheme.NoActionBar" />
