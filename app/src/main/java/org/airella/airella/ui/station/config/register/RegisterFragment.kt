@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_register_station.*
 import org.airella.airella.R
 import org.airella.airella.data.service.AuthService
-import org.airella.airella.utils.Config
 
 class RegisterFragment : Fragment() {
 
@@ -29,7 +28,7 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        apiUrl.setText(Config.DEFAULT_API_URL)
+        apiUrl.setText(AuthService.baseApiUrl)
         registrationToken.setText(AuthService.getUser().stationRegistrationToken)
 
         btn_continue.setText(R.string.action_save)

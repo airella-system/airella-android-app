@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.airella.airella.R
 import org.airella.airella.data.service.UserService
-import org.airella.airella.ui.station.AddSensorActivity
+import org.airella.airella.ui.station.AddStationActivity
 import org.airella.airella.utils.Log
 
 class HomeFragment : Fragment() {
@@ -44,7 +44,7 @@ class HomeFragment : Fragment() {
         })
 
         add_sensor_fab.setOnClickListener {
-            val intent = Intent(requireContext(), AddSensorActivity::class.java)
+            val intent = Intent(requireContext(), AddStationActivity::class.java)
             startActivity(intent)
         }
 

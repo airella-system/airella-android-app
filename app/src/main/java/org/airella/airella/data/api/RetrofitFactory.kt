@@ -14,8 +14,6 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitFactory {
 
-    const val baseUrl = "https://airella.cyfrogen.com/api/"
-
     fun getHttpClientBuilder(isAuthorization: Boolean): OkHttpClient.Builder {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -43,7 +41,7 @@ object RetrofitFactory {
     fun getBuilder(withAuthorization: Boolean): Retrofit.Builder = Retrofit.Builder()
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().build()).asLenient())
-        .baseUrl(baseUrl)
+        .baseUrl("${AuthService.baseApiUrl}/")
         .client(getHttpClientBuilder(withAuthorization).build())
 
 }

@@ -1,6 +1,7 @@
 package org.airella.airella.data.service
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanCallback
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,6 +27,15 @@ object BluetoothService {
                 Log.i("Stop BT scan")
                 bluetoothAdapter.bluetoothLeScanner.stopScan(callback)
             }
+        } catch (e: NullPointerException) {
+            throw BluetoothDisabledException()
+        }
+    }
+
+    @Throws(BluetoothDisabledException::class)
+    fun getDeviceByMac(macAddress: String): BluetoothDevice {
+        try {
+            return bluetoothAdapter.getRemoteDevice(macAddress)
         } catch (e: NullPointerException) {
             throw BluetoothDisabledException()
         }

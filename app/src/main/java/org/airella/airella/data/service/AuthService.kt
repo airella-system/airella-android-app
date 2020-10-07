@@ -10,6 +10,7 @@ import org.airella.airella.data.api.isSuccess
 import org.airella.airella.data.model.auth.AccessToken
 import org.airella.airella.data.model.auth.User
 import org.airella.airella.exception.UserNotLoggedException
+import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.RxUtils.runAsync
 
@@ -20,7 +21,10 @@ import org.airella.airella.utils.RxUtils.runAsync
 
 object AuthService {
 
-    private val authApi = AuthApi.create()
+    var baseApiUrl: String = PreferencesService.getString("api_url", Config.DEFAULT_API_URL)
+        private set
+
+    private val authApi by lazy { AuthApi.create() }
 
     private var user: User? = null
 
@@ -39,6 +43,7 @@ object AuthService {
         val email = PreferencesService.getString("email", "")
         val refreshToken = PreferencesService.getString("refreshToken", "")
         val stationRegistrationToken = PreferencesService.getString("stationRegistrationToken", "")
+
 
         if (email.isNotEmpty() && refreshToken.isNotEmpty() && stationRegistrationToken.isNotEmpty()) {
             user = User(null, refreshToken, stationRegistrationToken, email)

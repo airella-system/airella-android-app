@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_station_list.view.*
 import org.airella.airella.R
 import org.airella.airella.data.model.sensor.Station
-import org.airella.airella.ui.home.station.StationSummaryActivity
+import org.airella.airella.ui.home.station.StationInfoActivity
 import org.airella.airella.utils.inflate
 
 class StationAdapter : RecyclerView.Adapter<StationAdapter.StationHolder>() {
@@ -49,7 +49,7 @@ class StationAdapter : RecyclerView.Adapter<StationAdapter.StationHolder>() {
         }
 
         override fun onClick(v: View?) {
-            val intent = Intent(view.context, StationSummaryActivity::class.java)
+            val intent = Intent(view.context, StationInfoActivity::class.java)
             intent.putExtra("station", station)
             ContextCompat.startActivity(view.context, intent, null)
         }

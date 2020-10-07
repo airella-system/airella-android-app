@@ -5,7 +5,7 @@ import org.airella.airella.data.api.ApiResponse
 import org.airella.airella.data.api.RetrofitFactory
 import org.airella.airella.data.model.auth.RefreshTokenResponse
 import org.airella.airella.data.model.auth.User
-import retrofit2.Retrofit
+import org.airella.airella.data.service.AuthService
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -22,16 +22,12 @@ interface AuthApi {
 
     companion object {
 
-        private val retrofit: Retrofit by lazy {
-            RetrofitFactory.getBuilder(withAuthorization = false)
-                .baseUrl(RetrofitFactory.baseUrl + "auth/")
-                .build()
-        }
-
         fun create(): AuthApi {
-            return retrofit.create(
-                AuthApi::class.java
-            )
+            return RetrofitFactory
+                .getBuilder(withAuthorization = false)
+                .baseUrl("${AuthService.baseApiUrl}/auth/")
+                .build()
+                .create(AuthApi::class.java)
         }
     }
 }

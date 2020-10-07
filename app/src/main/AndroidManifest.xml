@@ -25,11 +25,11 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.home.station.StationSummaryActivity"
-            android:theme="@style/AppTheme"
+            android:name=".ui.home.station.StationInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="Station Info" />
         <activity
-            android:name=".ui.station.AddSensorActivity"
+            android:name=".ui.station.AddStationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.register.RegisterActivity" />

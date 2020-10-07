@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_bt_device_list.view.*
 import org.airella.airella.R
@@ -51,16 +50,15 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
             }
 
             val configFragment: Fragment = StationConfigFragment()
-            val transaction: FragmentTransaction =
-                (v.context as FragmentActivity).supportFragmentManager.beginTransaction()
 
             val bundle = Bundle()
             bundle.putParcelable("bt_device", btDevice)
             configFragment.arguments = bundle
 
-            transaction.replace(R.id.container, configFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            (v.context as FragmentActivity).supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, configFragment)
+                .addToBackStack(null).commit()
         }
 
     }

@@ -3,8 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.home.station.StationSummaryActivity">
+    android:layout_height="match_parent">
+
+    <org.airella.airella.ui.template.HeaderTemplate
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:image="@drawable/ic_phonelink_setup_white_70dp"
+        app:text="@string/station_summary" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -12,7 +21,7 @@
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,8 +31,8 @@
                 android:id="@+id/label_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginStart="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="Station name" />
@@ -32,7 +41,7 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
+                android:layout_marginEnd="32dp"
                 app:layout_constraintTop_toTopOf="@id/label_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Stacja AGH" />
@@ -56,8 +65,8 @@
                 android:id="@+id/label_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginStart="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="Address" />
@@ -66,9 +75,9 @@
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
-                app:layout_constraintTop_toTopOf="@id/label_address"
+                android:layout_marginEnd="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/label_address"
                 tools:text="ul. Jana Pawła 2137" />
 
             <View
@@ -90,8 +99,8 @@
                 android:id="@+id/label_aqi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginStart="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="CAQI" />
@@ -100,7 +109,7 @@
                 android:id="@+id/aqi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
+                android:layout_marginEnd="32dp"
                 app:layout_constraintTop_toTopOf="@id/label_aqi"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="19.0" />
