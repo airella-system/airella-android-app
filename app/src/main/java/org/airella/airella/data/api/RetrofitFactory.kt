@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitFactory {
 
-    const val baseUrl = "http://airella.cyfrogen.com/api/"
+    const val baseUrl = "https://airella.cyfrogen.com/api/"
 
     fun getHttpClientBuilder(isAuthorization: Boolean): OkHttpClient.Builder {
         val logging = HttpLoggingInterceptor()
