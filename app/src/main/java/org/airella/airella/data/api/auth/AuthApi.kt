@@ -1,11 +1,11 @@
 package org.airella.airella.data.api.auth
 
 import io.reactivex.rxjava3.core.Single
+import org.airella.airella.data.api.ApiManager
 import org.airella.airella.data.api.ApiResponse
 import org.airella.airella.data.api.RetrofitFactory
 import org.airella.airella.data.model.auth.RefreshTokenResponse
 import org.airella.airella.data.model.auth.User
-import org.airella.airella.data.service.AuthService
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -25,7 +25,7 @@ interface AuthApi {
         fun create(): AuthApi {
             return RetrofitFactory
                 .getBuilder(withAuthorization = false)
-                .baseUrl("${AuthService.baseApiUrl}/auth/")
+                .baseUrl("${ApiManager.baseApiUrl}/auth/")
                 .build()
                 .create(AuthApi::class.java)
         }

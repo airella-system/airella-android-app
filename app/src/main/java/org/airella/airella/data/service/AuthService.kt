@@ -2,7 +2,7 @@ package org.airella.airella.data.service
 
 
 import io.reactivex.rxjava3.core.Single
-import org.airella.airella.data.api.auth.AuthApi
+import org.airella.airella.data.api.ApiManager
 import org.airella.airella.data.api.auth.LoginData
 import org.airella.airella.data.api.auth.RegisterData
 import org.airella.airella.data.api.getResponse
@@ -10,7 +10,6 @@ import org.airella.airella.data.api.isSuccess
 import org.airella.airella.data.model.auth.AccessToken
 import org.airella.airella.data.model.auth.User
 import org.airella.airella.exception.UserNotLoggedException
-import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.RxUtils.runAsync
 
@@ -20,11 +19,6 @@ import org.airella.airella.utils.RxUtils.runAsync
  */
 
 object AuthService {
-
-    var baseApiUrl: String = PreferencesService.getString("api_url", Config.DEFAULT_API_URL)
-        private set
-
-    private val authApi by lazy { AuthApi.create() }
 
     private var user: User? = null
 
@@ -62,7 +56,7 @@ object AuthService {
     fun refreshToken(): Single<AccessToken> {
         clearAccessToken()
         return try {
-            authApi.refreshToken(getUser().refreshToken).getResponse()
+            ApiManager.authApi.refreshToken(getUser().refreshToken).getResponse()
                 .map { it.accessToken }
                 .doOnSuccess { getUser().accessToken = it }
         } catch (e: UserNotLoggedException) {
@@ -71,7 +65,7 @@ object AuthService {
     }
 
     fun login(email: String, password: String): Single<User> {
-        return authApi.login(
+        return ApiManager.authApi.login(
             LoginData(
                 email,
                 password
@@ -86,7 +80,7 @@ object AuthService {
     }
 
     fun register(email: String, password: String): Single<Boolean> {
-        return authApi.register(RegisterData(email, password))
+        return ApiManager.authApi.register(RegisterData(email, password))
             .isSuccess()
             .map { true }
     }

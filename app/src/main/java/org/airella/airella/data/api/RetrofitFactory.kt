@@ -41,7 +41,7 @@ object RetrofitFactory {
     fun getBuilder(withAuthorization: Boolean): Retrofit.Builder = Retrofit.Builder()
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().build()).asLenient())
-        .baseUrl("${AuthService.baseApiUrl}/")
+        .baseUrl("${ApiManager.baseApiUrl}/")
         .client(getHttpClientBuilder(withAuthorization).build())
 
 }
