@@ -85,7 +85,7 @@ class StationSummaryFragment : Fragment() {
                         newState: Int
                     ) {
                         super.onConnectionStateChange(gatt, status, newState)
-                        gatt.disconnect()
+                        gatt.close()
                         if (newState == BluetoothGatt.STATE_CONNECTED) {
                             Log.i("Connected to station")
                             requireActivity().runOnUiThread {

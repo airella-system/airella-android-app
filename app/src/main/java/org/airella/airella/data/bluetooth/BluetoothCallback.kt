@@ -22,7 +22,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
             onConnected()
         } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
             onFailToConnect()
-            gatt.disconnect()
+            gatt.close()
         }
     }
 
@@ -57,7 +57,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 }
             }
             else -> {
-                gatt.disconnect()
+                gatt.close()
                 onFailure()
             }
         }
@@ -82,7 +82,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 }
             }
             else -> {
-                gatt.disconnect()
+                gatt.close()
                 onFailure()
             }
         }
@@ -105,7 +105,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
             currentRequest = requests.remove()
             currentRequest.execute(gatt, gattService)
         } else {
-            gatt.disconnect()
+            gatt.close()
             onSuccess()
         }
     }
