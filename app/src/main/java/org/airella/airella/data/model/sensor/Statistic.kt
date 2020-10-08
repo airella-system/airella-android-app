@@ -2,7 +2,6 @@ package org.airella.airella.data.model.sensor
 
 import com.squareup.moshi.JsonClass
 import java.io.Serializable
-import java.time.LocalDateTime
 
 @JsonClass(generateAdapter = true)
 data class Statistic(
@@ -16,6 +15,6 @@ data class Statistic(
 
 @JsonClass(generateAdapter = true)
 data class StatisticValue(
-    val timestamp: LocalDateTime,
+    val timestamp: String,
     val value: String
 ) : Serializable

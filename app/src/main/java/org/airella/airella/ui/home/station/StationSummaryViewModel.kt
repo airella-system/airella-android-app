@@ -7,7 +7,4 @@ class StationSummaryViewModel : ViewModel() {
 
     lateinit var station: Station
 
-    lateinit var stationBtMacAddress: String
-
-
 }
