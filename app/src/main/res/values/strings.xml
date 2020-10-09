@@ -78,4 +78,5 @@
     <string name="station_aqi_1">AQI: %1$s</string>
     <string name="icon">icon</string>
     <string name="station_summary">Station summary</string>
+    <string name="set_custom_api_url">Set custom api url</string>
 </resources>

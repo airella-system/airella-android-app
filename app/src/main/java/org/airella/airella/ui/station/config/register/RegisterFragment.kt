@@ -29,7 +29,6 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        apiUrl.setText(ApiManager.baseApiUrl)
         registrationToken.setText(AuthService.getUser().stationRegistrationToken)
 
         btn_continue.setText(R.string.action_save)
@@ -38,7 +37,7 @@ class RegisterFragment : Fragment() {
             viewModel.registerStation(
                 this,
                 stationName.text.toString(),
-                apiUrl.text.toString()
+                ApiManager.baseApiUrl
             )
         }
     }

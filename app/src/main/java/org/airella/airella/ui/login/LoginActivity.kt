@@ -11,8 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.android.synthetic.main.activity_login.*
 import org.airella.airella.MainActivity
 import org.airella.airella.R
+import org.airella.airella.data.api.ApiManager
 import org.airella.airella.data.model.Result
 import org.airella.airella.data.model.auth.User
 import org.airella.airella.ui.register.RegisterActivity
@@ -87,6 +90,29 @@ class LoginActivity : AppCompatActivity() {
         registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+        }
+
+        apiUrlButton.setOnClickListener {
+            val form = layoutInflater.inflate(
+                R.layout.view_api_url_config,
+                null
+            )
+            val apiUrlEditText: EditText = form.findViewById(R.id.apiUrl)
+            apiUrlEditText.setText(ApiManager.baseApiUrl)
+
+            val alert = MaterialAlertDialogBuilder(this)
+                .setView(form)
+                .setPositiveButton(R.string.action_save) { _, _ ->
+                    var apiUrl = apiUrlEditText.text.trim().toString()
+                    if (!apiUrl.startsWith("http://") && !apiUrl.startsWith("https://")) {
+                        apiUrl = "http://$apiUrl"
+                    }
+                    ApiManager.baseApiUrl = apiUrl
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .create()
+
+            alert.show()
         }
 
     }
