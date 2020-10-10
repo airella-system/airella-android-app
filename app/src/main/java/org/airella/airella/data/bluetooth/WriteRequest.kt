@@ -2,6 +2,7 @@ package org.airella.airella.data.bluetooth
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattService
+import org.airella.airella.utils.Config.BT_MTU
 import org.airella.airella.utils.Log
 import java.util.*
 import kotlin.math.ceil

@@ -4,10 +4,10 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
+import org.airella.airella.data.service.AuthService
 import org.airella.airella.utils.Log
+import org.airella.airella.utils.RxUtils.runAsync
 import retrofit2.HttpException
 
 @JsonClass(generateAdapter = true)
@@ -19,8 +19,7 @@ open class ApiResponse<T>(
 
 
 fun Single<ApiResponse<Any>>.isSuccess(): Single<Boolean> {
-    return this.subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    return this.runAsync()
         .errorToResponse()
         .flatMap {
             return@flatMap when {
@@ -38,12 +37,13 @@ fun Single<ApiResponse<Any>>.isSuccess(): Single<Boolean> {
             }
         }.doOnError {
             Log.w("Error during API request: [$it]")
+        }.retry(2) { throwable ->
+            isWrongAccessToken(throwable).also { if (it) AuthService.clearAccessToken() }
         }
 }
 
 inline fun <reified T> Single<ApiResponse<T>>.getResponse(): Single<T> {
-    return this.subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    return this.runAsync()
         .errorToResponse()
         .flatMap {
             return@flatMap when {
@@ -61,6 +61,8 @@ inline fun <reified T> Single<ApiResponse<T>>.getResponse(): Single<T> {
             }
         }.doOnError {
             Log.w("Error during API request: [$it]")
+        }.retry(2) { throwable ->
+            isWrongAccessToken(throwable).also { if (it) AuthService.clearAccessToken() }
         }
 }
 
@@ -81,3 +83,6 @@ inline fun <reified T> Single<ApiResponse<T>>.errorToResponse(): Single<ApiRespo
         return@onErrorResumeNext Single.error(it)
     }
 }
+
+fun isWrongAccessToken(throwable: Throwable): Boolean =
+    throwable is ApiException && (throwable.status == "400" || throwable.status == "403")

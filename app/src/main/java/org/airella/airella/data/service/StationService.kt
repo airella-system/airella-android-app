@@ -1,15 +1,17 @@
 package org.airella.airella.data.service
 
 import io.reactivex.rxjava3.core.Single
+import org.airella.airella.data.api.ApiManager
 import org.airella.airella.data.api.getResponse
-import org.airella.airella.data.api.station.StationApi
-import org.airella.airella.data.model.sensor.Station
+import org.airella.airella.data.api.isSuccess
+import org.airella.airella.data.model.station.Statistic
 
 object StationService {
 
-    private val stationApi = StationApi.create()
+    fun getStatistic(stationId: String, statisticId: String): Single<Statistic> =
+        ApiManager.stationApi.getStatistic(stationId, statisticId).getResponse()
 
-    fun getStations(): Single<List<Station>> = stationApi.getStations()
-        .getResponse()
+    fun removeStation(stationId: String): Single<Boolean> =
+        ApiManager.stationApi.removeStation(stationId).isSuccess()
 
 }

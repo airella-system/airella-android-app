@@ -4,11 +4,10 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattService
+import org.airella.airella.MyApplication
 import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import java.util.*
-
-const val BT_MTU = 20
 
 open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
     BluetoothGattCallback() {
@@ -24,7 +23,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
             onConnected()
         } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
             onFailToConnect()
-            gatt.disconnect()
+            gatt.close()
         }
     }
 
@@ -59,7 +58,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 }
             }
             else -> {
-                gatt.disconnect()
+                gatt.close()
                 onFailure()
             }
         }
@@ -74,6 +73,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
         when (status) {
             BluetoothGatt.GATT_SUCCESS -> {
                 val characteristicValue = characteristic.value
+                Log.i("Read from ${characteristic.uuid} value ${String(characteristicValue)}")
                 val readRequest = currentRequest as ReadRequest
                 readRequest.appendResult(characteristicValue)
                 if (readRequest.isFinished()) {
@@ -84,30 +84,32 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 }
             }
             else -> {
-                gatt.disconnect()
+                gatt.close()
                 onFailure()
             }
         }
     }
 
-    protected open fun onConnected() {}
+    protected open fun onConnected() = MyApplication.setStatus("Connected")
 
-    protected open fun onFailToConnect() {}
+    protected open fun onFailToConnect() = MyApplication.setStatus("Failed to connect")
 
-    protected open fun onCharacteristicWrite(characteristicUUID: UUID) {}
+    protected open fun onFailure() = MyApplication.setStatus("Failed")
+
+    protected open fun onCharacteristicWrite(characteristicUUID: UUID) =
+        MyApplication.setStatus("Saving in progress...")
 
     protected open fun onCharacteristicRead(characteristicUUID: UUID, result: String) {}
 
-    protected open fun onSuccess() {}
+    protected open fun onSuccess() = MyApplication.setStatus("Success")
 
-    protected open fun onFailure() {}
 
     private fun executeNextRequest(gatt: BluetoothGatt) {
         if (requests.isNotEmpty()) {
             currentRequest = requests.remove()
             currentRequest.execute(gatt, gattService)
         } else {
-            gatt.disconnect()
+            gatt.close()
             onSuccess()
         }
     }
