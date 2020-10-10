@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Single
 import org.airella.airella.data.api.ApiManager
 import org.airella.airella.data.api.getResponse
 import org.airella.airella.data.api.isSuccess
-import org.airella.airella.data.model.sensor.Statistic
+import org.airella.airella.data.model.station.Statistic
 
 object StationService {
 

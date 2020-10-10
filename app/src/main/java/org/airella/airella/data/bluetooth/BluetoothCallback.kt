@@ -73,6 +73,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
         when (status) {
             BluetoothGatt.GATT_SUCCESS -> {
                 val characteristicValue = characteristic.value
+                Log.i("Read from ${characteristic.uuid} value ${String(characteristicValue)}")
                 val readRequest = currentRequest as ReadRequest
                 readRequest.appendResult(characteristicValue)
                 if (readRequest.isFinished()) {
@@ -93,7 +94,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
 
     protected open fun onFailToConnect() = MyApplication.setStatus("Failed to connect")
 
-    protected open fun onFailure() = MyApplication.setStatus("Saving failed")
+    protected open fun onFailure() = MyApplication.setStatus("Failed")
 
     protected open fun onCharacteristicWrite(characteristicUUID: UUID) =
         MyApplication.setStatus("Saving in progress...")

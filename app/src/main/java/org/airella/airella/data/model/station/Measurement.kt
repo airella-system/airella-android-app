@@ -1,4 +1,4 @@
-package org.airella.airella.data.model.sensor
+package org.airella.airella.data.model.station
 
 import com.squareup.moshi.JsonClass
 import org.airella.airella.data.model.common.Timespan

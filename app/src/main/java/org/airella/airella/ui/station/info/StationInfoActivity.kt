@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import org.airella.airella.R
-import org.airella.airella.data.model.sensor.Station
+import org.airella.airella.data.model.station.Station
 
 class StationInfoActivity : AppCompatActivity() {
 

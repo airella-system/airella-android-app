@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_bt_list.*
@@ -35,7 +34,7 @@ class BTListFragment : Fragment() {
         bt_list.layoutManager = LinearLayoutManager(requireContext())
         bt_list.adapter = viewModel.adapter
 
-        BluetoothService.isScanning.observe(viewLifecycleOwner, Observer {
+        BluetoothService.isScanning.observe(viewLifecycleOwner, {
             loading.visibility = if (it) View.VISIBLE else View.GONE
         })
     }

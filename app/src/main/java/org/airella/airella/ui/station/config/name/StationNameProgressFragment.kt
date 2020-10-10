@@ -1,4 +1,4 @@
-package org.airella.airella.ui.station.config.location
+package org.airella.airella.ui.station.config.name
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,11 +19,11 @@ import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import java.util.*
 
-class LocationProgressFragment : Fragment() {
+class StationNameProgressFragment : Fragment() {
 
     private val viewModel: ConfigViewModel by activityViewModels()
 
-    private val locationViewModel: LocationViewModel by activityViewModels()
+    private val locationViewModelStation: StationNameViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,18 +34,14 @@ class LocationProgressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val location = locationViewModel.location.value!!
-        saveLocation(location.latitude.toString(), location.longitude.toString())
+        saveStationName(locationViewModelStation.stationName.value!!)
     }
 
-    private fun saveLocation(latitude: String, longitude: String) {
-        Log.i("Save location start")
+    private fun saveStationName(stationName: String) {
+        Log.i("Save station name")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                WriteRequest(Config.LOCATION_LATITUDE_UUID, latitude),
-                WriteRequest(Config.LOCATION_LONGITUDE_UUID, longitude),
-                WriteRequest(Config.LOCATION_MANUALLY_UUID, "1"),
-                WriteRequest(Config.REFRESH_ACTION_UUID, Config.LOCATION_ACTION)
+                WriteRequest(Config.STATION_NAME_UUID, stationName)
             )
         )
         viewModel.btDevice.connectGatt(
@@ -55,8 +51,7 @@ class LocationProgressFragment : Fragment() {
                 override fun onSuccess() {
                     runOnUIThread {
                         setStatus("Success")
-                        viewModel.stationLatitude.value = latitude
-                        viewModel.stationLongitude.value = longitude
+                        viewModel.stationName.value = stationName
                         switchFragmentWithBackStack(
                             R.id.container,
                             ConfigurationSuccessfulFragment()

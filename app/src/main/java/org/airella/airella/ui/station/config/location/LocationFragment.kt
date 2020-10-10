@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -39,7 +38,7 @@ class LocationFragment : Fragment() {
 
         btn_continue.setText(R.string.action_save)
 
-        locationViewModel.location.observe(viewLifecycleOwner, Observer {
+        locationViewModel.location.observe(viewLifecycleOwner, {
             btn_continue.isEnabled = it != null
             val text = if (it != null) "${it.latitude}, ${it.longitude}" else "Can't get location"
             location_text.text = text

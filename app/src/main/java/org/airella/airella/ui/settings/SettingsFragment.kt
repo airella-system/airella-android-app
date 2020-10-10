@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.airella.airella.R
 
@@ -23,7 +22,7 @@ class SettingsFragment : Fragment() {
             ViewModelProvider(this).get(SettingsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
         val textView: TextView = root.findViewById(R.id.text_settings)
-        settingsViewModel.text.observe(viewLifecycleOwner, Observer {
+        settingsViewModel.text.observe(viewLifecycleOwner, {
             textView.text = it
         })
         return root

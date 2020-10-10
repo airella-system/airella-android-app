@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import kotlinx.android.synthetic.main.fragment_configuration_progress.*
 import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.data.api.ApiManager
@@ -33,6 +35,7 @@ class RegisterProgressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        configuration_text.setText(R.string.registration_in_progress)
         registerStation(ApiManager.baseApiUrl)
     }
 
@@ -54,7 +57,10 @@ class RegisterProgressFragment : Fragment() {
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     setStatus("Success")
-                    switchFragmentWithBackStack(R.id.container, ConfigurationSuccessfulFragment())
+                    val configurationSuccessfulFragment = ConfigurationSuccessfulFragment()
+                    configurationSuccessfulFragment.arguments =
+                        bundleOf(Pair("success_text", getString(R.string.registration_successful)))
+                    switchFragmentWithBackStack(R.id.container, configurationSuccessfulFragment)
                 }
             })
     }

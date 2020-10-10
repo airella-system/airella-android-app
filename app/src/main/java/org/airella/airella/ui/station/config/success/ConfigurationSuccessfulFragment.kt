@@ -21,6 +21,9 @@ class ConfigurationSuccessfulFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.getString("success_text")?.let {
+            main_text.text = it
+        }
         back_button.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack(
                 "config",

@@ -34,10 +34,10 @@ class MyApplication : Application() {
 
         fun setStatus(status: String) {
             Log.i(status)
-            runOnUIThread {
-                toast.setText(status)
-                toast.show()
-            }
+//            runOnUIThread {
+//                toast.setText(status)
+//                toast.show()
+//            }
         }
     }
 }

@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_station_list.view.*
 import org.airella.airella.R
-import org.airella.airella.data.model.sensor.Station
+import org.airella.airella.data.model.station.Station
 import org.airella.airella.ui.station.info.StationInfoActivity
 import org.airella.airella.utils.inflate
 

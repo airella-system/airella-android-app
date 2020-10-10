@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_login.*
@@ -38,20 +37,20 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
-        loginViewModel.emailError.observe(this, Observer {
+        loginViewModel.emailError.observe(this, {
             email.error = it?.let { getString(it) }
         })
 
-        loginViewModel.passwordError.observe(this, Observer {
+        loginViewModel.passwordError.observe(this, {
             password.error = it?.let { getString(it) }
         })
 
-        loginViewModel.isDataValid.observe(this, Observer {
+        loginViewModel.isDataValid.observe(this, {
             loginButton.isEnabled = it
         })
 
-        loginViewModel.loginResult.observe(this, Observer {
-            val loginResult: Result<User, String> = it ?: return@Observer
+        loginViewModel.loginResult.observe(this, {
+            val loginResult: Result<User, String> = it ?: return@observe
 
             loading.visibility = View.GONE
             when (loginResult) {

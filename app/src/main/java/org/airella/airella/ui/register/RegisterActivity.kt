@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.airella.airella.R
 import org.airella.airella.data.model.Result
@@ -32,24 +31,24 @@ class RegisterActivity : AppCompatActivity() {
 
         registerViewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
 
-        registerViewModel.emailError.observe(this, Observer {
+        registerViewModel.emailError.observe(this, {
             email.error = it?.let { getString(it) }
         })
 
-        registerViewModel.passwordError.observe(this, Observer {
+        registerViewModel.passwordError.observe(this, {
             password.error = it?.let { getString(it) }
         })
 
-        registerViewModel.passwordConfirmError.observe(this, Observer {
+        registerViewModel.passwordConfirmError.observe(this, {
             passwordConfirm.error = it?.let { getString(it) }
         })
 
-        registerViewModel.isDataValid.observe(this, Observer {
+        registerViewModel.isDataValid.observe(this, {
             registerButton.isEnabled = it
         })
 
-        registerViewModel.registerResult.observe(this, Observer {
-            val registerResult = it ?: return@Observer
+        registerViewModel.registerResult.observe(this, {
+            val registerResult = it ?: return@observe
 
             loading.visibility = View.GONE
             when (registerResult) {

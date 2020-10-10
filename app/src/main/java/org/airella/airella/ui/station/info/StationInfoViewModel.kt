@@ -1,7 +1,7 @@
 package org.airella.airella.ui.station.info
 
 import androidx.lifecycle.ViewModel
-import org.airella.airella.data.model.sensor.Station
+import org.airella.airella.data.model.station.Station
 
 class StationInfoViewModel : ViewModel() {
 

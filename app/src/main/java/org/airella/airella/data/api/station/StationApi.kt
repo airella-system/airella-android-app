@@ -3,7 +3,7 @@ package org.airella.airella.data.api.station
 import io.reactivex.rxjava3.core.Single
 import org.airella.airella.data.api.ApiResponse
 import org.airella.airella.data.api.RetrofitFactory
-import org.airella.airella.data.model.sensor.Statistic
+import org.airella.airella.data.model.station.Statistic
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Path

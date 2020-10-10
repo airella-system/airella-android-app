@@ -84,5 +84,9 @@
     <string name="address_label">Address:</string>
     <string name="location_label">Location:</string>
     <string name="back">Back</string>
+    <string name="choose_station_name">Choose station name</string>
+    <string name="configuration_in_progress">Configuration in progress</string>
     <string name="configuration_successful">Configuration successful</string>
+    <string name="registration_in_progress">Registration in progress</string>
+    <string name="registration_successful">Registration successful</string>
 </resources>
