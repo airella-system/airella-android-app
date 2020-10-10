@@ -1,9 +1,9 @@
-package org.airella.airella.ui.home.station
+package org.airella.airella.ui.station.info
 
 import androidx.lifecycle.ViewModel
 import org.airella.airella.data.model.sensor.Station
 
-class StationSummaryViewModel : ViewModel() {
+class StationInfoViewModel : ViewModel() {
 
     lateinit var station: Station
 

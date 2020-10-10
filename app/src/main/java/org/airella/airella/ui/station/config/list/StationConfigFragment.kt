@@ -1,4 +1,4 @@
-package org.airella.airella.ui.station.config
+package org.airella.airella.ui.station.config.list
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
@@ -6,23 +6,29 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
+import org.airella.airella.MyApplication
 import org.airella.airella.R
+import org.airella.airella.data.bluetooth.BluetoothCallback
+import org.airella.airella.data.bluetooth.BluetoothRequest
+import org.airella.airella.data.bluetooth.WriteRequest
+import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.address.AddressFragment
 import org.airella.airella.ui.station.config.location.LocationFragment
-import org.airella.airella.ui.station.config.register.RegisterFragment
-import org.airella.airella.ui.station.config.wifilist.WifiListFragment
+import org.airella.airella.ui.station.config.register.RegisterProgressFragment
+import org.airella.airella.ui.station.config.wifi.WifiListFragment
+import org.airella.airella.utils.Config
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
+import java.util.*
 
 class StationConfigFragment : Fragment() {
 
@@ -38,7 +44,7 @@ class StationConfigFragment : Fragment() {
         }
     }
 
-    private lateinit var viewModel: StationConfigViewModel
+    private val viewModel: ConfigViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -47,10 +53,6 @@ class StationConfigFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         PermissionUtils.requestBtIfDisabled(this)
-
-        viewModel = ViewModelProvider(this).get(StationConfigViewModel::class.java)
-
-        viewModel.btDevice = requireArguments().getParcelable("bt_device") as BluetoothDevice
 
         return inflater.inflate(R.layout.fragment_station_config, container, false)
     }
@@ -70,21 +72,24 @@ class StationConfigFragment : Fragment() {
             )
         }
 
-        wifi_config.setOnClickListener {
+        station_name_edit_button.setOnClickListener {
+//            goToConfigFragment(StationNameFragment())
+        }
+
+        station_wifi_edit_button.setOnClickListener {
             goToConfigFragment(WifiListFragment())
         }
 
-        address_config.setOnClickListener {
+        station_address_edit_button.setOnClickListener {
             goToConfigFragment(AddressFragment())
         }
 
-
-        location_config.setOnClickListener {
+        station_location_edit_button.setOnClickListener {
             goToConfigFragment(LocationFragment())
         }
 
         register_station.setOnClickListener {
-            goToConfigFragment(RegisterFragment())
+            goToConfigFragment(RegisterProgressFragment())
         }
 
         hard_reset.setOnClickListener {
@@ -92,7 +97,7 @@ class StationConfigFragment : Fragment() {
                 .setTitle("Hard Reset")
                 .setMessage("Are you sure you want to reset all configuration?")
                 .setPositiveButton(android.R.string.yes) { _, _ ->
-                    viewModel.hardResetDevice(requireContext())
+                    hardResetDevice()
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
@@ -100,11 +105,7 @@ class StationConfigFragment : Fragment() {
     }
 
     private fun goToConfigFragment(newFragment: Fragment) {
-        val bundle = Bundle()
-        bundle.putParcelable("bt_device", viewModel.btDevice)
-
-        newFragment.arguments = bundle
-        switchFragmentWithBackStack(R.id.container, newFragment)
+        switchFragmentWithBackStack(R.id.container, newFragment, "config")
     }
 
     override fun onResume() {
@@ -123,27 +124,47 @@ class StationConfigFragment : Fragment() {
     private fun updateBondState() {
         if (PermissionUtils.requestBtIfDisabled(this)) return
 
-        bond_status.text = when (viewModel.btDevice.bondState) {
-            BluetoothDevice.BOND_NONE -> "NOT BONDED"
-            BluetoothDevice.BOND_BONDING -> "BONDING"
-            else -> "BONDED"
-        }
-        bond_status.setTextColor(
-            when (viewModel.btDevice.bondState) {
-                BluetoothDevice.BOND_NONE -> Color.RED
-                BluetoothDevice.BOND_BONDING -> Color.rgb(255, 140, 0)
-                else -> Color.GREEN
-            }
-        )
+//        bond_status.text = when (viewModel.btDevice.bondState) {
+//            BluetoothDevice.BOND_NONE -> "NOT BONDED"
+//            BluetoothDevice.BOND_BONDING -> "BONDING"
+//            else -> "BONDED"
+//        }
+//        bond_status.setTextColor(
+//            when (viewModel.btDevice.bondState) {
+//                BluetoothDevice.BOND_NONE -> Color.RED
+//                BluetoothDevice.BOND_BONDING -> Color.rgb(255, 140, 0)
+//                else -> Color.GREEN
+//            }
+//        )
 
         bond_device.isEnabled = viewModel.btDevice.bondState == BluetoothDevice.BOND_NONE
 
-        wifi_config.isEnabled = viewModel.isBonded()
-        address_config.isEnabled = viewModel.isBonded()
-        location_config.isEnabled = viewModel.isBonded()
-        register_station.isEnabled = viewModel.isBonded()
-        hard_reset.isEnabled = viewModel.isBonded()
+        station_wifi_edit_button.isEnabled = isBonded()
+        station_address_edit_button.isEnabled = isBonded()
+        station_location_edit_button.isEnabled = isBonded()
+        register_station.isEnabled = isBonded()
+        hard_reset.isEnabled = isBonded()
     }
 
+    private fun isBonded() = viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED
+
+    private fun hardResetDevice() {
+        Log.i("Hard reset started")
+        MyApplication.setStatus("Connecting")
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+            listOf(
+                WriteRequest(Config.CLEAR_DATA_UUID, "")
+            )
+        )
+
+        viewModel.btDevice.connectGatt(
+            context,
+            false,
+            object : BluetoothCallback(bluetoothRequests) {
+                override fun onFailToConnect() = MyApplication.setStatus("Failed to connect")
+                override fun onSuccess() = MyApplication.setStatus("Hard reset successful")
+                override fun onFailure() = MyApplication.setStatus("Hard reset failed")
+            })
+    }
 }
 

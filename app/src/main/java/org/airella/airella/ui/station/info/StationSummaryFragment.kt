@@ -1,37 +1,34 @@
-package org.airella.airella.ui.home.station
+package org.airella.airella.ui.station.info
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_summary.*
 import org.airella.airella.R
-import org.airella.airella.data.model.sensor.Station
 import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.data.service.StationService
-import org.airella.airella.ui.station.config.StationConfigFragment
-import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
+import org.airella.airella.ui.station.config.StationConfigActivity
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
 
 class StationSummaryFragment : Fragment() {
 
-    private lateinit var viewModel: StationSummaryViewModel
+    private val viewModel: StationInfoViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this).get(StationSummaryViewModel::class.java)
-        viewModel.station = requireArguments().getSerializable("station") as Station
-
         return inflater.inflate(R.layout.fragment_station_summary, container, false)
     }
 
@@ -43,7 +40,7 @@ class StationSummaryFragment : Fragment() {
         address.text = viewModel.station.address.toString()
 
         station_connect_button.setOnClickListener {
-            PermissionUtils.requestBtIfDisabled(this)
+            if (PermissionUtils.requestBtIfDisabled(this)) return@setOnClickListener
             Toast.makeText(requireContext(), "Connecting to a station", Toast.LENGTH_SHORT).show()
 
             connectToDevice()
@@ -89,12 +86,10 @@ class StationSummaryFragment : Fragment() {
                         if (newState == BluetoothGatt.STATE_CONNECTED) {
                             Log.i("Connected to station")
                             requireActivity().runOnUiThread {
-                                val configFragment: Fragment = StationConfigFragment()
-                                val bundle = Bundle()
-                                bundle.putParcelable("bt_device", btDevice)
-                                configFragment.arguments = bundle
-
-                                switchFragmentWithBackStack(R.id.container, configFragment)
+                                val intent =
+                                    Intent(requireContext(), StationConfigActivity::class.java)
+                                intent.putExtra("bt_device", btDevice)
+                                ContextCompat.startActivity(requireContext(), intent, null)
                             }
                         } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
                             Toast.makeText(

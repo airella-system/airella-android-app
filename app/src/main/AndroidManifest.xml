@@ -25,16 +25,19 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.home.station.StationInfoActivity"
+            android:name="org.airella.airella.ui.station.info.StationInfoActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Station Info" />
         <activity
-            android:name=".ui.station.AddStationActivity"
+            android:name=".ui.station.btlist.BtListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.register.RegisterActivity" />
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="org.airella.airella.ui.station.config.StationConfigActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".StartActivity"

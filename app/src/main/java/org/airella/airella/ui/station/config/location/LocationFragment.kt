@@ -2,26 +2,26 @@ package org.airella.airella.ui.station.config.location
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_location.*
 import org.airella.airella.R
 import org.airella.airella.data.model.common.Location
+import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.PermissionUtils
 
 class LocationFragment : Fragment() {
 
-    private lateinit var viewModel: LocationViewModel
+    private val locationViewModel: LocationViewModel by activityViewModels()
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -29,10 +29,6 @@ class LocationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-        viewModel.btDevice = requireArguments().getParcelable("bt_device") as BluetoothDevice
-
         return inflater.inflate(R.layout.fragment_location, container, false)
     }
 
@@ -43,19 +39,16 @@ class LocationFragment : Fragment() {
 
         btn_continue.setText(R.string.action_save)
 
-        viewModel.location.observe(viewLifecycleOwner, Observer {
+        locationViewModel.location.observe(viewLifecycleOwner, Observer {
             btn_continue.isEnabled = it != null
             val text = if (it != null) "${it.latitude}, ${it.longitude}" else "Can't get location"
             location_text.text = text
         })
 
         btn_continue.setOnClickListener {
-            val location = viewModel.location.value ?: return@setOnClickListener
-            viewModel.saveLocation(
-                this,
-                location.latitude.toString(),
-                location.longitude.toString()
-            )
+            if (locationViewModel.location.value != null) {
+                switchFragmentWithBackStack(R.id.container, LocationProgressFragment())
+            }
         }
 
         refreshLocation()
@@ -80,7 +73,7 @@ class LocationFragment : Fragment() {
                     val lat = latitude.text.toString().toDoubleOrNull()
                     val long = longitude.text.toString().toDoubleOrNull()
                     if (lat != null && long != null) {
-                        viewModel.location.value = Location.createWithValidation(lat, long)
+                        locationViewModel.location.value = Location.createWithValidation(lat, long)
                     }
                 }
                 .setNegativeButton(R.string.cancel, null)
@@ -94,10 +87,10 @@ class LocationFragment : Fragment() {
     private fun refreshLocation() {
         if (PermissionUtils.requestLocationIfDisabled(this)) {
             fusedLocationClient.lastLocation.addOnSuccessListener {
-                viewModel.location.value = if (it != null) Location(it) else null
+                locationViewModel.location.value = if (it != null) Location(it) else null
             }
         } else {
-            viewModel.location.value = null
+            locationViewModel.location.value = null
         }
     }
 

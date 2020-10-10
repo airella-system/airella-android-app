@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattService
+import org.airella.airella.MyApplication
 import org.airella.airella.utils.Config
 import org.airella.airella.utils.Log
 import java.util.*
@@ -88,17 +89,19 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
         }
     }
 
-    protected open fun onConnected() {}
+    protected open fun onConnected() = MyApplication.setStatus("Connected")
 
-    protected open fun onFailToConnect() {}
+    protected open fun onFailToConnect() = MyApplication.setStatus("Failed to connect")
 
-    protected open fun onCharacteristicWrite(characteristicUUID: UUID) {}
+    protected open fun onFailure() = MyApplication.setStatus("Saving failed")
+
+    protected open fun onCharacteristicWrite(characteristicUUID: UUID) =
+        MyApplication.setStatus("Saving in progress...")
 
     protected open fun onCharacteristicRead(characteristicUUID: UUID, result: String) {}
 
-    protected open fun onSuccess() {}
+    protected open fun onSuccess() = MyApplication.setStatus("Success")
 
-    protected open fun onFailure() {}
 
     private fun executeNextRequest(gatt: BluetoothGatt) {
         if (requests.isNotEmpty()) {

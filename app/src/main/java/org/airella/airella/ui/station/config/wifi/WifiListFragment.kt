@@ -1,6 +1,5 @@
-package org.airella.airella.ui.station.config.wifilist
+package org.airella.airella.ui.station.config.wifi
 
-import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,20 +9,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_wifi_list.*
 import org.airella.airella.R
 
 class WifiListFragment : Fragment() {
 
-    private lateinit var viewModel: WifiListViewModel
+    private val wifiViewModel: WifiViewModel by viewModels()
 
-    private val adapter: WifiAdapter by lazy { WifiAdapter(this, viewModel.wifiList) }
-
-    private val toast by lazy { Toast.makeText(requireContext(), "", Toast.LENGTH_LONG) }
+    private val adapter: WifiAdapter by lazy { WifiAdapter(this, wifiViewModel.wifiList) }
 
     private lateinit var wifiManager: WifiManager
 
@@ -32,9 +28,6 @@ class WifiListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this).get(WifiListViewModel::class.java)
-
-        viewModel.btDevice = requireArguments().getParcelable("bt_device") as BluetoothDevice
         wifiManager =
             requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
@@ -63,24 +56,21 @@ class WifiListFragment : Fragment() {
         startWifiScan()
     }
 
-    fun saveWifiConfig(ssid: String, password: String) {
-        viewModel.saveWiFiConfig(
-            this,
-            ssid,
-            password
-        )
+    fun setWifiConfig(wifiSSID: String, wifiPassword: String) {
+        wifiViewModel.wifiSSID.value = wifiSSID
+        wifiViewModel.wifiPassword.value = wifiPassword
     }
 
     @Suppress("DEPRECATION")
-    fun startWifiScan() {
+    private fun startWifiScan() {
         if (!wifiManager.startScan()) {
             updateWifiList()
         }
     }
 
-    fun updateWifiList() {
-        viewModel.wifiList.clear()
-        viewModel.wifiList.addAll(wifiManager.scanResults)
+    private fun updateWifiList() {
+        wifiViewModel.wifiList.clear()
+        wifiViewModel.wifiList.addAll(wifiManager.scanResults)
         adapter.notifyDataSetChanged()
     }
 
@@ -90,7 +80,6 @@ class WifiListFragment : Fragment() {
             updateWifiList()
         }
     }
-
 
 }
 
