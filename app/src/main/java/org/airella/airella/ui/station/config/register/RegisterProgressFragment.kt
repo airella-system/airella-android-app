@@ -17,9 +17,10 @@ import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
-import org.airella.airella.utils.Config
+import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
+import org.airella.airella.config.RefreshAction
 import java.util.*
 
 class RegisterProgressFragment : Fragment() {
@@ -44,11 +45,11 @@ class RegisterProgressFragment : Fragment() {
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
                 WriteRequest(
-                    Config.REGISTRATION_TOKEN_UUID,
+                    Characteristic.REGISTRATION_TOKEN,
                     AuthService.getUser().stationRegistrationToken
                 ),
-                WriteRequest(Config.API_URL_UUID, apiUrl),
-                WriteRequest(Config.REFRESH_ACTION_UUID, Config.REGISTER_ACTION)
+                WriteRequest(Characteristic.API_URL, apiUrl),
+                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.REGISTER.code)
             )
         )
         viewModel.btDevice.connectGatt(

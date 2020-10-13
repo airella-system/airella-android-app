@@ -4,7 +4,7 @@ import org.airella.airella.data.api.auth.AuthApi
 import org.airella.airella.data.api.station.StationApi
 import org.airella.airella.data.api.user.UserApi
 import org.airella.airella.data.service.PreferencesService
-import org.airella.airella.utils.Config
+import org.airella.airella.config.Config
 import org.airella.airella.utils.Log
 
 object ApiManager {
@@ -24,7 +24,7 @@ object ApiManager {
     }
 
     private fun restartApi() {
-        Log.i("Restarted APIs")
+        Log.d("Restarted APIs")
         authApi = AuthApi.create()
         stationApi = StationApi.create()
         userApi = UserApi.create()

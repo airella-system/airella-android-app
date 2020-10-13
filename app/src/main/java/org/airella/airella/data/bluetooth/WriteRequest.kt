@@ -2,12 +2,13 @@ package org.airella.airella.data.bluetooth
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattService
-import org.airella.airella.utils.Config.BT_MTU
+import org.airella.airella.config.Characteristic
+import org.airella.airella.config.Config.BT_MTU
 import org.airella.airella.utils.Log
 import java.util.*
 import kotlin.math.ceil
 
-class WriteRequest(val characteristicUUID: UUID, value: String) : BluetoothRequest {
+class WriteRequest(override val characteristic: Characteristic, val value: String) : BluetoothRequest {
 
     private val chunksToWrite: LinkedList<ByteArray> = LinkedList()
 
@@ -26,10 +27,11 @@ class WriteRequest(val characteristicUUID: UUID, value: String) : BluetoothReque
     }
 
     override fun execute(gatt: BluetoothGatt, gattService: BluetoothGattService) {
-        val characteristic = gattService.getCharacteristic(characteristicUUID)
+        val characteristic = gattService.getCharacteristic(characteristic.uuid)
         val chunk = chunksToWrite.remove()
-        Log.d("Saving ${String(chunk)} to $characteristicUUID")
+        Log.d("Saving \"${String(chunk)}\" to ${this.characteristic}")
         characteristic.value = chunk
+
         gatt.writeCharacteristic(characteristic)
     }
 

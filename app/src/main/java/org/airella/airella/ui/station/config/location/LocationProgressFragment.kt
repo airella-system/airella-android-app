@@ -14,9 +14,10 @@ import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
-import org.airella.airella.utils.Config
+import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
+import org.airella.airella.config.RefreshAction
 import java.util.*
 
 class LocationProgressFragment : Fragment() {
@@ -42,10 +43,10 @@ class LocationProgressFragment : Fragment() {
         Log.i("Save location start")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                WriteRequest(Config.LOCATION_LATITUDE_UUID, latitude),
-                WriteRequest(Config.LOCATION_LONGITUDE_UUID, longitude),
-                WriteRequest(Config.LOCATION_MANUALLY_UUID, "1"),
-                WriteRequest(Config.REFRESH_ACTION_UUID, Config.LOCATION_ACTION)
+                WriteRequest(Characteristic.LOCATION_LATITUDE, latitude),
+                WriteRequest(Characteristic.LOCATION_LONGITUDE, longitude),
+                WriteRequest(Characteristic.LOCATION_MANUALLY, "1"),
+                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.LOCATION.code)
             )
         )
         viewModel.btDevice.connectGatt(

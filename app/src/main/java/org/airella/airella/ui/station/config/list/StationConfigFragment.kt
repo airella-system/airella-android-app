@@ -20,11 +20,11 @@ import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.address.AddressFragment
+import org.airella.airella.ui.station.config.internet.InternetChooseFragment
 import org.airella.airella.ui.station.config.location.LocationFragment
 import org.airella.airella.ui.station.config.name.StationNameFragment
 import org.airella.airella.ui.station.config.register.RegisterProgressFragment
-import org.airella.airella.ui.station.config.wifi.WifiListFragment
-import org.airella.airella.utils.Config
+import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
@@ -37,9 +37,9 @@ class StationConfigFragment : Fragment() {
         override fun onReceive(context: Context?, intent: Intent) {
             updateBondState()
             when (intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR)) {
-                BluetoothDevice.BOND_NONE -> Log.i("Bonding Failed")
-                BluetoothDevice.BOND_BONDING -> Log.i("Bonding...")
-                BluetoothDevice.BOND_BONDED -> Log.i("Bonded!")
+                BluetoothDevice.BOND_NONE -> Log.w("Bonding Failed")
+                BluetoothDevice.BOND_BONDING -> Log.d("Bonding...")
+                BluetoothDevice.BOND_BONDED -> Log.d("Bonded!")
             }
         }
     }
@@ -65,6 +65,10 @@ class StationConfigFragment : Fragment() {
 
         viewModel.stationName.observe(viewLifecycleOwner, {
             station_name_view.text = it
+        })
+
+        viewModel.connectionType.observe(viewLifecycleOwner, {
+            station_connection_type_view.text = it.toString()
         })
 
         viewModel.stationWifiSSID.observe(viewLifecycleOwner, {
@@ -124,7 +128,7 @@ class StationConfigFragment : Fragment() {
         }
 
         station_wifi_edit_button.setOnClickListener {
-            goToConfigFragment(WifiListFragment())
+            goToConfigFragment(InternetChooseFragment())
         }
 
         station_address_edit_button.setOnClickListener {
@@ -208,7 +212,7 @@ class StationConfigFragment : Fragment() {
         MyApplication.setStatus("Connecting")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                WriteRequest(Config.CLEAR_DATA_UUID, "")
+                WriteRequest(Characteristic.CLEAR_DATA, "")
             )
         )
 

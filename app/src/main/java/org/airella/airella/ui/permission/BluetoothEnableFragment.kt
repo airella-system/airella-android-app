@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_bt_enable.*
 import org.airella.airella.R
-import org.airella.airella.utils.Config.BT_ENABLE_CONST
+import org.airella.airella.config.Config.BT_ENABLE_CONST
 import org.airella.airella.utils.FragmentUtils.switchFragment
 
 class BluetoothEnableFragment(private val nextFragment: Fragment) : Fragment() {

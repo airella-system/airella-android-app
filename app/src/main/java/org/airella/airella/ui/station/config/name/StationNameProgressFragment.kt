@@ -14,7 +14,7 @@ import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
-import org.airella.airella.utils.Config
+import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import java.util.*
@@ -41,7 +41,7 @@ class StationNameProgressFragment : Fragment() {
         Log.i("Save station name")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                WriteRequest(Config.STATION_NAME_UUID, stationName)
+                WriteRequest(Characteristic.STATION_NAME, stationName)
             )
         )
         viewModel.btDevice.connectGatt(

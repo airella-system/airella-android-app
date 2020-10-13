@@ -81,6 +81,7 @@
     <string name="set_custom_api_url">Set custom api url</string>
     <string name="station_name_label">Station name:</string>
     <string name="wifi_label">WiFi:</string>
+    <string name="wifi_ssid_label">WiFi name:</string>
     <string name="address_label">Address:</string>
     <string name="location_label">Location:</string>
     <string name="back">Back</string>
@@ -89,4 +90,12 @@
     <string name="configuration_successful">Configuration successful</string>
     <string name="registration_in_progress">Registration in progress</string>
     <string name="registration_successful">Registration successful</string>
+    <string name="choose_internet_connection">Choose internet connection</string>
+    <string name="gsm">GSM</string>
+    <string name="apn">APN</string>
+    <string name="gsm_username">Username</string>
+    <string name="gsm_password">Password</string>
+    <string name="gsm_extender_url">GSM Extender URL (advanced)</string>
+    <string name="configure_gsm">Configure GSM</string>
+    <string name="connection_type">Connection type</string>
 </resources>

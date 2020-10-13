@@ -3,6 +3,7 @@ package org.airella.airella.ui.station.config
 import android.bluetooth.BluetoothDevice
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.airella.airella.config.InternetConnectionType
 
 open class ConfigViewModel : ViewModel() {
 
@@ -10,7 +11,14 @@ open class ConfigViewModel : ViewModel() {
 
     val stationName: MutableLiveData<String> = MutableLiveData()
 
+    val connectionType: MutableLiveData<InternetConnectionType> = MutableLiveData()
+
     val stationWifiSSID: MutableLiveData<String> = MutableLiveData()
+
+    val gsmApn: MutableLiveData<String> = MutableLiveData()
+    val gsmUsername: MutableLiveData<String> = MutableLiveData()
+    val gsmPassword: MutableLiveData<String> = MutableLiveData()
+    val gsmExtenderUrl: MutableLiveData<String> = MutableLiveData()
 
     val stationCountry: MutableLiveData<String> = MutableLiveData()
     val stationCity: MutableLiveData<String> = MutableLiveData()

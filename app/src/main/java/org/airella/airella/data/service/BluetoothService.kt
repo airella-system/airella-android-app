@@ -21,10 +21,10 @@ object BluetoothService {
         try {
             scanning.value = enable
             if (enable) {
-                Log.i("Start BT scan")
+                Log.d("Start BT scan")
                 bluetoothAdapter.bluetoothLeScanner.startScan(callback)
             } else {
-                Log.i("Stop BT scan")
+                Log.d("Stop BT scan")
                 bluetoothAdapter.bluetoothLeScanner.stopScan(callback)
             }
         } catch (e: NullPointerException) {
