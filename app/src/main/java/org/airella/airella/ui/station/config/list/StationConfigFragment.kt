@@ -1,10 +1,6 @@
 package org.airella.airella.ui.station.config.list
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.MyApplication
 import org.airella.airella.R
+import org.airella.airella.config.Characteristic
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
@@ -24,25 +21,12 @@ import org.airella.airella.ui.station.config.internet.InternetChooseFragment
 import org.airella.airella.ui.station.config.location.LocationFragment
 import org.airella.airella.ui.station.config.name.StationNameFragment
 import org.airella.airella.ui.station.config.register.RegisterProgressFragment
-import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
 import java.util.*
 
 class StationConfigFragment : Fragment() {
-
-    private val btBondBroadcastReceiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context?, intent: Intent) {
-            updateBondState()
-            when (intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR)) {
-                BluetoothDevice.BOND_NONE -> Log.w("Bonding Failed")
-                BluetoothDevice.BOND_BONDING -> Log.d("Bonding...")
-                BluetoothDevice.BOND_BONDED -> Log.d("Bonded!")
-            }
-        }
-    }
 
     private val viewModel: ConfigViewModel by activityViewModels()
 
@@ -60,8 +44,6 @@ class StationConfigFragment : Fragment() {
     @SuppressLint("InflateParams", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        updateBondState()
 
         viewModel.stationName.observe(viewLifecycleOwner, {
             station_name_view.text = it
@@ -114,14 +96,7 @@ class StationConfigFragment : Fragment() {
             setLocation()
         })
 
-//        bond_device.setOnClickListener {
-//            viewModel.btDevice.createBond()
-//            updateBondState()
-//            requireActivity().registerReceiver(
-//                btBondBroadcastReceiver,
-//                IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-//            )
-//        }
+
 
         station_name_edit_button.setOnClickListener {
             goToConfigFragment(StationNameFragment())
@@ -165,47 +140,6 @@ class StationConfigFragment : Fragment() {
     private fun goToConfigFragment(newFragment: Fragment) {
         switchFragmentWithBackStack(R.id.container, newFragment, "config")
     }
-
-    override fun onResume() {
-        super.onResume()
-        updateBondState()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        try {
-            requireActivity().unregisterReceiver(btBondBroadcastReceiver)
-        } catch (_: IllegalArgumentException) {
-        }
-    }
-
-    private fun updateBondState() {
-        if (PermissionUtils.requestBtIfDisabled(this)) return
-
-//        bond_status.text = when (viewModel.btDevice.bondState) {
-//            BluetoothDevice.BOND_NONE -> "NOT BONDED"
-//            BluetoothDevice.BOND_BONDING -> "BONDING"
-//            else -> "BONDED"
-//        }
-//        bond_status.setTextColor(
-//            when (viewModel.btDevice.bondState) {
-//                BluetoothDevice.BOND_NONE -> Color.RED
-//                BluetoothDevice.BOND_BONDING -> Color.rgb(255, 140, 0)
-//                else -> Color.GREEN
-//            }
-//        )
-
-//        bond_device.isEnabled = viewModel.btDevice.bondState == BluetoothDevice.BOND_NONE
-
-        station_name_edit_button.isEnabled = isBonded()
-        station_wifi_edit_button.isEnabled = isBonded()
-        station_address_edit_button.isEnabled = isBonded()
-        station_location_edit_button.isEnabled = isBonded()
-        register_station.isEnabled = isBonded()
-        hard_reset.isEnabled = isBonded()
-    }
-
-    private fun isBonded() = viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED
 
     private fun hardResetDevice() {
         Log.i("Hard reset started")
