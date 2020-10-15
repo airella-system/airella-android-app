@@ -81,8 +81,8 @@ class StationConfigActivity : AppCompatActivity() {
                 ReadRequest(Characteristic.INTERNET_CONNECTION_TYPE),
                 ReadRequest(Characteristic.WIFI_SSID),
 
-//                ReadRequest(Characteristic.GSM_EXTENDER_URL),
-//                ReadRequest(Characteristic.GSM_CONFIG),
+                ReadRequest(Characteristic.GSM_EXTENDER_URL),
+                ReadRequest(Characteristic.GSM_CONFIG),
 
                 ReadRequest(Characteristic.STATION_COUNTRY),
                 ReadRequest(Characteristic.STATION_CITY),
