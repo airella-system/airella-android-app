@@ -28,7 +28,7 @@ class StationConfigActivity : AppCompatActivity() {
                 BluetoothDevice.BOND_BONDING -> Log.d("Bonding...")
                 BluetoothDevice.BOND_BONDED -> {
                     Log.d("Bonded!")
-                    getStatistics()
+                    getStationConfig()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, StationConfigFragment())
                         .commitNow()
@@ -52,7 +52,7 @@ class StationConfigActivity : AppCompatActivity() {
             viewModel.btDevice = intent.extras!!.getParcelable("bt_device")!!
 
             if (viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED) {
-                getStatistics()
+                getStationConfig()
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.container, StationConfigFragment())
                     .commitNow()
@@ -73,13 +73,16 @@ class StationConfigActivity : AppCompatActivity() {
         }
     }
 
-    private fun getStatistics() {
+    private fun getStationConfig() {
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
                 ReadRequest(Characteristic.STATION_NAME),
 
                 ReadRequest(Characteristic.INTERNET_CONNECTION_TYPE),
                 ReadRequest(Characteristic.WIFI_SSID),
+
+//                ReadRequest(Characteristic.GSM_EXTENDER_URL),
+//                ReadRequest(Characteristic.GSM_CONFIG),
 
                 ReadRequest(Characteristic.STATION_COUNTRY),
                 ReadRequest(Characteristic.STATION_CITY),
@@ -101,6 +104,9 @@ class StationConfigActivity : AppCompatActivity() {
                             viewModel.connectionType.value =
                                 InternetConnectionType.getByCode(result)
                         Characteristic.WIFI_SSID -> viewModel.stationWifiSSID.value = result
+
+                        Characteristic.GSM_EXTENDER_URL -> viewModel.gsmExtenderUrl.value = result
+                        Characteristic.GSM_CONFIG -> viewModel.setApnConfig(result)
 
                         Characteristic.STATION_COUNTRY -> viewModel.stationCountry.value = result
                         Characteristic.STATION_CITY -> viewModel.stationCity.value = result

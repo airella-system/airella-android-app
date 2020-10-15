@@ -6,6 +6,10 @@ enum class Characteristic(uuid: String) {
 
     WIFI_SSID("45bee5c6-8043-4c6e-b497-fad68a340b70"),
     WIFI_PASSWORD("0851dd07-b59f-40c6-8114-357c7dff694c"),
+
+    GSM_EXTENDER_URL("53831c50-cb06-4dbe-b41e-6020511c3c32"),
+    GSM_CONFIG("767a9672-ec3f-4889-8678-2360c5e5192b"), // "APN","Username","Password"
+
     REGISTRATION_TOKEN("cb520851-1fd3-446e-a590-e777ddd0232c"),
     API_URL("20418184-e336-4409-a04d-61d7cf31f56b"),
 

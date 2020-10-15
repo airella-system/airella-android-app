@@ -30,14 +30,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
 
-        <!--        <Button-->
-        <!--            android:id="@+id/bond_device"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="start"-->
-        <!--            android:layout_marginTop="16dp"-->
-        <!--            android:text="@string/bond_device" />-->
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -96,27 +88,7 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintStart_toStartOf="@+id/station_connection_type_label"
                 app:layout_constraintTop_toBottomOf="@+id/station_connection_type_label"
-                tools:text="WIFI" />
-
-            <TextView
-                android:id="@+id/station_wifi_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/wifi_ssid_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintStart_toStartOf="@+id/station_connection_type_view"
-                app:layout_constraintTop_toBottomOf="@+id/station_connection_type_view" />
-
-            <TextView
-                android:id="@+id/station_wifi_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/station_wifi_label"
-                app:layout_constraintTop_toBottomOf="@+id/station_wifi_label"
-                tools:text="UPC21359345034534" />
+                tools:text="NONE" />
 
             <ImageButton
                 android:id="@+id/station_wifi_edit_button"
@@ -127,6 +99,70 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/station_wifi_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/station_connection_type_view"
+                app:layout_constraintTop_toBottomOf="@+id/station_connection_type_view">
+
+                <TextView
+                    android:id="@+id/station_wifi_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/wifi_ssid_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                <TextView
+                    android:id="@+id/station_wifi_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    tools:text="UPC21359345034534" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/station_gsm_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/station_connection_type_view"
+                app:layout_constraintTop_toBottomOf="@+id/station_connection_type_view">
+
+                <TextView
+                    android:id="@+id/station_apn_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/apn_configuration"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                <TextView
+                    android:id="@+id/station_apn_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="&quot;a2mobile.pl.&quot;,&quot;&quot;,&quot;&quot;" />
+
+                <TextView
+                    android:id="@+id/station_gsm_extender_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gsm_extender_url"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                <TextView
+                    android:id="@+id/station_gsm_extender_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    tools:text="http://airella.extender.com" />
+            </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

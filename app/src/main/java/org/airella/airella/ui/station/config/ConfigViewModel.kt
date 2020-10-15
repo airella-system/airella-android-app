@@ -28,4 +28,16 @@ open class ConfigViewModel : ViewModel() {
     val stationLatitude: MutableLiveData<String> = MutableLiveData()
     val stationLongitude: MutableLiveData<String> = MutableLiveData()
 
+
+    private val apnRegex: Regex = """"(.*?)","(.*?)",(.*?)"""".toRegex()
+
+    fun setApnConfig(config: String) {
+        apnRegex.find(config)?.let {
+            val (apn, username, password) = it.destructured
+            gsmApn.value = apn
+            gsmUsername.value = username
+            gsmPassword.value = password
+        }
+    }
+
 }

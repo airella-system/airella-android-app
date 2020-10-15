@@ -10,5 +10,5 @@ object Config {
 
     val SERVICE_UUID: UUID = UUID.fromString("f1eb6601-af50-4cf3-9f6e-4e1c6fb8e88c")
 
-    const val DEFAULT_API_URL = "https://airella.cyfrogen.com/api"
+    const val DEFAULT_API_URL = "http://airella.cyfrogen.com/api"
 }

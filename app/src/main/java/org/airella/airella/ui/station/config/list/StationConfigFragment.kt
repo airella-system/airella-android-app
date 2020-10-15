@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.MyApplication
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
+import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
@@ -51,6 +52,20 @@ class StationConfigFragment : Fragment() {
 
         viewModel.connectionType.observe(viewLifecycleOwner, {
             station_connection_type_view.text = it.toString()
+            when (it) {
+                InternetConnectionType.WIFI -> {
+                    station_wifi_container.visibility = View.VISIBLE
+                    station_gsm_container.visibility = View.GONE
+                }
+                InternetConnectionType.GSM -> {
+                    station_wifi_container.visibility = View.GONE
+                    station_gsm_container.visibility = View.VISIBLE
+                }
+                else -> {
+                    station_wifi_container.visibility = View.GONE
+                    station_gsm_container.visibility = View.GONE
+                }
+            }
         })
 
         viewModel.stationWifiSSID.observe(viewLifecycleOwner, {

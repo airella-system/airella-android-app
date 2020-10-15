@@ -9,12 +9,15 @@ import androidx.fragment.app.activityViewModels
 import org.airella.airella.MyApplication.Companion.runOnUIThread
 import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
+import org.airella.airella.config.Characteristic
+import org.airella.airella.config.InternetConnectionType
+import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
+import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
-import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.utils.Log
 import java.util.*
 
@@ -44,12 +47,13 @@ class GsmProgressFragment : Fragment() {
         Log.i("Save gsm config start")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-//                WriteRequest(, Config.InternetConnectionType.GSM.value),
-//                WriteRequest(, apn),
-//                WriteRequest(, gmsUsername),
-//                WriteRequest(, gsmPassword),
-//                WriteRequest(, gsmExtenderUrl),
-//                WriteRequest(Config.REFRESH_ACTION_UUID, Config.LOCATION_ACTION)
+                WriteRequest(
+                    Characteristic.INTERNET_CONNECTION_TYPE,
+                    InternetConnectionType.GSM.code
+                ),
+                WriteRequest(Characteristic.GSM_CONFIG, """"$apn","$gsmUsername","$gsmPassword""""),
+                WriteRequest(Characteristic.GSM_EXTENDER_URL, gsmExtenderUrl),
+                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.GSM.code)
             )
         )
         viewModel.btDevice.connectGatt(

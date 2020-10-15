@@ -37,6 +37,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 gattService = it
                 executeNextRequest(gatt)
             } else {
+                Log.w("Service is null")
                 onFailure()
             }
         }
@@ -61,6 +62,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
             }
             else -> {
                 gatt.close()
+                Log.w("Saving characteristic failed, status: $status")
                 onFailure()
             }
         }
@@ -89,6 +91,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
             }
             else -> {
                 gatt.close()
+                Log.w("Reading characteristic failed, status: $status")
                 onFailure()
             }
         }

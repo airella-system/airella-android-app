@@ -95,8 +95,9 @@
     <string name="apn">APN</string>
     <string name="gsm_username">Username</string>
     <string name="gsm_password">Password</string>
-    <string name="gsm_extender_url">GSM Extender URL (advanced)</string>
+    <string name="gsm_extender_url">GSM Extender URL</string>
     <string name="configure_gsm">Configure GSM</string>
     <string name="connection_type">Connection type</string>
     <string name="bond_with_device_in_order_to_configure_it">Bond with device in order to configure it</string>
+    <string name="apn_configuration">APN configuration</string>
 </resources>
