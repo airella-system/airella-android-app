@@ -72,30 +72,47 @@ class StationConfigFragment : Fragment() {
             station_wifi_view.text = it
         })
 
-        fun setAddress1() {
+        viewModel.gsmExtenderUrl.observe(viewLifecycleOwner, {
+            station_gsm_extender_view.text = it
+        })
+
+        viewModel.gsmApn.observe(viewLifecycleOwner, {
+            station_gsm_apn_view.text = "APN: $it"
+        })
+
+        viewModel.gsmUsername.observe(viewLifecycleOwner, {
+            station_gsm_username_view.text = "Username: $it"
+        })
+
+        viewModel.gsmPassword.observe(viewLifecycleOwner, {
+            station_gsm_password_view.text = "Password: $it"
+        })
+
+
+        fun setAddressStreetAndHouseNo() {
             station_address_view_1.text =
                 "${viewModel.stationStreet.value} ${viewModel.stationHouseNo.value}"
         }
 
         viewModel.stationStreet.observe(viewLifecycleOwner, {
-            setAddress1()
+            setAddressStreetAndHouseNo()
         })
 
         viewModel.stationHouseNo.observe(viewLifecycleOwner, {
-            setAddress1()
+            setAddressStreetAndHouseNo()
         })
 
-        fun setAddress2() {
+        fun setAddressCountryAndCity() {
             station_address_view_2.text =
                 "${viewModel.stationCity.value}, ${viewModel.stationCountry.value}"
         }
 
         viewModel.stationCountry.observe(viewLifecycleOwner, {
-            setAddress2()
+            setAddressCountryAndCity()
         })
 
         viewModel.stationCity.observe(viewLifecycleOwner, {
-            setAddress2()
+            setAddressCountryAndCity()
         })
 
         fun setLocation() {
