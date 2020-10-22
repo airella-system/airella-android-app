@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_location_enable.*
 import org.airella.airella.R
-import org.airella.airella.utils.Config.REQUEST_FINE_LOCATION_CONST
+import org.airella.airella.config.Config.REQUEST_FINE_LOCATION_CONST
 import org.airella.airella.utils.FragmentUtils.switchFragment
 import org.airella.airella.utils.PermissionUtils
 

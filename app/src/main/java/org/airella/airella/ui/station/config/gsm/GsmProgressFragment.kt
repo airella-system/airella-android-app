@@ -1,4 +1,4 @@
-package org.airella.airella.ui.station.config.address
+package org.airella.airella.ui.station.config.gsm
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,22 +9,22 @@ import androidx.fragment.app.activityViewModels
 import org.airella.airella.MyApplication.Companion.runOnUIThread
 import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
+import org.airella.airella.config.Characteristic
+import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
-import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
-import org.airella.airella.config.RefreshAction
 import java.util.*
 
-class AddressProgressFragment : Fragment() {
+class GsmProgressFragment : Fragment() {
 
     private val viewModel: ConfigViewModel by activityViewModels()
 
-    private val addressViewModel: AddressViewModel by activityViewModels()
+    private val gsmViewModel: GsmViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,24 +35,24 @@ class AddressProgressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val address = addressViewModel.address.value!!
-        saveAddress(address.country, address.city, address.street, address.number)
+        val apn = gsmViewModel.apn.value!!
+        val gmsUsername = gsmViewModel.apn.value!!
+        val gsmPassword = gsmViewModel.apn.value!!
+        val gsmExtenderUrl = gsmViewModel.apn.value!!
+        saveGsm(apn, gmsUsername, gsmPassword, gsmExtenderUrl)
     }
 
-    private fun saveAddress(
-        country: String,
-        city: String,
-        street: String,
-        houseNo: String
-    ) {
-        Log.i("Save address start")
+    private fun saveGsm(apn: String, gsmUsername: String, gsmPassword: String, gsmExtenderUrl: String) {
+        Log.i("Save gsm config start")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                WriteRequest(Characteristic.STATION_COUNTRY, country),
-                WriteRequest(Characteristic.STATION_CITY, city),
-                WriteRequest(Characteristic.STATION_STREET, street),
-                WriteRequest(Characteristic.STATION_HOUSE_NO, houseNo),
-                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.ADDRESS.code)
+                WriteRequest(
+                    Characteristic.INTERNET_CONNECTION_TYPE,
+                    InternetConnectionType.GSM.code
+                ),
+                WriteRequest(Characteristic.GSM_CONFIG, """"$apn","$gsmUsername","$gsmPassword""""),
+                WriteRequest(Characteristic.GSM_EXTENDER_URL, gsmExtenderUrl),
+//                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.GSM.code),
             )
         )
         viewModel.btDevice.connectGatt(
@@ -62,10 +62,11 @@ class AddressProgressFragment : Fragment() {
                 override fun onSuccess() {
                     runOnUIThread {
                         setStatus("Success")
-                        viewModel.stationCountry.value = country
-                        viewModel.stationCity.value = city
-                        viewModel.stationStreet.value = street
-                        viewModel.stationHouseNo.value = houseNo
+                        viewModel.connectionType.value = InternetConnectionType.GSM
+                        viewModel.gsmApn.value = apn
+                        viewModel.gsmUsername.value = gsmUsername
+                        viewModel.gsmPassword.value = gsmPassword
+                        viewModel.gsmExtenderUrl.value = gsmExtenderUrl
                         switchFragmentWithBackStack(
                             R.id.container,
                             ConfigurationSuccessfulFragment()

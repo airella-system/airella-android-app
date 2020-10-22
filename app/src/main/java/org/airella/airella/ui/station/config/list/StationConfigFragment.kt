@@ -1,10 +1,6 @@
 package org.airella.airella.ui.station.config.list
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,34 +11,23 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
 import org.airella.airella.MyApplication
 import org.airella.airella.R
+import org.airella.airella.config.Characteristic
+import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.address.AddressFragment
+import org.airella.airella.ui.station.config.internet.InternetChooseFragment
 import org.airella.airella.ui.station.config.location.LocationFragment
 import org.airella.airella.ui.station.config.name.StationNameFragment
 import org.airella.airella.ui.station.config.register.RegisterProgressFragment
-import org.airella.airella.ui.station.config.wifi.WifiListFragment
-import org.airella.airella.utils.Config
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
 import java.util.*
 
 class StationConfigFragment : Fragment() {
-
-    private val btBondBroadcastReceiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context?, intent: Intent) {
-            updateBondState()
-            when (intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR)) {
-                BluetoothDevice.BOND_NONE -> Log.i("Bonding Failed")
-                BluetoothDevice.BOND_BONDING -> Log.i("Bonding...")
-                BluetoothDevice.BOND_BONDED -> Log.i("Bonded!")
-            }
-        }
-    }
 
     private val viewModel: ConfigViewModel by activityViewModels()
 
@@ -61,40 +46,73 @@ class StationConfigFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        updateBondState()
-
         viewModel.stationName.observe(viewLifecycleOwner, {
             station_name_view.text = it
+        })
+
+        viewModel.connectionType.observe(viewLifecycleOwner, {
+            station_connection_type_view.text = it.toString()
+            when (it) {
+                InternetConnectionType.WIFI -> {
+                    station_wifi_container.visibility = View.VISIBLE
+                    station_gsm_container.visibility = View.GONE
+                }
+                InternetConnectionType.GSM -> {
+                    station_wifi_container.visibility = View.GONE
+                    station_gsm_container.visibility = View.VISIBLE
+                }
+                else -> {
+                    station_wifi_container.visibility = View.GONE
+                    station_gsm_container.visibility = View.GONE
+                }
+            }
         })
 
         viewModel.stationWifiSSID.observe(viewLifecycleOwner, {
             station_wifi_view.text = it
         })
 
-        fun setAddress1() {
+        viewModel.gsmExtenderUrl.observe(viewLifecycleOwner, {
+            station_gsm_extender_view.text = it
+        })
+
+        viewModel.gsmApn.observe(viewLifecycleOwner, {
+            station_gsm_apn_view.text = "APN: $it"
+        })
+
+        viewModel.gsmUsername.observe(viewLifecycleOwner, {
+            station_gsm_username_view.text = "Username: $it"
+        })
+
+        viewModel.gsmPassword.observe(viewLifecycleOwner, {
+            station_gsm_password_view.text = "Password: $it"
+        })
+
+
+        fun setAddressStreetAndHouseNo() {
             station_address_view_1.text =
                 "${viewModel.stationStreet.value} ${viewModel.stationHouseNo.value}"
         }
 
         viewModel.stationStreet.observe(viewLifecycleOwner, {
-            setAddress1()
+            setAddressStreetAndHouseNo()
         })
 
         viewModel.stationHouseNo.observe(viewLifecycleOwner, {
-            setAddress1()
+            setAddressStreetAndHouseNo()
         })
 
-        fun setAddress2() {
+        fun setAddressCountryAndCity() {
             station_address_view_2.text =
                 "${viewModel.stationCity.value}, ${viewModel.stationCountry.value}"
         }
 
         viewModel.stationCountry.observe(viewLifecycleOwner, {
-            setAddress2()
+            setAddressCountryAndCity()
         })
 
         viewModel.stationCity.observe(viewLifecycleOwner, {
-            setAddress2()
+            setAddressCountryAndCity()
         })
 
         fun setLocation() {
@@ -110,21 +128,14 @@ class StationConfigFragment : Fragment() {
             setLocation()
         })
 
-//        bond_device.setOnClickListener {
-//            viewModel.btDevice.createBond()
-//            updateBondState()
-//            requireActivity().registerReceiver(
-//                btBondBroadcastReceiver,
-//                IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-//            )
-//        }
+
 
         station_name_edit_button.setOnClickListener {
             goToConfigFragment(StationNameFragment())
         }
 
         station_wifi_edit_button.setOnClickListener {
-            goToConfigFragment(WifiListFragment())
+            goToConfigFragment(InternetChooseFragment())
         }
 
         station_address_edit_button.setOnClickListener {
@@ -162,53 +173,12 @@ class StationConfigFragment : Fragment() {
         switchFragmentWithBackStack(R.id.container, newFragment, "config")
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateBondState()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        try {
-            requireActivity().unregisterReceiver(btBondBroadcastReceiver)
-        } catch (_: IllegalArgumentException) {
-        }
-    }
-
-    private fun updateBondState() {
-        if (PermissionUtils.requestBtIfDisabled(this)) return
-
-//        bond_status.text = when (viewModel.btDevice.bondState) {
-//            BluetoothDevice.BOND_NONE -> "NOT BONDED"
-//            BluetoothDevice.BOND_BONDING -> "BONDING"
-//            else -> "BONDED"
-//        }
-//        bond_status.setTextColor(
-//            when (viewModel.btDevice.bondState) {
-//                BluetoothDevice.BOND_NONE -> Color.RED
-//                BluetoothDevice.BOND_BONDING -> Color.rgb(255, 140, 0)
-//                else -> Color.GREEN
-//            }
-//        )
-
-//        bond_device.isEnabled = viewModel.btDevice.bondState == BluetoothDevice.BOND_NONE
-
-        station_name_edit_button.isEnabled = isBonded()
-        station_wifi_edit_button.isEnabled = isBonded()
-        station_address_edit_button.isEnabled = isBonded()
-        station_location_edit_button.isEnabled = isBonded()
-        register_station.isEnabled = isBonded()
-        hard_reset.isEnabled = isBonded()
-    }
-
-    private fun isBonded() = viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED
-
     private fun hardResetDevice() {
         Log.i("Hard reset started")
         MyApplication.setStatus("Connecting")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                WriteRequest(Config.CLEAR_DATA_UUID, "")
+                WriteRequest(Characteristic.CLEAR_DATA, "")
             )
         )
 

@@ -49,7 +49,7 @@ class StationSummaryFragment : Fragment() {
         remove_station_button.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Are you sure to remove a station?")
-                .setPositiveButton("Try again") { _, _ ->
+                .setPositiveButton(android.R.string.yes) { _, _ ->
                     Toast.makeText(requireContext(), "Removing a station", Toast.LENGTH_SHORT)
                         .show()
                     StationService.removeStation(viewModel.station.id).subscribe({
@@ -73,7 +73,7 @@ class StationSummaryFragment : Fragment() {
         StationService.getStatistic(viewModel.station.id, "btMacAddress")
             .map { it.values[0].value }
             .subscribe({ btMacAddress ->
-                Log.e("Connecting to $btMacAddress")
+                Log.d("Connecting to $btMacAddress")
                 val btDevice = BluetoothService.getDeviceByMac(btMacAddress)
                 btDevice.connectGatt(requireContext(), false, object : BluetoothGattCallback() {
                     override fun onConnectionStateChange(
@@ -84,7 +84,7 @@ class StationSummaryFragment : Fragment() {
                         super.onConnectionStateChange(gatt, status, newState)
                         gatt.close()
                         if (newState == BluetoothGatt.STATE_CONNECTED) {
-                            Log.i("Connected to station")
+                            Log.d("Connected to station")
                             requireActivity().runOnUiThread {
                                 val intent =
                                     Intent(requireContext(), StationConfigActivity::class.java)

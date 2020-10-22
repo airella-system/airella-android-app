@@ -30,14 +30,17 @@ class MyApplication : Application() {
         val appContext: Context?
             get() = context
 
-        private val toast by lazy { Toast.makeText(appContext, "", Toast.LENGTH_LONG) }
+        private val toast by lazy { Toast.makeText(appContext, "", Toast.LENGTH_SHORT) }
+
+        fun createToast(text: String) {
+            runOnUIThread {
+                toast.setText(text)
+                toast.show()
+            }
+        }
 
         fun setStatus(status: String) {
-            Log.i(status)
-//            runOnUIThread {
-//                toast.setText(status)
-//                toast.show()
-//            }
+            Log.d(status)
         }
     }
 }

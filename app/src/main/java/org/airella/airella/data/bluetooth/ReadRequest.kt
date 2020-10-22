@@ -2,18 +2,18 @@ package org.airella.airella.data.bluetooth
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattService
+import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.Log
-import java.util.*
 
-class ReadRequest(val characteristicUUID: UUID) : BluetoothRequest {
+class ReadRequest(override val characteristic: Characteristic) : BluetoothRequest {
 
     private var readBuffer: ByteArray = ByteArray(0)
 
     private var remainingChunks: Int = 0
 
     override fun execute(gatt: BluetoothGatt, gattService: BluetoothGattService) {
-        val characteristic = gattService.getCharacteristic(characteristicUUID)
-        Log.d("Reading from $characteristicUUID")
+        val characteristic = gattService.getCharacteristic(characteristic.uuid)
+        Log.d("Reading from ${this.characteristic}")
         gatt.readCharacteristic(characteristic)
     }
 
@@ -22,6 +22,10 @@ class ReadRequest(val characteristicUUID: UUID) : BluetoothRequest {
     fun appendResult(result: ByteArray) {
         var chunk = result.toList()
         if (readBuffer.isEmpty()) {
+            if (chunk.isEmpty()) {
+                remainingChunks = 0
+                return
+            }
             remainingChunks = chunk[0].toInt()
             chunk = chunk.drop(1)
         }
