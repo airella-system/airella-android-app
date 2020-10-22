@@ -49,7 +49,7 @@ class StationSummaryFragment : Fragment() {
         remove_station_button.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Are you sure to remove a station?")
-                .setPositiveButton("Try again") { _, _ ->
+                .setPositiveButton(android.R.string.yes) { _, _ ->
                     Toast.makeText(requireContext(), "Removing a station", Toast.LENGTH_SHORT)
                         .show()
                     StationService.removeStation(viewModel.station.id).subscribe({

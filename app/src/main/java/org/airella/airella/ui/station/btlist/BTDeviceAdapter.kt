@@ -7,13 +7,20 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_bt_device_list.view.*
+import org.airella.airella.MyApplication.Companion.createToast
+import org.airella.airella.MyApplication.Companion.runOnUIThread
 import org.airella.airella.R
+import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.ui.station.config.StationConfigActivity
 import org.airella.airella.utils.inflate
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
     RecyclerView.Adapter<BTDeviceAdapter.BtDeviceView>() {
+
+    var allowConnecting = true
 
     override fun getItemCount(): Int = btDevices.size
 
@@ -27,7 +34,7 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
     }
 
 
-    class BtDeviceView(private var view: View) : RecyclerView.ViewHolder(view),
+    inner class BtDeviceView(private var view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
 
         private var btDevice: BluetoothDevice? = null
@@ -44,12 +51,42 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
         }
 
         override fun onClick(v: View) {
-            if (btDevice == null) {
+            if (btDevice == null || !allowConnecting) {
                 return
             }
-            val intent = Intent(v.context, StationConfigActivity::class.java)
-            intent.putExtra("bt_device", btDevice)
-            ContextCompat.startActivity(v.context, intent, null)
+            allowConnecting = false
+            val btDevice = btDevice!!
+
+            createToast("Connecting to device")
+
+            val timeout = Timer().schedule(5_000L) {
+                createToast("Can't connect to device")
+                allowConnecting = true
+            }
+
+
+            btDevice.connectGatt(v.context, false, object : BluetoothCallback(LinkedList()) {
+                override fun onSuccess() {
+                    timeout.cancel()
+                    runOnUIThread {
+                        val intent = Intent(v.context, StationConfigActivity::class.java)
+                        intent.putExtra("bt_device", btDevice)
+                        ContextCompat.startActivity(v.context, intent, null)
+                    }
+                }
+
+                override fun onFailToConnect() {
+                    allowConnecting = true
+                    timeout.cancel()
+                    createToast("This device isn't Airella station")
+                }
+
+                override fun onFailure() {
+                    allowConnecting = true
+                    timeout.cancel()
+                    createToast("This device isn't Airella station")
+                }
+            })
         }
 
     }

@@ -22,6 +22,10 @@ class ReadRequest(override val characteristic: Characteristic) : BluetoothReques
     fun appendResult(result: ByteArray) {
         var chunk = result.toList()
         if (readBuffer.isEmpty()) {
+            if (chunk.isEmpty()) {
+                remainingChunks = 0
+                return
+            }
             remainingChunks = chunk[0].toInt()
             chunk = chunk.drop(1)
         }

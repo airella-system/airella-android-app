@@ -140,6 +140,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="@+id/station_connection_type_view"
                     app:layout_constraintTop_toBottomOf="@+id/station_connection_type_view">
 
