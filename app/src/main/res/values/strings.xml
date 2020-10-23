@@ -90,7 +90,7 @@
     <string name="configuration_successful">Configuration successful</string>
     <string name="registration_in_progress">Registration in progress</string>
     <string name="registration_successful">Registration successful</string>
-    <string name="choose_internet_connection">Choose internet connection</string>
+    <string name="choose_internet_connection">Connect station to Internet</string>
     <string name="gsm">GSM</string>
     <string name="apn">APN</string>
     <string name="gsm_username">Username</string>
@@ -100,4 +100,5 @@
     <string name="connection_type">Connection type</string>
     <string name="bond_with_device_in_order_to_configure_it">Bond with device in order to configure it</string>
     <string name="apn_configuration">APN configuration</string>
+    <string name="how_to_connect_station_to_internet">How do you want to connect station to Internet?</string>
 </resources>
