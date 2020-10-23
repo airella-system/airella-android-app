@@ -33,6 +33,7 @@ class MyApplication : Application() {
         private val toast by lazy { Toast.makeText(appContext, "", Toast.LENGTH_SHORT) }
 
         fun createToast(text: String) {
+            Log.d(text)
             runOnUIThread {
                 toast.setText(text)
                 toast.show()
