@@ -11,7 +11,7 @@ import org.airella.airella.ui.login.LoginActivity
 import org.airella.airella.utils.Log
 
 class StartActivity : AppCompatActivity() {
-    var lanuched = false
+    var launched = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
@@ -31,8 +31,8 @@ class StartActivity : AppCompatActivity() {
                 p2: Int,
                 animationPercent: Float
             ) {
-                if (animationPercent > 0.8 && !lanuched) {
-                    lanuched = true
+                if (animationPercent > 0.8 && !launched) {
+                    launched = true
                     if (AuthService.isUserLogged()) {
                         Log.i("User logged")
                         val intent = Intent(context, MainActivity::class.java)
