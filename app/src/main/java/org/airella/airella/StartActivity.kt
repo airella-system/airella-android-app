@@ -29,9 +29,9 @@ class StartActivity : AppCompatActivity() {
                 p0: MotionLayout?,
                 p1: Int,
                 p2: Int,
-                percentage: Float
+                animationPercent: Float
             ) {
-                if (percentage > 0.9 && !lanuched) {
+                if (animationPercent > 0.8 && !lanuched) {
                     lanuched = true
                     if (AuthService.isUserLogged()) {
                         Log.i("User logged")
@@ -39,12 +39,15 @@ class StartActivity : AppCompatActivity() {
                         intent.flags =
                             Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     } else {
                         Log.i("User not logged")
                         val intent = Intent(context, LoginActivity::class.java)
                         intent.flags =
                             Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
                     }
                 }
             }

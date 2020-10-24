@@ -50,7 +50,7 @@
     <string name="turn_on_bluetooth">Turn on Bluetooth</string>
     <string name="turn_on_bluetooth_long">Please turn on Bluetooth in order to connect to station</string>
     <string name="turn_on_location">Turn on location</string>
-    <string name="turn_on_location_long">Please turn on Location in order to set station location with GPS</string>
+    <string name="turn_on_location_long">Please turn on Location in order to scan for Bluetooth devices</string>
     <string name="search_for_station">Search for station</string>
     <string name="enable_internet_to_show_your_stations">Enable Internet to show your stations</string>
     <string name="register_stations_to_see_them">Register stations to see them here</string>
