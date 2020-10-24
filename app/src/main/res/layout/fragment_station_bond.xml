@@ -11,10 +11,10 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:image="@drawable/ic_bluetooth_white_70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:image="@drawable/ic_bluetooth_white_70dp"
         app:text="@string/bond_device" />
 
 
@@ -25,6 +25,7 @@
         android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="@string/bond_with_device_in_order_to_configure_it"
+        android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +35,8 @@
         android:id="@+id/bond_device_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
         android:layout_marginTop="32dp"
         android:text="@string/bond_device"
         app:layout_constraintEnd_toEndOf="parent"

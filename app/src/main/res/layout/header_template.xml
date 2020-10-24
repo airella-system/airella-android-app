@@ -20,6 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25"
+        app:tint="@android:color/white"
         tools:src="@drawable/ic_account_box_white_70dp" />
 
     <TextView

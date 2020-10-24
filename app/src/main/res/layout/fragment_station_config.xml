@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/station_name_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/colorTextBlack"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,8 +68,8 @@
 
                 <ImageButton
                     android:id="@+id/station_name_edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_edit_gray_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -88,6 +88,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/connection_type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/colorTextBlack"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,8 +103,8 @@
 
                 <ImageButton
                     android:id="@+id/station_wifi_edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_edit_gray_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -125,7 +126,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/wifi_ssid_label"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@color/colorTextBlack" />
 
                     <TextView
                         android:id="@+id/station_wifi_view"
@@ -150,7 +152,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/apn_configuration"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                        android:textColor="@color/colorTextBlack" />
 
                     <TextView
                         android:id="@+id/station_gsm_apn_view"
@@ -175,8 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="@string/gsm_extender_url"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                        android:text="@string/gsm_extender_url" />
 
                     <TextView
                         android:id="@+id/station_gsm_extender_view"
@@ -197,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/address_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/colorTextBlack"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -222,7 +223,7 @@
 
                 <ImageButton
                     android:id="@+id/station_address_edit_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_edit_gray_24dp"
@@ -241,7 +242,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/location_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/colorTextBlack"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -257,8 +258,8 @@
 
                 <ImageButton
                     android:id="@+id/station_location_edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_edit_gray_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"

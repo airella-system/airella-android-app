@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:image="@drawable/ic_account_box_white_70dp"
+        app:image="@drawable/ic_assignment_white_18dp"
         app:text="@string/choose_station_name" />
 
     <ScrollView
