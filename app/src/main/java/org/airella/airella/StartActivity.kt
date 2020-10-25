@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import org.airella.airella.data.service.AuthService
-import org.airella.airella.data.service.PreferencesService
 import org.airella.airella.ui.login.LoginActivity
 import org.airella.airella.utils.Log
 
@@ -12,7 +11,6 @@ class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PreferencesService.init(applicationContext)
 
         setContentView(R.layout.activity_start)
     }
