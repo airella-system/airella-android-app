@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattService
 import org.airella.airella.MyApplication
-import org.airella.airella.config.Characteristic
 import org.airella.airella.config.Config
 import org.airella.airella.utils.Log
 import java.util.*
@@ -58,14 +57,15 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
         Log.d("Saving to ${currentRequest.characteristic} finished with status " + if (status == 0) "Success" else "Failed with code $status")
         when (status) {
             BluetoothGatt.GATT_SUCCESS -> {
-                if (currentRequest.isFinished()) {
-                    Log.i("Saved \"${(currentRequest as WriteRequest).value}\" to ${currentRequest.characteristic} successfully")
+                val writeRequest = currentRequest as WriteRequest
+                if (writeRequest.isFinished()) {
+                    Log.i("Saved \"${(writeRequest).value}\" to ${writeRequest.characteristic} successfully")
                     MyApplication.runOnUIThread {
-                        onCharacteristicWrite(currentRequest.characteristic)
+                        writeRequest.onSuccess()
                     }
                     executeNextRequest(gatt)
                 } else {
-                    currentRequest.execute(gatt, gattService)
+                    writeRequest.execute(gatt, gattService)
                 }
             }
             else -> {
@@ -94,7 +94,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                     val result = readRequest.getValue()
                     Log.i("Read \"$result\" from ${readRequest.characteristic} successfully")
                     MyApplication.runOnUIThread {
-                        onCharacteristicRead(readRequest.characteristic, result)
+                        readRequest.onSuccess()
                     }
                     executeNextRequest(gatt)
                 } else {
@@ -116,11 +116,6 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
     protected open fun onFailToConnect() = MyApplication.setStatus("Failed to connect")
 
     protected open fun onFailure() = MyApplication.setStatus("Failed")
-
-    protected open fun onCharacteristicWrite(characteristic: Characteristic) =
-        MyApplication.setStatus("Saving in progress...")
-
-    protected open fun onCharacteristicRead(characteristic: Characteristic, result: String) {}
 
     protected open fun onSuccess() = MyApplication.setStatus("Success")
 

@@ -5,7 +5,10 @@ import android.bluetooth.BluetoothGattService
 import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.Log
 
-class ReadRequest(override val characteristic: Characteristic) : BluetoothRequest {
+class ReadRequest(
+    override val characteristic: Characteristic,
+    private val onSuccess: (String) -> Unit
+) : BluetoothRequest {
 
     private var readBuffer: ByteArray = ByteArray(0)
 
@@ -34,5 +37,7 @@ class ReadRequest(override val characteristic: Characteristic) : BluetoothReques
     }
 
     fun getValue() = String(readBuffer)
+
+    fun onSuccess() = onSuccess(getValue())
 
 }

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
-import org.airella.airella.MyApplication
+import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
@@ -91,7 +91,7 @@ class StationConfigFragment : Fragment() {
 
         fun setAddressStreetAndHouseNo() {
             station_address_view_1.text =
-                "${viewModel.stationStreet.value} ${viewModel.stationHouseNo.value}"
+                "${viewModel.stationStreet.value ?: ""} ${viewModel.stationHouseNo.value ?: ""}"
         }
 
         viewModel.stationStreet.observe(viewLifecycleOwner, {
@@ -104,7 +104,7 @@ class StationConfigFragment : Fragment() {
 
         fun setAddressCountryAndCity() {
             station_address_view_2.text =
-                "${viewModel.stationCity.value}, ${viewModel.stationCountry.value}"
+                "${viewModel.stationCity.value ?: ""}, ${viewModel.stationCountry.value ?: ""}"
         }
 
         viewModel.stationCountry.observe(viewLifecycleOwner, {
@@ -117,7 +117,7 @@ class StationConfigFragment : Fragment() {
 
         fun setLocation() {
             station_location_view.text =
-                "${viewModel.stationLatitude.value}, ${viewModel.stationLongitude.value}"
+                "${viewModel.stationLatitude.value ?: ""}, ${viewModel.stationLongitude.value ?: ""}"
         }
 
         viewModel.stationLatitude.observe(viewLifecycleOwner, {
@@ -175,7 +175,7 @@ class StationConfigFragment : Fragment() {
 
     private fun hardResetDevice() {
         Log.i("Hard reset started")
-        MyApplication.setStatus("Connecting")
+        setStatus("Connecting")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
                 WriteRequest(Characteristic.CLEAR_DATA, "")
@@ -186,9 +186,9 @@ class StationConfigFragment : Fragment() {
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
-                override fun onFailToConnect() = MyApplication.setStatus("Failed to connect")
-                override fun onSuccess() = MyApplication.setStatus("Hard reset successful")
-                override fun onFailure() = MyApplication.setStatus("Hard reset failed")
+                override fun onFailToConnect() = setStatus("Failed to connect")
+                override fun onSuccess() = setStatus("Hard reset successful")
+                override fun onFailure() = setStatus("Hard reset failed")
             })
     }
 }
