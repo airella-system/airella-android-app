@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_bt_device_list.view.*
 import org.airella.airella.MyApplication.Companion.createToast
-import org.airella.airella.MyApplication.Companion.runOnUIThread
+import org.airella.airella.MyApplication.Companion.runOnUiThread
 import org.airella.airella.R
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.ui.station.config.StationConfigActivity
@@ -68,7 +68,7 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
             btDevice.connectGatt(v.context, false, object : BluetoothCallback(LinkedList()) {
                 override fun onSuccess() {
                     timeout.cancel()
-                    runOnUIThread {
+                    runOnUiThread {
                         val intent = Intent(v.context, StationConfigActivity::class.java)
                         intent.putExtra("bt_device", btDevice)
                         ContextCompat.startActivity(v.context, intent, null)

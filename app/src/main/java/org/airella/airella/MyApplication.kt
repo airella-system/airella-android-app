@@ -16,14 +16,12 @@ class MyApplication : Application() {
         super.onCreate()
         context = applicationContext
         PreferencesService.init(applicationContext)
-
-
     }
 
     companion object {
         private val mainThreadHandler = Handler(Looper.getMainLooper())
 
-        fun runOnUIThread(runnable: () -> Unit) = mainThreadHandler.post(runnable)
+        fun runOnUiThread(runnable: Runnable) = mainThreadHandler.post(runnable)
 
         private lateinit var context: Context
 
@@ -34,7 +32,7 @@ class MyApplication : Application() {
 
         fun createToast(text: String) {
             Log.d(text)
-            runOnUIThread {
+            runOnUiThread {
                 toast.setText(text)
                 toast.show()
             }
