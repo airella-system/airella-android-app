@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.runOnUIThread
 import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
@@ -60,18 +59,16 @@ class GsmProgressFragment : Fragment() {
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    runOnUIThread {
-                        setStatus("Success")
-                        viewModel.connectionType.value = InternetConnectionType.GSM
-                        viewModel.gsmApn.value = apn
-                        viewModel.gsmUsername.value = gsmUsername
-                        viewModel.gsmPassword.value = gsmPassword
-                        viewModel.gsmExtenderUrl.value = gsmExtenderUrl
-                        switchFragmentWithBackStack(
-                            R.id.container,
-                            ConfigurationSuccessfulFragment()
-                        )
-                    }
+                    setStatus("Success")
+                    viewModel.connectionType.value = InternetConnectionType.GSM
+                    viewModel.gsmApn.value = apn
+                    viewModel.gsmUsername.value = gsmUsername
+                    viewModel.gsmPassword.value = gsmPassword
+                    viewModel.gsmExtenderUrl.value = gsmExtenderUrl
+                    switchFragmentWithBackStack(
+                        R.id.container,
+                        ConfigurationSuccessfulFragment()
+                    )
                 }
             })
     }
