@@ -22,7 +22,7 @@ class BTListViewModel : ViewModel() {
         override fun onScanFailed(errorCode: Int) {
             super.onScanFailed(errorCode)
             Log.e("Scan failed with code $errorCode")
-            // TODO message dla usera
+            stopBtScan()
         }
 
         override fun onScanResult(callbackType: Int, result: ScanResult) {
