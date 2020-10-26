@@ -39,15 +39,14 @@ class StartActivity : AppCompatActivity() {
                         intent.flags =
                             Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                     } else {
                         Log.i("User not logged")
                         val intent = Intent(context, LoginActivity::class.java)
                         intent.flags =
                             Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                     }
                 }
             }
