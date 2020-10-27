@@ -5,8 +5,10 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
+import android.os.ParcelUuid
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import org.airella.airella.config.Config
 import org.airella.airella.exception.BluetoothDisabledException
 import org.airella.airella.utils.Log
 import java.util.*
@@ -17,8 +19,9 @@ object BluetoothService {
 
     private val scanning: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    //    private val filters: List<ScanFilter> = listOf(ScanFilter.Builder().setServiceUuid(ParcelUuid(Config.SERVICE_UUID)).build())
-    private val filters: List<ScanFilter> = listOf()
+    private val filters: List<ScanFilter> = listOf(
+        ScanFilter.Builder().setServiceUuid(ParcelUuid(Config.SERVICE_UUID)).build()
+    )
 
     private val settings = ScanSettings.Builder()
         .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
