@@ -11,10 +11,10 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:image="@drawable/ic_settings_white_70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:image="@drawable/ic_phonelink_setup_white_70dp"
         app:text="@string/register_station" />
 
     <ProgressBar
