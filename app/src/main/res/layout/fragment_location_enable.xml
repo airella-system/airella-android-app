@@ -10,10 +10,10 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:image="@drawable/ic_location_on_white_70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:image="@drawable/ic_location_on_white_70dp"
         app:text="@string/turn_on_location" />
 
     <TextView
@@ -23,6 +23,7 @@
         android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="@string/turn_on_location_long"
+        android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +34,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
         android:text="@string/turn_on_location"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

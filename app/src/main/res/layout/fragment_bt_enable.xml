@@ -11,10 +11,10 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:image="@drawable/ic_bluetooth_white_70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:image="@drawable/ic_bluetooth_white_70dp"
         app:text="@string/turn_on_bluetooth" />
 
 
@@ -25,16 +25,20 @@
         android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="@string/turn_on_bluetooth_long"
+        android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/enable_bt_button"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:text="@string/turn_on_bluetooth"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

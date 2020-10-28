@@ -9,19 +9,20 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:image="@drawable/ic_air_filter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:image="@drawable/ic_phonelink_setup_white_70dp"
         app:text="@string/station_summary" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -31,19 +32,20 @@
                 android:id="@+id/label_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:text="Station name"
+                android:textColor="@color/colorTextBlack"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="Station name" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
-                app:layout_constraintTop_toTopOf="@id/label_name"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/label_name"
                 tools:text="Stacja AGH" />
 
             <View
@@ -51,9 +53,9 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toBottomOf="@id/label_name"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -65,11 +67,12 @@
                 android:id="@+id/label_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:text="Address"
+                android:textColor="@color/colorTextBlack"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="Address" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/address"
@@ -85,9 +88,9 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toBottomOf="@id/label_address"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_address" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -99,19 +102,20 @@
                 android:id="@+id/label_aqi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:text="CAQI"
+                android:textColor="@color/colorTextBlack"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="CAQI" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/aqi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
-                app:layout_constraintTop_toTopOf="@id/label_aqi"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/label_aqi"
                 tools:text="19.0" />
 
             <View
@@ -119,36 +123,42 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toBottomOf="@id/label_aqi"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_aqi" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <Button
+            android:id="@+id/remove_station_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="32dp"
+            android:backgroundTint="@color/colorButtonRed"
+            android:text="@string/remove_station" />
     </LinearLayout>
 
-    <Button
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/station_connect_button"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
         android:layout_marginBottom="32dp"
-        android:layout_marginStart="48dp"
-        android:background="@android:color/transparent"
-        android:drawableTop="@drawable/ic_outline_settings_gray_50dp"
-        android:text="Connect"
-        android:textColor="@android:color/black"
+        android:lines="2"
+        android:text="@string/configure_station_via_bluetooth"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/colorPrimary"
+        app:icon="@drawable/ic_settings_white_70dp"
+        app:iconSize="32dp"
+        app:iconTint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/remove_station_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:background="@android:color/transparent"
-        android:drawableTop="@drawable/ic_clear_gray_50dp"
-        android:text="@string/remove_station"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/station_connect_button"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
