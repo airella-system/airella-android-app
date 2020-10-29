@@ -76,51 +76,44 @@ class StationConfigActivity : AppCompatActivity() {
     private fun getStationConfig() {
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
-                ReadRequest(Characteristic.STATION_NAME),
+                ReadRequest(Characteristic.STATION_NAME) {
+                    viewModel.stationName.value = it
+                },
 
-                ReadRequest(Characteristic.INTERNET_CONNECTION_TYPE),
-                ReadRequest(Characteristic.WIFI_SSID),
+                ReadRequest(Characteristic.INTERNET_CONNECTION_TYPE) {
+                    viewModel.connectionType.value = InternetConnectionType.getByCode(it)
+                },
+                ReadRequest(Characteristic.WIFI_SSID) {
+                    viewModel.stationWifiSSID.value = it
+                },
+                ReadRequest(Characteristic.GSM_EXTENDER_URL) {
+                    viewModel.gsmExtenderUrl.value = it
+                },
+                ReadRequest(Characteristic.GSM_CONFIG) {
+                    viewModel.setApnConfig(it)
+                },
 
-                ReadRequest(Characteristic.GSM_EXTENDER_URL),
-                ReadRequest(Characteristic.GSM_CONFIG),
+                ReadRequest(Characteristic.STATION_COUNTRY) {
+                    viewModel.stationCountry.value = it
+                },
+                ReadRequest(Characteristic.STATION_CITY) {
+                    viewModel.stationCity.value = it
+                },
+                ReadRequest(Characteristic.STATION_STREET) {
+                    viewModel.stationStreet.value = it
+                },
+                ReadRequest(Characteristic.STATION_HOUSE_NO) {
+                    viewModel.stationHouseNo.value = it
+                },
 
-                ReadRequest(Characteristic.STATION_COUNTRY),
-                ReadRequest(Characteristic.STATION_CITY),
-                ReadRequest(Characteristic.STATION_STREET),
-                ReadRequest(Characteristic.STATION_HOUSE_NO),
-
-                ReadRequest(Characteristic.LOCATION_LATITUDE),
-                ReadRequest(Characteristic.LOCATION_LONGITUDE)
+                ReadRequest(Characteristic.LOCATION_LATITUDE) {
+                    viewModel.stationLatitude.value = it
+                },
+                ReadRequest(Characteristic.LOCATION_LONGITUDE) {
+                    viewModel.stationLongitude.value = it
+                }
             )
         )
-        viewModel.btDevice.connectGatt(this, false, object : BluetoothCallback(bluetoothRequests) {
-
-            override fun onCharacteristicRead(characteristic: Characteristic, result: String) {
-                runOnUiThread {
-                    when (characteristic) {
-                        Characteristic.STATION_NAME -> viewModel.stationName.value = result
-
-                        Characteristic.INTERNET_CONNECTION_TYPE ->
-                            viewModel.connectionType.value =
-                                InternetConnectionType.getByCode(result)
-                        Characteristic.WIFI_SSID -> viewModel.stationWifiSSID.value = result
-
-                        Characteristic.GSM_EXTENDER_URL -> viewModel.gsmExtenderUrl.value = result
-                        Characteristic.GSM_CONFIG -> viewModel.setApnConfig(result)
-
-                        Characteristic.STATION_COUNTRY -> viewModel.stationCountry.value = result
-                        Characteristic.STATION_CITY -> viewModel.stationCity.value = result
-                        Characteristic.STATION_STREET -> viewModel.stationStreet.value = result
-                        Characteristic.STATION_HOUSE_NO -> viewModel.stationHouseNo.value = result
-
-                        Characteristic.LOCATION_LATITUDE -> viewModel.stationLatitude.value = result
-                        Characteristic.LOCATION_LONGITUDE -> viewModel.stationLongitude.value =
-                            result
-                        else -> {
-                        }
-                    }
-                }
-            }
-        })
+        viewModel.btDevice.connectGatt(this, false, BluetoothCallback(bluetoothRequests))
     }
 }

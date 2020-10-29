@@ -8,7 +8,13 @@ import org.airella.airella.utils.Log
 import java.util.*
 import kotlin.math.ceil
 
-class WriteRequest(override val characteristic: Characteristic, val value: String) : BluetoothRequest {
+class WriteRequest(
+    override val characteristic: Characteristic,
+    val value: String,
+    val onSuccess: () -> Unit
+) : BluetoothRequest {
+
+    constructor(characteristic: Characteristic, value: String) : this(characteristic, value, {})
 
     private val chunksToWrite: LinkedList<ByteArray> = LinkedList()
 

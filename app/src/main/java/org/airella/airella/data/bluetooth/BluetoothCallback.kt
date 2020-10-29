@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattService
 import org.airella.airella.MyApplication
-import org.airella.airella.config.Characteristic
+import org.airella.airella.MyApplication.Companion.runOnUiThread
 import org.airella.airella.config.Config
 import org.airella.airella.utils.Log
 import java.util.*
@@ -19,11 +19,19 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
-        if (newState == BluetoothGatt.STATE_CONNECTED) {
-            gatt.discoverServices()
-            onConnected()
-        } else if (newState != BluetoothGatt.STATE_DISCONNECTED) {
-            onFailToConnect()
+        if (status == BluetoothGatt.GATT_SUCCESS) {
+            if (newState == BluetoothGatt.STATE_CONNECTED) {
+                runOnUiThread {
+                    gatt.discoverServices()
+                    onConnected()
+                }
+            } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
+                gatt.close()
+            }
+        } else {
+            runOnUiThread {
+                onFailToConnect()
+            }
             gatt.close()
         }
     }
@@ -38,7 +46,9 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 executeNextRequest(gatt)
             } else {
                 Log.w("Service is null")
-                onFailure()
+                runOnUiThread {
+                    onFailure()
+                }
             }
         }
     }
@@ -52,18 +62,23 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
         Log.d("Saving to ${currentRequest.characteristic} finished with status " + if (status == 0) "Success" else "Failed with code $status")
         when (status) {
             BluetoothGatt.GATT_SUCCESS -> {
-                if (currentRequest.isFinished()) {
-                    Log.i("Saved \"${(currentRequest as WriteRequest).value}\" to ${currentRequest.characteristic} successfully")
-                    onCharacteristicWrite(currentRequest.characteristic)
+                val writeRequest = currentRequest as WriteRequest
+                if (writeRequest.isFinished()) {
+                    Log.i("Saved \"${(writeRequest).value}\" to ${writeRequest.characteristic} successfully")
+                    runOnUiThread {
+                        writeRequest.onSuccess()
+                    }
                     executeNextRequest(gatt)
                 } else {
-                    currentRequest.execute(gatt, gattService)
+                    writeRequest.execute(gatt, gattService)
                 }
             }
             else -> {
                 gatt.close()
                 Log.w("Saving characteristic failed, status: $status")
-                onFailure()
+                runOnUiThread {
+                    onFailure()
+                }
             }
         }
     }
@@ -83,7 +98,9 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 if (readRequest.isFinished()) {
                     val result = readRequest.getValue()
                     Log.i("Read \"$result\" from ${readRequest.characteristic} successfully")
-                    onCharacteristicRead(readRequest.characteristic, result)
+                    runOnUiThread {
+                        readRequest.onSuccess()
+                    }
                     executeNextRequest(gatt)
                 } else {
                     readRequest.execute(gatt, gattService)
@@ -92,7 +109,9 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
             else -> {
                 gatt.close()
                 Log.w("Reading characteristic failed, status: $status")
-                onFailure()
+                runOnUiThread {
+                    onFailure()
+                }
             }
         }
     }
@@ -103,11 +122,6 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
 
     protected open fun onFailure() = MyApplication.setStatus("Failed")
 
-    protected open fun onCharacteristicWrite(characteristic: Characteristic) =
-        MyApplication.setStatus("Saving in progress...")
-
-    protected open fun onCharacteristicRead(characteristic: Characteristic, result: String) {}
-
     protected open fun onSuccess() = MyApplication.setStatus("Success")
 
 
@@ -117,7 +131,9 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
             currentRequest.execute(gatt, gattService)
         } else {
             gatt.close()
-            onSuccess()
+            runOnUiThread {
+                onSuccess()
+            }
         }
     }
 

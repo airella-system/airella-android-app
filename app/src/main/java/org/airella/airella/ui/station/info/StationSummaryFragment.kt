@@ -81,7 +81,7 @@ class StationSummaryFragment : Fragment() {
                     false,
                     object : BluetoothCallback(LinkedList()) {
                         override fun onSuccess() {
-                            MyApplication.runOnUIThread {
+                            MyApplication.runOnUiThread {
                                 val intent =
                                     Intent(requireContext(), StationConfigActivity::class.java)
                                 intent.putExtra("bt_device", btDevice)
