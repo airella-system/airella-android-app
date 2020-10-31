@@ -105,4 +105,5 @@
     <string name="how_to_connect_station_to_internet">How do you want to connect station to Internet?</string>
     <string name="add_station">Add station</string>
     <string name="configure_station_via_bluetooth">Configure station\nvia Bluetooth</string>
+    <string name="airella_gsm_extender_url">https://gsm-extender.airella.cyfrogen.com/</string>
 </resources>

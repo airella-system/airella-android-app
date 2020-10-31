@@ -10,6 +10,7 @@ import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
+import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
@@ -35,9 +36,9 @@ class GsmProgressFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val apn = gsmViewModel.apn.value!!
-        val gmsUsername = gsmViewModel.apn.value!!
-        val gsmPassword = gsmViewModel.apn.value!!
-        val gsmExtenderUrl = gsmViewModel.apn.value!!
+        val gmsUsername = gsmViewModel.username.value!!
+        val gsmPassword = gsmViewModel.password.value!!
+        val gsmExtenderUrl = gsmViewModel.extenderUrl.value!!
         saveGsm(apn, gmsUsername, gsmPassword, gsmExtenderUrl)
     }
 
@@ -51,7 +52,7 @@ class GsmProgressFragment : Fragment() {
                 ),
                 WriteRequest(Characteristic.GSM_CONFIG, """"$apn","$gsmUsername","$gsmPassword""""),
                 WriteRequest(Characteristic.GSM_EXTENDER_URL, gsmExtenderUrl),
-//                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.GSM.code),
+                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.GSM.code),
             )
         )
         viewModel.btDevice.connectGatt(
