@@ -13,8 +13,10 @@ import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
+import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
@@ -49,7 +51,8 @@ class WifiProgressFragment : Fragment() {
                 ),
                 WriteRequest(Characteristic.WIFI_SSID, wifiSSID),
                 WriteRequest(Characteristic.WIFI_PASSWORD, wifiPassword),
-                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.WIFI.code)
+                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.WIFI.code),
+                ReadRequest(Characteristic.DEVICE_STATUS)
             )
         )
         viewModel.btDevice.connectGatt(
@@ -57,13 +60,21 @@ class WifiProgressFragment : Fragment() {
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
-                    viewModel.connectionType.value = InternetConnectionType.WIFI
-                    viewModel.stationWifiSSID.value = wifiSSID
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationSuccessfulFragment()
-                    )
+                    if (viewModel.apiConnection.value!!.status) {
+                        setStatus("Success")
+                        viewModel.connectionType.value = InternetConnectionType.WIFI
+                        viewModel.stationWifiSSID.value = wifiSSID
+                        switchFragmentWithBackStack(
+                            R.id.container,
+                            ConfigurationSuccessfulFragment()
+                        )
+                    } else {
+                        setStatus("Failed")
+                        switchFragmentWithBackStack(
+                            R.id.container,
+                            ConfigurationFailedFragment()
+                        )
+                    }
                 }
             })
     }

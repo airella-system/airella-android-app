@@ -90,6 +90,7 @@
     <string name="configuration_successful">Configuration successful</string>
     <string name="success">Success!</string>
     <string name="station_was_setup_successfully">Station was setup successfully!</string>
+    <string name="station_setup_failed">Station setup failed!</string>
     <string name="registration_in_progress">Registration in progress</string>
     <string name="registration_successful">Registration successful</string>
     <string name="choose_internet_connection">Connect station to Internet</string>
@@ -105,4 +106,5 @@
     <string name="how_to_connect_station_to_internet">How do you want to connect station to Internet?</string>
     <string name="add_station">Add station</string>
     <string name="configure_station_via_bluetooth">Configure station\nvia Bluetooth</string>
+    <string name="failed">Failed</string>
 </resources>

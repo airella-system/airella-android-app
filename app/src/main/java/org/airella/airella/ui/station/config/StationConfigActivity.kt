@@ -27,6 +27,7 @@ class StationConfigActivity : AppCompatActivity() {
                 BluetoothDevice.BOND_NONE -> Log.w("Bonding Failed")
                 BluetoothDevice.BOND_BONDING -> Log.d("Bonding...")
                 BluetoothDevice.BOND_BONDED -> {
+                    unregisterReceiver(this)
                     Log.d("Bonded!")
                     getStationConfig()
                     supportFragmentManager.beginTransaction()
@@ -43,11 +44,6 @@ class StationConfigActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_container)
 
-        registerReceiver(
-            btBondBroadcastReceiver,
-            IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-        )
-
         if (savedInstanceState == null) {
             viewModel.btDevice = intent.extras!!.getParcelable("bt_device")!!
 
@@ -57,6 +53,11 @@ class StationConfigActivity : AppCompatActivity() {
                     .replace(R.id.container, StationConfigFragment())
                     .commitNow()
             } else {
+                registerReceiver(
+                    btBondBroadcastReceiver,
+                    IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
+                )
+
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.container, StationBondFragment())
                     .commitNow()
@@ -111,6 +112,10 @@ class StationConfigActivity : AppCompatActivity() {
                 },
                 ReadRequest(Characteristic.LOCATION_LONGITUDE) {
                     viewModel.stationLongitude.value = it
+                },
+
+                ReadRequest(Characteristic.DEVICE_STATUS) {
+                    viewModel.setStatus(it)
                 }
             )
         )
