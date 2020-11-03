@@ -8,8 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import kotlinx.android.synthetic.main.fragment_configuration_succesful.*
 import org.airella.airella.R
+import org.airella.airella.ui.OnBackPressed
 
-class ConfigurationFailedFragment : Fragment() {
+class ConfigurationFailedFragment : Fragment(), OnBackPressed {
 
 
     override fun onCreateView(
@@ -22,11 +23,19 @@ class ConfigurationFailedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         back_button.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack(
-                "config",
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
+            returnToConfigList()
         }
     }
 
+    override fun onBackPressed(): Boolean {
+        returnToConfigList()
+        return true
+    }
+
+    private fun returnToConfigList() {
+        requireActivity().supportFragmentManager.popBackStack(
+            "config",
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+    }
 }

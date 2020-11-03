@@ -14,6 +14,7 @@ import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.ReadRequest
+import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.list.StationConfigFragment
 import org.airella.airella.utils.Log
 import java.util.*
@@ -120,5 +121,13 @@ class StationConfigActivity : AppCompatActivity() {
             )
         )
         viewModel.btDevice.connectGatt(this, false, BluetoothCallback(bluetoothRequests))
+    }
+
+    override fun onBackPressed() {
+        val fragment =
+            this.supportFragmentManager.findFragmentById(R.id.container)
+        if ((fragment as? OnBackPressed)?.onBackPressed()?.not() ?: true) {
+            super.onBackPressed()
+        }
     }
 }

@@ -10,17 +10,18 @@ import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_configuration_progress.*
 import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
+import org.airella.airella.config.Characteristic
+import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.api.ApiManager
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
-import org.airella.airella.config.Characteristic
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
-import org.airella.airella.config.RefreshAction
 import java.util.*
 
 class RegisterProgressFragment : Fragment() {
@@ -62,6 +63,22 @@ class RegisterProgressFragment : Fragment() {
                     configurationSuccessfulFragment.arguments =
                         bundleOf(Pair("success_text", getString(R.string.registration_successful)))
                     switchFragmentWithBackStack(R.id.container, configurationSuccessfulFragment)
+                }
+
+                override fun onFailure() {
+                    super.onFailure()
+                    switchFragmentWithBackStack(
+                        R.id.container,
+                        ConfigurationFailedFragment()
+                    )
+                }
+
+                override fun onFailToConnect() {
+                    super.onFailToConnect()
+                    switchFragmentWithBackStack(
+                        R.id.container,
+                        ConfigurationFailedFragment()
+                    )
                 }
             })
     }

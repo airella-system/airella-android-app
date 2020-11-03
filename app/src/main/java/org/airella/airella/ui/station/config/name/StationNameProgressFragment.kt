@@ -13,6 +13,7 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
@@ -53,6 +54,22 @@ class StationNameProgressFragment : Fragment() {
                     switchFragmentWithBackStack(
                         R.id.container,
                         ConfigurationSuccessfulFragment()
+                    )
+                }
+
+                override fun onFailure() {
+                    super.onFailure()
+                    switchFragmentWithBackStack(
+                        R.id.container,
+                        ConfigurationFailedFragment()
+                    )
+                }
+
+                override fun onFailToConnect() {
+                    super.onFailToConnect()
+                    switchFragmentWithBackStack(
+                        R.id.container,
+                        ConfigurationFailedFragment()
                     )
                 }
             })

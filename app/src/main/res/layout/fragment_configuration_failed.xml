@@ -42,7 +42,7 @@
             android:id="@+id/secondary_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Station was setup successfully"
+            android:text="@string/station_setup_failed"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@android:color/white"
             android:textSize="20sp"
