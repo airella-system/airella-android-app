@@ -68,6 +68,7 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
             btDevice.connectGatt(v.context, false, object : BluetoothCallback(LinkedList()) {
                 override fun onSuccess() {
                     timeout.cancel()
+                    allowConnecting = true
                     runOnUiThread {
                         val intent = Intent(v.context, StationConfigActivity::class.java)
                         intent.putExtra("bt_device", btDevice)
