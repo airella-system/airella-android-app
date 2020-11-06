@@ -1,5 +1,8 @@
 package org.airella.airella.data.model.station
 
-data class Status(val status: Boolean, val code: String) {
-    constructor(code: String) : this((arrayOf("OK", "YES").contains(code)), code)
+data class Status(val code: String) {
+
+    private val okStatuses = arrayOf("OK", "YES")
+
+    fun isOK(): Boolean = okStatuses.contains(code)
 }

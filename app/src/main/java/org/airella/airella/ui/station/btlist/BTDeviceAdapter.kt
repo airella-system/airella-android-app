@@ -11,7 +11,7 @@ import org.airella.airella.MyApplication.Companion.createToast
 import org.airella.airella.MyApplication.Companion.runOnUiThread
 import org.airella.airella.R
 import org.airella.airella.data.bluetooth.BluetoothCallback
-import org.airella.airella.ui.station.config.StationConfigActivity
+import org.airella.airella.ui.station.config.StationActivity
 import org.airella.airella.utils.inflate
 import java.util.*
 import kotlin.concurrent.schedule
@@ -70,7 +70,7 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
                     timeout.cancel()
                     allowConnecting = true
                     runOnUiThread {
-                        val intent = Intent(v.context, StationConfigActivity::class.java)
+                        val intent = Intent(v.context, StationActivity::class.java)
                         intent.putExtra("bt_device", btDevice)
                         ContextCompat.startActivity(v.context, intent, null)
                     }

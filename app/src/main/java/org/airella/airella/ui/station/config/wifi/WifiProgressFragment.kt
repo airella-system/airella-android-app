@@ -60,7 +60,7 @@ class WifiProgressFragment : Fragment() {
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    if (viewModel.apiConnection.value!!.status) {
+                    if (viewModel.apiConnection.value!!.isOK()) {
                         setStatus("Success")
                         viewModel.connectionType.value = InternetConnectionType.WIFI
                         viewModel.stationWifiSSID.value = wifiSSID

@@ -15,11 +15,11 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.ui.OnBackPressed
-import org.airella.airella.ui.station.config.list.StationConfigFragment
+import org.airella.airella.ui.station.config.main.StationMainFragment
 import org.airella.airella.utils.Log
 import java.util.*
 
-class StationConfigActivity : AppCompatActivity() {
+class StationActivity : AppCompatActivity() {
 
     private val btBondBroadcastReceiver = object : BroadcastReceiver() {
 
@@ -32,7 +32,7 @@ class StationConfigActivity : AppCompatActivity() {
                     Log.d("Bonded!")
                     getStationConfig()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, StationConfigFragment())
+                        .replace(R.id.container, StationMainFragment())
                         .commitNow()
                 }
             }
@@ -51,7 +51,7 @@ class StationConfigActivity : AppCompatActivity() {
             if (viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED) {
                 getStationConfig()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, StationConfigFragment())
+                    .replace(R.id.container, StationMainFragment())
                     .commitNow()
             } else {
                 registerReceiver(

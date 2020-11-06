@@ -1,4 +1,4 @@
-package org.airella.airella.ui.station.config.list
+package org.airella.airella.ui.station.config.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -30,7 +30,6 @@ import java.util.*
 class StationConfigFragment : Fragment() {
 
     private val viewModel: ConfigViewModel by activityViewModels()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
