@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
@@ -174,7 +173,7 @@ class StationConfigFragment : Fragment() {
 
     private fun hardResetDevice() {
         Log.i("Hard reset started")
-        setStatus("Connecting")
+        Log.d("Connecting")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
             listOf(
                 WriteRequest(Characteristic.CLEAR_DATA, "")
@@ -185,9 +184,17 @@ class StationConfigFragment : Fragment() {
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
-                override fun onFailToConnect() = setStatus("Failed to connect")
-                override fun onSuccess() = setStatus("Hard reset successful")
-                override fun onFailure() = setStatus("Hard reset failed")
+                override fun onFailToConnect() {
+                    Log.d("Failed to connect")
+                }
+
+                override fun onSuccess() {
+                    Log.d("Hard reset successful")
+                }
+
+                override fun onFailure() {
+                    Log.d("Hard reset failed")
+                }
             })
     }
 }

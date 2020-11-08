@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.RefreshAction
@@ -60,7 +59,7 @@ class AddressProgressFragment : Fragment() {
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
+                    Log.d("Success")
                     viewModel.stationCountry.value = country
                     viewModel.stationCity.value = city
                     viewModel.stationStreet.value = street

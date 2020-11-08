@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
@@ -61,7 +60,7 @@ class WifiProgressFragment : Fragment() {
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     if (viewModel.apiConnection.value!!.isOK()) {
-                        setStatus("Success")
+                        Log.d("Success")
                         viewModel.connectionType.value = InternetConnectionType.WIFI
                         viewModel.stationWifiSSID.value = wifiSSID
                         switchFragmentWithBackStack(
@@ -69,7 +68,7 @@ class WifiProgressFragment : Fragment() {
                             ConfigurationSuccessfulFragment()
                         )
                     } else {
-                        setStatus("Failed")
+                        Log.d("Failed")
                         switchFragmentWithBackStack(
                             R.id.container,
                             ConfigurationFailedFragment()

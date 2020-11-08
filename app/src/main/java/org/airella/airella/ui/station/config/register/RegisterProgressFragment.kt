@@ -8,7 +8,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_configuration_progress.*
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.RefreshAction
@@ -58,7 +57,7 @@ class RegisterProgressFragment : Fragment() {
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
+                    Log.d("Success")
                     val configurationSuccessfulFragment = ConfigurationSuccessfulFragment()
                     configurationSuccessfulFragment.arguments =
                         bundleOf(Pair("success_text", getString(R.string.registration_successful)))

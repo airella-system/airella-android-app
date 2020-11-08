@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.data.bluetooth.BluetoothCallback
@@ -49,7 +48,7 @@ class StationNameProgressFragment : Fragment() {
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
+                    Log.d("Success")
                     viewModel.stationName.value = stationName
                     switchFragmentWithBackStack(
                         R.id.container,

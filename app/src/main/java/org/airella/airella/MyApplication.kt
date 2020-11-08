@@ -37,9 +37,5 @@ class MyApplication : Application() {
                 toast.show()
             }
         }
-
-        fun setStatus(status: String) {
-            Log.d(status)
-        }
     }
 }
