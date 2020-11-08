@@ -12,11 +12,12 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_summary.*
 import org.airella.airella.MyApplication
+import org.airella.airella.MyApplication.Companion.createToast
 import org.airella.airella.R
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.data.service.StationService
-import org.airella.airella.ui.station.config.StationConfigActivity
+import org.airella.airella.ui.station.config.StationActivity
 import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
 import java.util.*
@@ -51,18 +52,12 @@ class StationSummaryFragment : Fragment() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Are you sure to remove a station?")
                 .setPositiveButton(android.R.string.yes) { _, _ ->
-                    Toast.makeText(requireContext(), "Removing a station", Toast.LENGTH_SHORT)
-                        .show()
+                    createToast("Removing a station")
                     StationService.removeStation(viewModel.station.id).subscribe({
-                        Toast.makeText(requireContext(), "Removed a station", Toast.LENGTH_LONG)
-                            .show()
+                        createToast("Removed a station")
                         activity?.finish()
                     }, {
-                        Toast.makeText(
-                            requireContext(),
-                            "Failed to remove a station",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        createToast("Failed to remove a station")
                     })
                 }
                 .setNegativeButton(R.string.cancel, null)
@@ -83,7 +78,7 @@ class StationSummaryFragment : Fragment() {
                         override fun onSuccess() {
                             MyApplication.runOnUiThread {
                                 val intent =
-                                    Intent(requireContext(), StationConfigActivity::class.java)
+                                    Intent(requireContext(), StationActivity::class.java)
                                 intent.putExtra("bt_device", btDevice)
                                 ContextCompat.startActivity(requireContext(), intent, null)
                             }

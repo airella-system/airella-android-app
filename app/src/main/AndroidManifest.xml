@@ -37,7 +37,7 @@
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.airella.airella.ui.station.config.StationConfigActivity"
+            android:name="org.airella.airella.ui.station.config.StationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".StartActivity"

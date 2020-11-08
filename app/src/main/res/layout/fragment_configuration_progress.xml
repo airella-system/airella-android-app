@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:text="@string/register_station" />
+        app:text="@string/configuration_in_progress" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

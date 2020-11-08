@@ -9,9 +9,12 @@ import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_gsm_config.*
 import kotlinx.android.synthetic.main.fragment_location.btn_continue
 import org.airella.airella.R
+import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 
 class GsmConfigFragment : Fragment() {
+
+    private val configViewModel: ConfigViewModel by activityViewModels()
 
     private val gsmViewModel: GsmViewModel by activityViewModels()
 
@@ -24,6 +27,12 @@ class GsmConfigFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        apn_edit.setText(configViewModel.gsmApn.value)
+        gsm_username_edit.setText(configViewModel.gsmUsername.value)
+        gsm_password_edit.setText(configViewModel.gsmPassword.value)
+        gsm_extender_edit.setText(configViewModel.gsmExtenderUrl.value)
+
 
         btn_continue.setText(R.string.action_save)
 

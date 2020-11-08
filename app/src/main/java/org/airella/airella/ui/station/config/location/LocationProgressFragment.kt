@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.RefreshAction
@@ -14,6 +13,7 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
@@ -53,12 +53,28 @@ class LocationProgressFragment : Fragment() {
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
+                    Log.d("Success")
                     viewModel.stationLatitude.value = latitude
                     viewModel.stationLongitude.value = longitude
                     switchFragmentWithBackStack(
                         R.id.container,
                         ConfigurationSuccessfulFragment()
+                    )
+                }
+
+                override fun onFailure() {
+                    super.onFailure()
+                    switchFragmentWithBackStack(
+                        R.id.container,
+                        ConfigurationFailedFragment()
+                    )
+                }
+
+                override fun onFailToConnect() {
+                    super.onFailToConnect()
+                    switchFragmentWithBackStack(
+                        R.id.container,
+                        ConfigurationFailedFragment()
                     )
                 }
             })

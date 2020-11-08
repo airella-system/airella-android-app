@@ -14,11 +14,12 @@ import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.ReadRequest
-import org.airella.airella.ui.station.config.list.StationConfigFragment
+import org.airella.airella.ui.OnBackPressed
+import org.airella.airella.ui.station.config.main.StationMainFragment
 import org.airella.airella.utils.Log
 import java.util.*
 
-class StationConfigActivity : AppCompatActivity() {
+class StationActivity : AppCompatActivity() {
 
     private val btBondBroadcastReceiver = object : BroadcastReceiver() {
 
@@ -27,10 +28,11 @@ class StationConfigActivity : AppCompatActivity() {
                 BluetoothDevice.BOND_NONE -> Log.w("Bonding Failed")
                 BluetoothDevice.BOND_BONDING -> Log.d("Bonding...")
                 BluetoothDevice.BOND_BONDED -> {
+                    unregisterReceiver(this)
                     Log.d("Bonded!")
                     getStationConfig()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, StationConfigFragment())
+                        .replace(R.id.container, StationMainFragment())
                         .commitNow()
                 }
             }
@@ -43,20 +45,20 @@ class StationConfigActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_container)
 
-        registerReceiver(
-            btBondBroadcastReceiver,
-            IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-        )
-
         if (savedInstanceState == null) {
             viewModel.btDevice = intent.extras!!.getParcelable("bt_device")!!
 
             if (viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED) {
                 getStationConfig()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, StationConfigFragment())
+                    .replace(R.id.container, StationMainFragment())
                     .commitNow()
             } else {
+                registerReceiver(
+                    btBondBroadcastReceiver,
+                    IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
+                )
+
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.container, StationBondFragment())
                     .commitNow()
@@ -111,9 +113,21 @@ class StationConfigActivity : AppCompatActivity() {
                 },
                 ReadRequest(Characteristic.LOCATION_LONGITUDE) {
                     viewModel.stationLongitude.value = it
+                },
+
+                ReadRequest(Characteristic.DEVICE_STATUS) {
+                    viewModel.setStatus(it)
                 }
             )
         )
         viewModel.btDevice.connectGatt(this, false, BluetoothCallback(bluetoothRequests))
+    }
+
+    override fun onBackPressed() {
+        val fragment =
+            this.supportFragmentManager.findFragmentById(R.id.container)
+        if ((fragment as? OnBackPressed)?.onBackPressed()?.not() ?: true) {
+            super.onBackPressed()
+        }
     }
 }

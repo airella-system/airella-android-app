@@ -10,6 +10,8 @@ class ReadRequest(
     private val onSuccess: (String) -> Unit
 ) : BluetoothRequest {
 
+    constructor(characteristic: Characteristic) : this(characteristic, {})
+
     private var readBuffer: ByteArray = ByteArray(0)
 
     private var remainingChunks: Int = 0
