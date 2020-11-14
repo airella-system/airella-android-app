@@ -38,18 +38,20 @@ class StationNameProgressFragment : Fragment() {
 
     private fun saveStationName(stationName: String) {
         Log.i("Save station name")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(Characteristic.STATION_NAME, stationName)
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+            addAll(viewModel.getStationNameReadRequest())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     Log.d("Success")
-                    viewModel.stationName.value = stationName
                     switchFragmentWithBackStack(
                         R.id.container,
                         ConfigurationSuccessfulFragment()
@@ -57,21 +59,21 @@ class StationNameProgressFragment : Fragment() {
                 }
 
                 override fun onFailure() {
-                    super.onFailure()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
 
                 override fun onFailToConnect() {
-                    super.onFailToConnect()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
             })
+    }
+
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
     }
 
 }

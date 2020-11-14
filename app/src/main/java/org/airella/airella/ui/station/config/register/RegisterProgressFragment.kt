@@ -42,7 +42,7 @@ class RegisterProgressFragment : Fragment() {
 
     private fun registerStation(apiUrl: String) {
         Log.i("Register station start")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(
                     Characteristic.REGISTRATION_TOKEN,
@@ -51,35 +51,50 @@ class RegisterProgressFragment : Fragment() {
                 WriteRequest(Characteristic.API_URL, apiUrl),
                 WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.REGISTER.code)
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    Log.d("Success")
-                    val configurationSuccessfulFragment = ConfigurationSuccessfulFragment()
-                    configurationSuccessfulFragment.arguments =
-                        bundleOf(Pair("success_text", getString(R.string.registration_successful)))
-                    switchFragmentWithBackStack(R.id.container, configurationSuccessfulFragment)
+                    when {
+                        viewModel.registered.value!!.isOK() -> {
+                            Log.d("Success")
+                            val configurationSuccessfulFragment =
+                                ConfigurationSuccessfulFragment()
+                            configurationSuccessfulFragment.arguments =
+                                bundleOf(
+                                    Pair(
+                                        "success_text",
+                                        getString(R.string.registration_successful)
+                                    )
+                                )
+                            switchFragmentWithBackStack(
+                                R.id.container,
+                                configurationSuccessfulFragment
+                            )
+                        }
+                        else -> configFailed()
+                    }
                 }
 
                 override fun onFailure() {
-                    super.onFailure()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
 
                 override fun onFailToConnect() {
-                    super.onFailToConnect()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
             })
     }
 
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
+    }
 }

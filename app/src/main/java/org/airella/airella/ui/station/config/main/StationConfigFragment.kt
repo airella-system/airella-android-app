@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
+import org.airella.airella.MyApplication.Companion.createToast
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
@@ -189,7 +190,8 @@ class StationConfigFragment : Fragment() {
                 }
 
                 override fun onSuccess() {
-                    Log.d("Hard reset successful")
+                    viewModel.getStationConfig()
+                    createToast("Hard reset successful")
                 }
 
                 override fun onFailure() {

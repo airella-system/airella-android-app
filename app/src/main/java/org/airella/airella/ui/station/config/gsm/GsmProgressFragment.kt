@@ -42,9 +42,14 @@ class GsmProgressFragment : Fragment() {
         saveGsm(apn, gmsUsername, gsmPassword, gsmExtenderUrl)
     }
 
-    private fun saveGsm(apn: String, gsmUsername: String, gsmPassword: String, gsmExtenderUrl: String) {
+    private fun saveGsm(
+        apn: String,
+        gsmUsername: String,
+        gsmPassword: String,
+        gsmExtenderUrl: String
+    ) {
         Log.i("Save gsm config start")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(
                     Characteristic.INTERNET_CONNECTION_TYPE,
@@ -54,40 +59,44 @@ class GsmProgressFragment : Fragment() {
                 WriteRequest(Characteristic.GSM_EXTENDER_URL, gsmExtenderUrl),
                 WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.GSM.code),
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+            addAll(viewModel.getInternetReadRequests())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    Log.d("Success")
-                    viewModel.connectionType.value = InternetConnectionType.GSM
-                    viewModel.gsmApn.value = apn
-                    viewModel.gsmUsername.value = gsmUsername
-                    viewModel.gsmPassword.value = gsmPassword
-                    viewModel.gsmExtenderUrl.value = gsmExtenderUrl
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationSuccessfulFragment()
-                    )
+                    when {
+                        viewModel.apiConnection.value!!.isOK() -> {
+                            Log.d("Success")
+                            switchFragmentWithBackStack(
+                                R.id.container,
+                                ConfigurationSuccessfulFragment()
+                            )
+                        }
+                        else -> configFailed()
+                    }
                 }
 
                 override fun onFailure() {
-                    super.onFailure()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
 
                 override fun onFailToConnect() {
-                    super.onFailToConnect()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
-            })
+            }
+        )
+    }
+
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
     }
 
 }
