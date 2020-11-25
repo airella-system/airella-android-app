@@ -45,7 +45,7 @@ class AddressProgressFragment : Fragment() {
         houseNo: String
     ) {
         Log.i("Save address start")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(Characteristic.STATION_COUNTRY, country),
                 WriteRequest(Characteristic.STATION_CITY, city),
@@ -53,17 +53,16 @@ class AddressProgressFragment : Fragment() {
                 WriteRequest(Characteristic.STATION_HOUSE_NO, houseNo),
                 WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.ADDRESS.code)
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+            addAll(viewModel.getAddressReadRequests())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     Log.d("Success")
-                    viewModel.stationCountry.value = country
-                    viewModel.stationCity.value = city
-                    viewModel.stationStreet.value = street
-                    viewModel.stationHouseNo.value = houseNo
                     switchFragmentWithBackStack(
                         R.id.container,
                         ConfigurationSuccessfulFragment()
@@ -71,21 +70,21 @@ class AddressProgressFragment : Fragment() {
                 }
 
                 override fun onFailure() {
-                    super.onFailure()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
 
                 override fun onFailToConnect() {
-                    super.onFailToConnect()
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationFailedFragment()
-                    )
+                    configFailed()
                 }
             })
+    }
+
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
     }
 
 }

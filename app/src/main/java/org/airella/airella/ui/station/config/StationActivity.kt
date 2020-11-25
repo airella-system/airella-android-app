@@ -9,15 +9,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import org.airella.airella.R
-import org.airella.airella.config.Characteristic
-import org.airella.airella.config.InternetConnectionType
-import org.airella.airella.data.bluetooth.BluetoothCallback
-import org.airella.airella.data.bluetooth.BluetoothRequest
-import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.main.StationMainFragment
 import org.airella.airella.utils.Log
-import java.util.*
 
 class StationActivity : AppCompatActivity() {
 
@@ -30,7 +24,7 @@ class StationActivity : AppCompatActivity() {
                 BluetoothDevice.BOND_BONDED -> {
                     unregisterReceiver(this)
                     Log.d("Bonded!")
-                    getStationConfig()
+                    viewModel.getStationConfig()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, StationMainFragment())
                         .commitNow()
@@ -49,7 +43,7 @@ class StationActivity : AppCompatActivity() {
             viewModel.btDevice = intent.extras!!.getParcelable("bt_device")!!
 
             if (viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED) {
-                getStationConfig()
+                viewModel.getStationConfig()
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.container, StationMainFragment())
                     .commitNow()
@@ -75,58 +69,11 @@ class StationActivity : AppCompatActivity() {
         }
     }
 
-    private fun getStationConfig() {
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
-            listOf(
-                ReadRequest(Characteristic.STATION_NAME) {
-                    viewModel.stationName.value = it
-                },
-
-                ReadRequest(Characteristic.INTERNET_CONNECTION_TYPE) {
-                    viewModel.connectionType.value = InternetConnectionType.getByCode(it)
-                },
-                ReadRequest(Characteristic.WIFI_SSID) {
-                    viewModel.stationWifiSSID.value = it
-                },
-                ReadRequest(Characteristic.GSM_EXTENDER_URL) {
-                    viewModel.gsmExtenderUrl.value = it
-                },
-                ReadRequest(Characteristic.GSM_CONFIG) {
-                    viewModel.setApnConfig(it)
-                },
-
-                ReadRequest(Characteristic.STATION_COUNTRY) {
-                    viewModel.stationCountry.value = it
-                },
-                ReadRequest(Characteristic.STATION_CITY) {
-                    viewModel.stationCity.value = it
-                },
-                ReadRequest(Characteristic.STATION_STREET) {
-                    viewModel.stationStreet.value = it
-                },
-                ReadRequest(Characteristic.STATION_HOUSE_NO) {
-                    viewModel.stationHouseNo.value = it
-                },
-
-                ReadRequest(Characteristic.LOCATION_LATITUDE) {
-                    viewModel.stationLatitude.value = it
-                },
-                ReadRequest(Characteristic.LOCATION_LONGITUDE) {
-                    viewModel.stationLongitude.value = it
-                },
-
-                ReadRequest(Characteristic.DEVICE_STATUS) {
-                    viewModel.setStatus(it)
-                }
-            )
-        )
-        viewModel.btDevice.connectGatt(this, false, BluetoothCallback(bluetoothRequests))
-    }
 
     override fun onBackPressed() {
         val fragment =
             this.supportFragmentManager.findFragmentById(R.id.container)
-        if ((fragment as? OnBackPressed)?.onBackPressed()?.not() ?: true) {
+        if ((fragment as? OnBackPressed)?.onBackPressed() != true) {
             super.onBackPressed()
         }
     }

@@ -12,7 +12,6 @@ import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
-import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
@@ -42,7 +41,7 @@ class WifiProgressFragment : Fragment() {
 
     private fun saveWiFiConfig(wifiSSID: String, wifiPassword: String) {
         Log.i("Save wifi config start")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(
                     Characteristic.INTERNET_CONNECTION_TYPE,
@@ -51,31 +50,43 @@ class WifiProgressFragment : Fragment() {
                 WriteRequest(Characteristic.WIFI_SSID, wifiSSID),
                 WriteRequest(Characteristic.WIFI_PASSWORD, wifiPassword),
                 WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.WIFI.code),
-                ReadRequest(Characteristic.DEVICE_STATUS)
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+            addAll(viewModel.getInternetReadRequests())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    if (viewModel.apiConnection.value!!.isOK()) {
-                        Log.d("Success")
-                        viewModel.connectionType.value = InternetConnectionType.WIFI
-                        viewModel.stationWifiSSID.value = wifiSSID
-                        switchFragmentWithBackStack(
-                            R.id.container,
-                            ConfigurationSuccessfulFragment()
-                        )
-                    } else {
-                        Log.d("Failed")
-                        switchFragmentWithBackStack(
-                            R.id.container,
-                            ConfigurationFailedFragment()
-                        )
+                    Log.d("Success")
+                    when {
+                        viewModel.apiConnection.value!!.isOK() -> {
+                            switchFragmentWithBackStack(
+                                R.id.container,
+                                ConfigurationSuccessfulFragment()
+                            )
+                        }
+                        else -> configFailed()
                     }
+                }
+
+                override fun onFailure() {
+                    configFailed()
+                }
+
+                override fun onFailToConnect() {
+                    configFailed()
                 }
             })
     }
 
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
+    }
 }

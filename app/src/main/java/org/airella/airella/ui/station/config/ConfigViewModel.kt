@@ -3,9 +3,15 @@ package org.airella.airella.ui.station.config
 import android.bluetooth.BluetoothDevice
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.airella.airella.MyApplication
+import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
+import org.airella.airella.data.bluetooth.BluetoothCallback
+import org.airella.airella.data.bluetooth.BluetoothRequest
+import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.data.model.station.Status
 import org.airella.airella.utils.Log
+import java.util.*
 
 open class ConfigViewModel : ViewModel() {
 
@@ -39,9 +45,88 @@ open class ConfigViewModel : ViewModel() {
     val weatherStatus: MutableLiveData<Status> = MutableLiveData()
 
 
-    private val apnRegex: Regex = """"(.*?)","(.*?)",(.*?)"""".toRegex()
+    fun getStatusReadRequest(): Queue<BluetoothRequest> = LinkedList(
+        listOf(
+            ReadRequest(Characteristic.DEVICE_STATUS) {
+                setStatus(it)
+            }
+        )
+    )
 
-    fun setApnConfig(config: String) {
+    fun getStationNameReadRequest(): Queue<BluetoothRequest> = LinkedList(
+        listOf(
+
+            ReadRequest(Characteristic.STATION_NAME) {
+                stationName.value = it
+            })
+    )
+
+    fun getInternetReadRequests(): Queue<BluetoothRequest> = LinkedList(
+        listOf(
+            ReadRequest(Characteristic.INTERNET_CONNECTION_TYPE) {
+                connectionType.value = InternetConnectionType.getByCode(it)
+            },
+            ReadRequest(Characteristic.WIFI_SSID) {
+                stationWifiSSID.value = it
+            },
+            ReadRequest(Characteristic.GSM_EXTENDER_URL) {
+                gsmExtenderUrl.value = it
+            },
+            ReadRequest(Characteristic.GSM_CONFIG) {
+                setApnConfig(it)
+            }
+        )
+    )
+
+    fun getAddressReadRequests(): Queue<BluetoothRequest> = LinkedList(
+        listOf(
+            ReadRequest(Characteristic.STATION_COUNTRY) {
+                stationCountry.value = it
+            },
+            ReadRequest(Characteristic.STATION_CITY) {
+                stationCity.value = it
+            },
+            ReadRequest(Characteristic.STATION_STREET) {
+                stationStreet.value = it
+            },
+            ReadRequest(Characteristic.STATION_HOUSE_NO) {
+                stationHouseNo.value = it
+            },
+        )
+    )
+
+    fun getLocationReadRequests(): Queue<BluetoothRequest> = LinkedList(
+        listOf(
+            ReadRequest(Characteristic.LOCATION_LATITUDE) {
+                stationLatitude.value = it
+            },
+            ReadRequest(Characteristic.LOCATION_LONGITUDE) {
+                stationLongitude.value = it
+            }
+        )
+    )
+
+
+    fun getStationConfig() {
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>().apply {
+            addAll(getStatusReadRequest())
+            addAll(getStationNameReadRequest())
+            addAll(getInternetReadRequests())
+            addAll(getAddressReadRequests())
+            addAll(getLocationReadRequests())
+        }
+        btDevice.connectGatt(
+            MyApplication.appContext,
+            false,
+            BluetoothCallback(bluetoothRequests)
+        )
+    }
+
+
+    private
+    val apnRegex: Regex = """"(.*?)","(.*?)",(.*?)"""".toRegex()
+
+    private fun setApnConfig(config: String) {
         apnRegex.find(config)?.let {
             val (apn, username, password) = it.destructured
             gsmApn.value = apn
@@ -50,7 +135,7 @@ open class ConfigViewModel : ViewModel() {
         }
     }
 
-    fun setStatus(statusString: String) {
+    private fun setStatus(statusString: String) {
         statusString.split(",").forEach {
             try {
                 val (name, status) = it.split("|", limit = 2)
