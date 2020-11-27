@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
@@ -15,6 +14,7 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
@@ -42,9 +42,14 @@ class GsmProgressFragment : Fragment() {
         saveGsm(apn, gmsUsername, gsmPassword, gsmExtenderUrl)
     }
 
-    private fun saveGsm(apn: String, gsmUsername: String, gsmPassword: String, gsmExtenderUrl: String) {
+    private fun saveGsm(
+        apn: String,
+        gsmUsername: String,
+        gsmPassword: String,
+        gsmExtenderUrl: String
+    ) {
         Log.i("Save gsm config start")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(
                     Characteristic.INTERNET_CONNECTION_TYPE,
@@ -54,24 +59,50 @@ class GsmProgressFragment : Fragment() {
                 WriteRequest(Characteristic.GSM_EXTENDER_URL, gsmExtenderUrl),
                 WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.GSM.code),
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+            addAll(viewModel.getInternetReadRequests())
+            addAll(viewModel.getLastOperationStateReadRequest())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
-                    viewModel.connectionType.value = InternetConnectionType.GSM
-                    viewModel.gsmApn.value = apn
-                    viewModel.gsmUsername.value = gsmUsername
-                    viewModel.gsmPassword.value = gsmPassword
-                    viewModel.gsmExtenderUrl.value = gsmExtenderUrl
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationSuccessfulFragment()
-                    )
+                    when {
+                        viewModel.apiConnection.value!!.isOK() -> {
+                            Log.d("Success")
+                            when (viewModel.lastOperationStatus.value) {
+                                "gsm|ok" -> {
+                                    switchFragmentWithBackStack(
+                                        R.id.container,
+                                        ConfigurationSuccessfulFragment()
+                                    )
+                                }
+                                else -> configFailed()
+                            }
+                        }
+                        else -> configFailed()
+                    }
                 }
-            })
+
+                override fun onFailure() {
+                    configFailed()
+                }
+
+                override fun onFailToConnect() {
+                    configFailed()
+                }
+            }
+        )
+    }
+
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
     }
 
 }

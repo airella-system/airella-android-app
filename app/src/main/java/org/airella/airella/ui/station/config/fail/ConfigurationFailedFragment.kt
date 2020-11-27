@@ -1,4 +1,4 @@
-package org.airella.airella.ui.station.config.success
+package org.airella.airella.ui.station.config.fail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,21 +10,18 @@ import kotlinx.android.synthetic.main.fragment_configuration_succesful.*
 import org.airella.airella.R
 import org.airella.airella.ui.OnBackPressed
 
-class ConfigurationSuccessfulFragment : Fragment(), OnBackPressed {
+class ConfigurationFailedFragment : Fragment(), OnBackPressed {
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_configuration_succesful, container, false)
+        return inflater.inflate(R.layout.fragment_configuration_failed, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getString("success_text")?.let {
-            main_text.text = it
-        }
         back_button.setOnClickListener {
             returnToConfigList()
         }
@@ -41,5 +38,4 @@ class ConfigurationSuccessfulFragment : Fragment(), OnBackPressed {
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
     }
-
 }

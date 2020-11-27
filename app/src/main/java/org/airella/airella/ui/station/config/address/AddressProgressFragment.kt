@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.RefreshAction
@@ -14,6 +13,7 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
@@ -45,7 +45,7 @@ class AddressProgressFragment : Fragment() {
         houseNo: String
     ) {
         Log.i("Save address start")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(Characteristic.STATION_COUNTRY, country),
                 WriteRequest(Characteristic.STATION_CITY, city),
@@ -53,23 +53,44 @@ class AddressProgressFragment : Fragment() {
                 WriteRequest(Characteristic.STATION_HOUSE_NO, houseNo),
                 WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.ADDRESS.code)
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+            addAll(viewModel.getAddressReadRequests())
+            addAll(viewModel.getLastOperationStateReadRequest())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
-                    viewModel.stationCountry.value = country
-                    viewModel.stationCity.value = city
-                    viewModel.stationStreet.value = street
-                    viewModel.stationHouseNo.value = houseNo
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationSuccessfulFragment()
-                    )
+                    Log.d("Success")
+                    when (viewModel.lastOperationStatus.value) {
+                        "address|ok" -> {
+                            switchFragmentWithBackStack(
+                                R.id.container,
+                                ConfigurationSuccessfulFragment()
+                            )
+                        }
+                        else -> configFailed()
+                    }
+                }
+
+                override fun onFailure() {
+                    configFailed()
+                }
+
+                override fun onFailToConnect() {
+                    configFailed()
                 }
             })
+    }
+
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
     }
 
 }

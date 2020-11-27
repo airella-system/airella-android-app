@@ -9,9 +9,12 @@ import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_location.btn_continue
 import kotlinx.android.synthetic.main.fragment_station_name.*
 import org.airella.airella.R
+import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 
 class StationNameFragment : Fragment() {
+
+    private val configViewModel: ConfigViewModel by activityViewModels()
 
     private val stationNameViewModel: StationNameViewModel by activityViewModels()
 
@@ -24,6 +27,8 @@ class StationNameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        station_name_edit.setText(configViewModel.stationName.value)
 
         btn_continue.setText(R.string.action_save)
 

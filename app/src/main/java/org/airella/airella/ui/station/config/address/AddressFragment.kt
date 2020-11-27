@@ -9,9 +9,12 @@ import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_address.*
 import org.airella.airella.R
 import org.airella.airella.data.model.common.Address
+import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 
 class AddressFragment : Fragment() {
+
+    private val configViewModel: ConfigViewModel by activityViewModels()
 
     private val addressViewModel: AddressViewModel by activityViewModels()
 
@@ -24,6 +27,11 @@ class AddressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        country.setText(configViewModel.stationCountry.value)
+        city.setText(configViewModel.stationCity.value)
+        street.setText(configViewModel.stationStreet.value)
+        houseNo.setText(configViewModel.stationHouseNo.value)
 
         btn_continue.setText(R.string.action_save)
 

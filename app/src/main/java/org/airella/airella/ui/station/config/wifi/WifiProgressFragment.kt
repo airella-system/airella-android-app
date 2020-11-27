@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import org.airella.airella.MyApplication.Companion.setStatus
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
@@ -15,6 +14,7 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
@@ -41,7 +41,7 @@ class WifiProgressFragment : Fragment() {
 
     private fun saveWiFiConfig(wifiSSID: String, wifiPassword: String) {
         Log.i("Save wifi config start")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
+        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
                 WriteRequest(
                     Characteristic.INTERNET_CONNECTION_TYPE,
@@ -49,23 +49,45 @@ class WifiProgressFragment : Fragment() {
                 ),
                 WriteRequest(Characteristic.WIFI_SSID, wifiSSID),
                 WriteRequest(Characteristic.WIFI_PASSWORD, wifiPassword),
-                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.WIFI.code)
+                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.WIFI.code),
             )
-        )
+        ).apply {
+            addAll(viewModel.getStatusReadRequest())
+            addAll(viewModel.getInternetReadRequests())
+            addAll(viewModel.getLastOperationStateReadRequest())
+        }
         viewModel.btDevice.connectGatt(
             context,
             false,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    setStatus("Success")
-                    viewModel.connectionType.value = InternetConnectionType.WIFI
-                    viewModel.stationWifiSSID.value = wifiSSID
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationSuccessfulFragment()
-                    )
+                    Log.d("Success")
+                    when (viewModel.lastOperationStatus.value) {
+                        "wifi|ok" -> {
+                            switchFragmentWithBackStack(
+                                R.id.container,
+                                ConfigurationSuccessfulFragment()
+                            )
+                        }
+                        else -> configFailed()
+                    }
+                }
+
+                override fun onFailure() {
+                    configFailed()
+                }
+
+                override fun onFailToConnect() {
+                    configFailed()
                 }
             })
     }
 
+    private fun configFailed() {
+        Log.d("Failed")
+        switchFragmentWithBackStack(
+            R.id.container,
+            ConfigurationFailedFragment()
+        )
+    }
 }

@@ -43,7 +43,7 @@
     <string name="unexpected_error">"Unexpected Error"</string>
     <string name="location_permission_required_scan">Location permission is required to scan Bluetooth devices</string>
 
-    <string name="status">"Status: "</string>
+    <string name="status_label">"Status: "</string>
     <string name="bond_device">Bond with device</string>
     <string name="hard_reset">Hard reset</string>
     <string name="location_required_rejected">You must allow Location permission to scan nearby BT devices</string>
@@ -90,6 +90,7 @@
     <string name="configuration_successful">Configuration successful</string>
     <string name="success">Success!</string>
     <string name="station_was_setup_successfully">Station was setup successfully!</string>
+    <string name="station_setup_failed">Station setup failed!</string>
     <string name="registration_in_progress">Registration in progress</string>
     <string name="registration_successful">Registration successful</string>
     <string name="choose_internet_connection">Connect station to Internet</string>
@@ -105,5 +106,15 @@
     <string name="how_to_connect_station_to_internet">How do you want to connect station to Internet?</string>
     <string name="add_station">Add station</string>
     <string name="configure_station_via_bluetooth">Configure station\nvia Bluetooth</string>
+    <string name="failed">Failed</string>
+    <string name="registered">Registered</string>
+    <string name="api_connection">API Connection</string>
+    <string name="configure">Configure</string>
+    <string name="status">Status</string>
+    <string name="air_sensor">Air sensor</string>
+    <string name="gps">Gps</string>
+    <string name="heater">Heater</string>
+    <string name="power_sensor">Power sensor</string>
+    <string name="weather_sensor">Weather sensor</string>
     <string name="airella_gsm_extender_url">https://gsm-extender.airella.cyfrogen.com/</string>
 </resources>
