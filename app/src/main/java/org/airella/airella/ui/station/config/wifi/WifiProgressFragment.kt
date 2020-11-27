@@ -54,6 +54,7 @@ class WifiProgressFragment : Fragment() {
         ).apply {
             addAll(viewModel.getStatusReadRequest())
             addAll(viewModel.getInternetReadRequests())
+            addAll(viewModel.getLastOperationStateReadRequest())
         }
         viewModel.btDevice.connectGatt(
             context,
@@ -61,8 +62,8 @@ class WifiProgressFragment : Fragment() {
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     Log.d("Success")
-                    when {
-                        viewModel.apiConnection.value!!.isOK() -> {
+                    when (viewModel.lastOperationStatus.value) {
+                        "wifi|ok" -> {
                             switchFragmentWithBackStack(
                                 R.id.container,
                                 ConfigurationSuccessfulFragment()

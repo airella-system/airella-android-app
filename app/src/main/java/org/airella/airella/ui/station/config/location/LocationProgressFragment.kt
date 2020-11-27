@@ -50,6 +50,7 @@ class LocationProgressFragment : Fragment() {
         ).apply {
             addAll(viewModel.getStatusReadRequest())
             addAll(viewModel.getLocationReadRequests())
+            addAll(viewModel.getLastOperationStateReadRequest())
         }
         viewModel.btDevice.connectGatt(
             context,
@@ -57,10 +58,15 @@ class LocationProgressFragment : Fragment() {
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     Log.d("Success")
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationSuccessfulFragment()
-                    )
+                    when (viewModel.lastOperationStatus.value) {
+                        "location|ok" -> {
+                            switchFragmentWithBackStack(
+                                R.id.container,
+                                ConfigurationSuccessfulFragment()
+                            )
+                        }
+                        else -> configFailed()
+                    }
                 }
 
                 override fun onFailure() {

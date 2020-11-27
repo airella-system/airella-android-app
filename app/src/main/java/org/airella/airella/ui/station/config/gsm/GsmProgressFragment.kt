@@ -62,6 +62,7 @@ class GsmProgressFragment : Fragment() {
         ).apply {
             addAll(viewModel.getStatusReadRequest())
             addAll(viewModel.getInternetReadRequests())
+            addAll(viewModel.getLastOperationStateReadRequest())
         }
         viewModel.btDevice.connectGatt(
             context,
@@ -71,10 +72,15 @@ class GsmProgressFragment : Fragment() {
                     when {
                         viewModel.apiConnection.value!!.isOK() -> {
                             Log.d("Success")
-                            switchFragmentWithBackStack(
-                                R.id.container,
-                                ConfigurationSuccessfulFragment()
-                            )
+                            when (viewModel.lastOperationStatus.value) {
+                                "gsm|ok" -> {
+                                    switchFragmentWithBackStack(
+                                        R.id.container,
+                                        ConfigurationSuccessfulFragment()
+                                    )
+                                }
+                                else -> configFailed()
+                            }
                         }
                         else -> configFailed()
                     }
