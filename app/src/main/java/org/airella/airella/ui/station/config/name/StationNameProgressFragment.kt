@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import org.airella.airella.R
 import org.airella.airella.config.Characteristic
+import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
@@ -40,11 +41,13 @@ class StationNameProgressFragment : Fragment() {
         Log.i("Save station name")
         val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>(
             listOf(
-                WriteRequest(Characteristic.STATION_NAME, stationName)
+                WriteRequest(Characteristic.STATION_NAME, stationName),
+                WriteRequest(Characteristic.REFRESH_ACTION, RefreshAction.NAME.code)
             )
         ).apply {
             addAll(viewModel.getStatusReadRequest())
             addAll(viewModel.getStationNameReadRequest())
+            addAll(viewModel.getLastOperationStateReadRequest())
         }
         viewModel.btDevice.connectGatt(
             context,
@@ -52,10 +55,15 @@ class StationNameProgressFragment : Fragment() {
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     Log.d("Success")
-                    switchFragmentWithBackStack(
-                        R.id.container,
-                        ConfigurationSuccessfulFragment()
-                    )
+                    when (viewModel.lastOperationStatus.value) {
+                        "name|ok" -> {
+                            switchFragmentWithBackStack(
+                                R.id.container,
+                                ConfigurationSuccessfulFragment()
+                            )
+                        }
+                        else -> configFailed()
+                    }
                 }
 
                 override fun onFailure() {

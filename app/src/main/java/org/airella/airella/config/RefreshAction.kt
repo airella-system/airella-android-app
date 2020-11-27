@@ -5,5 +5,6 @@ enum class RefreshAction(val code: String) {
     WIFI("wifi"),
     GSM("gsm"),
     ADDRESS("address"),
+    NAME("name"),
     LOCATION("location");
 }

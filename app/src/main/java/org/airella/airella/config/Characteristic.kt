@@ -27,6 +27,7 @@ enum class Characteristic(uuid: String) {
     INTERNET_CONNECTION_TYPE("7d9059a5-f426-4f2f-9050-3c88036beb1b"),
 
     DEVICE_STATUS("2ffe173c-0f18-4af2-b21a-c9c3aef54003"),
+    LAST_OPERATION_STATUS("2ffe173c-0f18-4af2-b21a-c9c3aef54004"),
 
     REFRESH_ACTION("2ca7df70-42df-482e-81cf-468e0fcec5dc"),
     CLEAR_DATA("9023e6f3-223d-4c6c-bd39-ebca35d7e8d0");

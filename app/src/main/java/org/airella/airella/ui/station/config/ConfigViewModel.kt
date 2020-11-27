@@ -43,7 +43,16 @@ open class ConfigViewModel : ViewModel() {
     val heater: MutableLiveData<Status> = MutableLiveData()
     val powerSensor: MutableLiveData<Status> = MutableLiveData()
     val weatherStatus: MutableLiveData<Status> = MutableLiveData()
+    val lastOperationStatus: MutableLiveData<String> = MutableLiveData()
 
+    
+    fun getLastOperationStateReadRequest(): Queue<BluetoothRequest> = LinkedList(
+        listOf(
+            ReadRequest(Characteristic.LAST_OPERATION_STATUS) {
+                lastOperationStatus.value = it
+            }
+        )
+    )
 
     fun getStatusReadRequest(): Queue<BluetoothRequest> = LinkedList(
         listOf(
