@@ -36,9 +36,9 @@ class GsmProgressFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val apn = gsmViewModel.apn.value!!
-        val gmsUsername = gsmViewModel.apn.value!!
-        val gsmPassword = gsmViewModel.apn.value!!
-        val gsmExtenderUrl = gsmViewModel.apn.value!!
+        val gmsUsername = gsmViewModel.username.value!!
+        val gsmPassword = gsmViewModel.password.value!!
+        val gsmExtenderUrl = gsmViewModel.extenderUrl.value!!
         saveGsm(apn, gmsUsername, gsmPassword, gsmExtenderUrl)
     }
 

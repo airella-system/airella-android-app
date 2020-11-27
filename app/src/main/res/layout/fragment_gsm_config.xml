@@ -105,7 +105,7 @@
                     android:id="@+id/gsm_extender_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:text="@string/airella_gsm_extender_url"
                     android:hint="@string/gsm_extender_url"
                     android:inputType="text"
                     android:selectAllOnFocus="true" />
