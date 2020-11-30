@@ -30,7 +30,7 @@ object AuthService {
             ?: refreshToken().map { it.token }.runAsync()
 
     fun clearAccessToken() {
-        getUser().accessToken = null
+        user?.accessToken = null
     }
 
     init {

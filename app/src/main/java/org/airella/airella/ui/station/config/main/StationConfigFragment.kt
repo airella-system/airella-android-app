@@ -127,6 +127,9 @@ class StationConfigFragment : Fragment() {
             setLocation()
         })
 
+        viewModel.registered.observe(viewLifecycleOwner, {
+            register_station.visibility = if (it.isOK()) View.GONE else View.VISIBLE
+        })
 
 
         station_name_edit_button.setOnClickListener {

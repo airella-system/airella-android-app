@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.airella.airella.R
 import org.airella.airella.data.model.Result
 import org.airella.airella.utils.afterTextChanged
@@ -54,7 +55,6 @@ class RegisterActivity : AppCompatActivity() {
             when (registerResult) {
                 is Result.Success -> {
                     showRegisterSuccess()
-                    finish()
                 }
                 is Result.Error -> {
                     showRegisterFailed(registerResult.data)
@@ -90,11 +90,13 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun showRegisterSuccess() {
-        Toast.makeText(
-            applicationContext,
-            getString(R.string.register_success),
-            Toast.LENGTH_LONG
-        ).show()
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Registration successful")
+            .setMessage("To complete registration process please check your email for a activation request.")
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                finish()
+            }
+            .show()
     }
 
     private fun showRegisterFailed(errorString: String) {
