@@ -14,6 +14,7 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.BluetoothService
+import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.StationLoadingFragment
 import org.airella.airella.utils.FragmentUtils.clearBackStack
@@ -21,7 +22,7 @@ import org.airella.airella.utils.FragmentUtils.switchFragment
 import org.airella.airella.utils.Log
 import java.util.*
 
-class ResetProgressFragment : Fragment() {
+class ResetProgressFragment : Fragment(), OnBackPressed {
 
     private val viewModel: ConfigViewModel by activityViewModels()
 
@@ -64,4 +65,9 @@ class ResetProgressFragment : Fragment() {
                 }
             })
     }
+
+    override fun onBackPressed(): Boolean {
+        return true
+    }
+
 }

@@ -16,7 +16,6 @@ import org.airella.airella.ui.station.config.address.AddressFragment
 import org.airella.airella.ui.station.config.internet.InternetChooseFragment
 import org.airella.airella.ui.station.config.location.LocationFragment
 import org.airella.airella.ui.station.config.name.StationNameFragment
-import org.airella.airella.ui.station.config.register.RegisterProgressFragment
 import org.airella.airella.ui.station.config.reset.ResetProgressFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.PermissionUtils
@@ -121,10 +120,6 @@ class StationConfigFragment : Fragment() {
             setLocation()
         })
 
-        viewModel.registered.observe(viewLifecycleOwner, {
-            register_station.visibility = if (it.isOK()) View.GONE else View.VISIBLE
-        })
-
 
         station_name_edit_button.setOnClickListener {
             goToConfigFragment(StationNameFragment())
@@ -140,17 +135,6 @@ class StationConfigFragment : Fragment() {
 
         station_location_edit_button.setOnClickListener {
             goToConfigFragment(LocationFragment())
-        }
-
-        register_station.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Register station")
-                .setMessage("Are you sure you want to register station?")
-                .setPositiveButton(android.R.string.yes) { _, _ ->
-                    goToConfigFragment(RegisterProgressFragment())
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
         }
 
         hard_reset.setOnClickListener {

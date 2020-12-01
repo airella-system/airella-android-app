@@ -18,6 +18,7 @@ import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.AuthService
 import org.airella.airella.data.service.BluetoothService
+import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.address.AddressViewModel
 import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
@@ -31,7 +32,7 @@ import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
 import java.util.*
 
-class WizardFinishFragment : Fragment() {
+class WizardFinishFragment : Fragment(), OnBackPressed {
 
     private val viewModel: ConfigViewModel by activityViewModels()
 

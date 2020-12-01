@@ -45,7 +45,7 @@ open class ConfigViewModel : ViewModel() {
     val weatherStatus: MutableLiveData<Status> = MutableLiveData()
     val lastOperationStatus: MutableLiveData<String> = MutableLiveData()
 
-    val isWizard: MutableLiveData<Boolean> = MutableLiveData()
+    val isWizard: MutableLiveData<Boolean> = MutableLiveData(false)
     
     fun getLastOperationStateReadRequest(): Queue<BluetoothRequest> = LinkedList(
         listOf(
@@ -146,10 +146,7 @@ open class ConfigViewModel : ViewModel() {
             try {
                 val (name, status) = it.split("|", limit = 2)
                 when (name) {
-                    "REGISTERED" -> {
-                        registered.value = Status(status)
-                        isWizard.value = !registered.value!!.isOK()
-                    }
+                    "REGISTERED" -> registered.value = Status(status)
                     "API_CONNECTION" -> apiConnection.value = Status(status)
                     "AIR_SENSOR" -> airSensor.value = Status(status)
                     "GPS" -> gps.value = Status(status)

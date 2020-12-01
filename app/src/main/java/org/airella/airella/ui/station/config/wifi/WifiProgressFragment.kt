@@ -14,6 +14,7 @@ import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.BluetoothService
+import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
@@ -21,7 +22,7 @@ import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import java.util.*
 
-class WifiProgressFragment : Fragment() {
+class WifiProgressFragment : Fragment(), OnBackPressed {
 
     private val viewModel: ConfigViewModel by activityViewModels()
 

@@ -117,4 +117,5 @@
     <string name="heater">Heater</string>
     <string name="power_sensor">Power sensor</string>
     <string name="weather_sensor">Weather sensor</string>
+    <string name="retry">Retry</string>
 </resources>

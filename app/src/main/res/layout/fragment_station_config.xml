@@ -271,16 +271,6 @@
         android:background="@android:color/darker_gray" />
 
     <Button
-        android:id="@+id/register_station"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/register_station" />
-
-    <Button
         android:id="@+id/hard_reset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

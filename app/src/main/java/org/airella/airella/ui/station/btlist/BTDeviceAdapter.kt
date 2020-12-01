@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_bt_device_list.view.*
-import org.airella.airella.MyApplication.Companion.createToast
 import org.airella.airella.R
 import org.airella.airella.ui.station.config.StationActivity
 import org.airella.airella.utils.inflate
@@ -49,8 +48,6 @@ class BTDeviceAdapter(private val btDevices: MutableList<BluetoothDevice>) :
                 return
             }
             val btDevice = btDevice!!
-
-            createToast("Connecting to device")
 
             val intent = Intent(v.context, StationActivity::class.java)
             intent.putExtra("bt_device", btDevice)

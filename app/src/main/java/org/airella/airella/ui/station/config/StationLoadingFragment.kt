@@ -33,13 +33,13 @@ class StationLoadingFragment : Fragment() {
 
         BluetoothService.connectGatt(
             viewModel.btDevice,
-            object : BluetoothCallback(viewModel.getStatusReadRequest()) {
+            object : BluetoothCallback(viewModel.getFullConfig()) {
                 override fun onSuccess() {
-                    if (viewModel.registered.value!!.isOK()) {
-                        viewModel.getStationConfig()
-                        switchFragment(R.id.container, StationMainFragment())
-                    } else {
+                    viewModel.isWizard.value = !viewModel.registered.value!!.isOK()
+                    if (viewModel.isWizard.value!!) {
                         switchFragment(R.id.container, WizardFragment())
+                    } else {
+                        switchFragment(R.id.container, StationMainFragment())
                     }
                 }
 

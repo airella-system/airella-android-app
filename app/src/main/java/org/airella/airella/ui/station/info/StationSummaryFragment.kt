@@ -60,7 +60,6 @@ class StationSummaryFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.e(viewModel.station.id)
         StationService.getStation(viewModel.station.id).subscribe({ station ->
             viewModel.station = station
             updateStationInfo()
