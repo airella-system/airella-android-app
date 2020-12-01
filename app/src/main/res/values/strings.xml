@@ -23,6 +23,7 @@
     <string name="action_register">Register</string>
     <string name="action_register_short">Register</string>
     <string name="action_save">Save</string>
+    <string name="action_continue">Continue</string>
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_email">Invalid email</string>
     <string name="invalid_password">Password must be at least 6 characters</string>

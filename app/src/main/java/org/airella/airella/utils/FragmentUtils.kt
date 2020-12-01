@@ -20,4 +20,11 @@ object FragmentUtils {
             ?.addToBackStack(name)
             ?.commit()
     }
+
+    fun Fragment.clearBackStack() {
+        val fm = requireActivity().supportFragmentManager
+        for (i in 0 until fm.backStackEntryCount) {
+            fm.popBackStack()
+        }
+    }
 }

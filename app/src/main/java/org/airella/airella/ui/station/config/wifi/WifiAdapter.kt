@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.item_bt_device_list.view.*
 import org.airella.airella.R
-import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.inflate
 
 
@@ -59,7 +58,6 @@ class WifiAdapter(val fragment: WifiListFragment, private val wifiList: MutableL
                 .setView(form)
                 .setPositiveButton(R.string.action_save) { _, _ ->
                     fragment.setWifiConfig(wifi.SSID, wifiPassword.text.toString())
-                    fragment.switchFragmentWithBackStack(R.id.container, WifiProgressFragment())
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()

@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_gsm_config.*
 import kotlinx.android.synthetic.main.fragment_location.btn_continue
 import org.airella.airella.R
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.address.AddressFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 
 class GsmConfigFragment : Fragment() {
@@ -33,15 +34,18 @@ class GsmConfigFragment : Fragment() {
         gsm_password_edit.setText(configViewModel.gsmPassword.value)
         gsm_extender_edit.setText(configViewModel.gsmExtenderUrl.value)
 
-
-        btn_continue.setText(R.string.action_save)
+        btn_continue.setText(if (configViewModel.isWizard.value!!) R.string.action_continue else R.string.action_save)
 
         btn_continue.setOnClickListener {
             gsmViewModel.apn.value = apn_edit.text.toString()
             gsmViewModel.username.value = gsm_username_edit.text.toString()
             gsmViewModel.password.value = gsm_password_edit.text.toString()
             gsmViewModel.extenderUrl.value = gsm_extender_edit.text.toString()
-            switchFragmentWithBackStack(R.id.container, GsmProgressFragment())
+            if (configViewModel.isWizard.value!!) {
+                switchFragmentWithBackStack(R.id.container, AddressFragment())
+            } else {
+                switchFragmentWithBackStack(R.id.container, GsmProgressFragment())
+            }
         }
     }
 }

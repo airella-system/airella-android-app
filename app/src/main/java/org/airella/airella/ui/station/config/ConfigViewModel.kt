@@ -45,6 +45,7 @@ open class ConfigViewModel : ViewModel() {
     val weatherStatus: MutableLiveData<Status> = MutableLiveData()
     val lastOperationStatus: MutableLiveData<String> = MutableLiveData()
 
+    val isWizard: MutableLiveData<Boolean> = MutableLiveData()
     
     fun getLastOperationStateReadRequest(): Queue<BluetoothRequest> = LinkedList(
         listOf(
@@ -115,19 +116,19 @@ open class ConfigViewModel : ViewModel() {
         )
     )
 
+    fun getFullConfig(): Queue<BluetoothRequest> = LinkedList<BluetoothRequest>().apply {
+        addAll(getStatusReadRequest())
+        addAll(getStationNameReadRequest())
+        addAll(getInternetReadRequests())
+        addAll(getAddressReadRequests())
+        addAll(getLocationReadRequests())
+    }
 
     fun getStationConfig() {
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>().apply {
-            addAll(getStatusReadRequest())
-            addAll(getStationNameReadRequest())
-            addAll(getInternetReadRequests())
-            addAll(getAddressReadRequests())
-            addAll(getLocationReadRequests())
-        }
         btDevice.connectGatt(
             MyApplication.appContext,
             false,
-            BluetoothCallback(bluetoothRequests)
+            BluetoothCallback(getFullConfig())
         )
     }
 
@@ -149,7 +150,9 @@ open class ConfigViewModel : ViewModel() {
             try {
                 val (name, status) = it.split("|", limit = 2)
                 when (name) {
-                    "REGISTERED" -> registered.value = Status(status)
+                    "REGISTERED" -> {
+                        registered.value = Status(status); isWizard.value = true
+                    }
                     "API_CONNECTION" -> apiConnection.value = Status(status)
                     "AIR_SENSOR" -> airSensor.value = Status(status)
                     "GPS" -> gps.value = Status(status)

@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_location.btn_continue
 import kotlinx.android.synthetic.main.fragment_station_name.*
 import org.airella.airella.R
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.internet.InternetChooseFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 
 class StationNameFragment : Fragment() {
@@ -30,11 +31,15 @@ class StationNameFragment : Fragment() {
 
         station_name_edit.setText(configViewModel.stationName.value)
 
-        btn_continue.setText(R.string.action_save)
+        btn_continue.setText(if (configViewModel.isWizard.value!!) R.string.action_continue else R.string.action_save)
 
         btn_continue.setOnClickListener {
             stationNameViewModel.stationName.value = station_name_edit.text.toString()
-            switchFragmentWithBackStack(R.id.container, StationNameProgressFragment())
+            if (configViewModel.isWizard.value!!) {
+                switchFragmentWithBackStack(R.id.container, InternetChooseFragment())
+            } else {
+                switchFragmentWithBackStack(R.id.container, StationNameProgressFragment())
+            }
         }
     }
 

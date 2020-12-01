@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import org.airella.airella.R
 import org.airella.airella.ui.OnBackPressed
-import org.airella.airella.ui.station.config.main.StationMainFragment
 import org.airella.airella.utils.Log
 
 class StationActivity : AppCompatActivity() {
@@ -24,10 +23,7 @@ class StationActivity : AppCompatActivity() {
                 BluetoothDevice.BOND_BONDED -> {
                     unregisterReceiver(this)
                     Log.d("Bonded!")
-                    viewModel.getStationConfig()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, StationMainFragment())
-                        .commitNow()
+                    onConnectedAndBonded()
                 }
             }
         }
@@ -43,10 +39,7 @@ class StationActivity : AppCompatActivity() {
             viewModel.btDevice = intent.extras!!.getParcelable("bt_device")!!
 
             if (viewModel.btDevice.bondState == BluetoothDevice.BOND_BONDED) {
-                viewModel.getStationConfig()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, StationMainFragment())
-                    .commitNow()
+                onConnectedAndBonded()
             } else {
                 registerReceiver(
                     btBondBroadcastReceiver,
@@ -76,5 +69,13 @@ class StationActivity : AppCompatActivity() {
         if ((fragment as? OnBackPressed)?.onBackPressed() != true) {
             super.onBackPressed()
         }
+    }
+
+
+    private fun onConnectedAndBonded() {
+//        viewModel.getStationConfig()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, StationLoadingFragment())
+            .commitNow()
     }
 }

@@ -9,23 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_station_config.*
-import org.airella.airella.MyApplication.Companion.createToast
 import org.airella.airella.R
-import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
-import org.airella.airella.data.bluetooth.BluetoothCallback
-import org.airella.airella.data.bluetooth.BluetoothRequest
-import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.address.AddressFragment
 import org.airella.airella.ui.station.config.internet.InternetChooseFragment
 import org.airella.airella.ui.station.config.location.LocationFragment
 import org.airella.airella.ui.station.config.name.StationNameFragment
 import org.airella.airella.ui.station.config.register.RegisterProgressFragment
+import org.airella.airella.ui.station.config.reset.ResetProgressFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
-import org.airella.airella.utils.Log
 import org.airella.airella.utils.PermissionUtils
-import java.util.*
 
 class StationConfigFragment : Fragment() {
 
@@ -164,7 +158,7 @@ class StationConfigFragment : Fragment() {
                 .setTitle("Hard Reset")
                 .setMessage("Are you sure you want to reset all configuration?")
                 .setPositiveButton(android.R.string.yes) { _, _ ->
-                    hardResetDevice()
+                    goToConfigFragment(ResetProgressFragment())
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
@@ -173,34 +167,6 @@ class StationConfigFragment : Fragment() {
 
     private fun goToConfigFragment(newFragment: Fragment) {
         switchFragmentWithBackStack(R.id.container, newFragment, "config")
-    }
-
-    private fun hardResetDevice() {
-        Log.i("Hard reset started")
-        Log.d("Connecting")
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList(
-            listOf(
-                WriteRequest(Characteristic.CLEAR_DATA, "")
-            )
-        )
-
-        viewModel.btDevice.connectGatt(
-            context,
-            false,
-            object : BluetoothCallback(bluetoothRequests) {
-                override fun onFailToConnect() {
-                    Log.d("Failed to connect")
-                }
-
-                override fun onSuccess() {
-                    viewModel.getStationConfig()
-                    createToast("Hard reset successful")
-                }
-
-                override fun onFailure() {
-                    Log.d("Hard reset failed")
-                }
-            })
     }
 }
 
