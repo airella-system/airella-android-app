@@ -73,7 +73,8 @@ class StationActivity : AppCompatActivity() {
 
 
     private fun onConnectedAndBonded() {
-//        viewModel.getStationConfig()
+        viewModel.getStationConfig()
+        viewModel.getStationConfig()
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, StationLoadingFragment())
             .commitNow()

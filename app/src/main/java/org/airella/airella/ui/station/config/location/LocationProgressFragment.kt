@@ -12,6 +12,7 @@ import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
+import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
@@ -52,9 +53,8 @@ class LocationProgressFragment : Fragment() {
             addAll(viewModel.getLocationReadRequests())
             addAll(viewModel.getLastOperationStateReadRequest())
         }
-        viewModel.btDevice.connectGatt(
-            context,
-            false,
+        BluetoothService.connectGatt(
+            viewModel.btDevice,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     Log.d("Success")

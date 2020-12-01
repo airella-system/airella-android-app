@@ -3,13 +3,13 @@ package org.airella.airella.ui.station.config
 import android.bluetooth.BluetoothDevice
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.airella.airella.MyApplication
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.data.model.station.Status
+import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.utils.Log
 import java.util.*
 
@@ -125,11 +125,7 @@ open class ConfigViewModel : ViewModel() {
     }
 
     fun getStationConfig() {
-        btDevice.connectGatt(
-            MyApplication.appContext,
-            false,
-            BluetoothCallback(getFullConfig())
-        )
+        BluetoothService.connectGatt(btDevice, BluetoothCallback(getFullConfig()))
     }
 
 
@@ -151,7 +147,8 @@ open class ConfigViewModel : ViewModel() {
                 val (name, status) = it.split("|", limit = 2)
                 when (name) {
                     "REGISTERED" -> {
-                        registered.value = Status(status); isWizard.value = true
+                        registered.value = Status(status)
+                        isWizard.value = !registered.value!!.isOK()
                     }
                     "API_CONNECTION" -> apiConnection.value = Status(status)
                     "AIR_SENSOR" -> airSensor.value = Status(status)

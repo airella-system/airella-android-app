@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitFactory {
 
-    fun getHttpClientBuilder(isAuthorization: Boolean): OkHttpClient.Builder {
+    private fun getHttpClientBuilder(isAuthorization: Boolean): OkHttpClient.Builder {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
         val httpClientBuilder = OkHttpClient.Builder()
@@ -23,15 +23,13 @@ object RetrofitFactory {
         httpClientBuilder.connectTimeout(15, TimeUnit.SECONDS)
 
         if (isAuthorization) {
-            httpClientBuilder.addInterceptor(object : Interceptor {
-                override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
-                    val request: Request =
-                        chain.request().newBuilder().header(
-                            "Authorization",
-                            "Bearer ${AuthService.getAccessToken().blockingGet()}"
-                        ).build()
-                    return chain.proceed(request)
-                }
+            httpClientBuilder.addInterceptor(Interceptor { chain ->
+                val request: Request =
+                    chain.request().newBuilder().header(
+                        "Authorization",
+                        "Bearer ${AuthService.getAccessToken().blockingGet()}"
+                    ).build()
+                chain.proceed(request)
             })
         }
 

@@ -6,7 +6,7 @@ import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class Measurement(
-    val timespan: Timespan,
-    val timestamp: String,
-    val value: Double
+    val timespan: Timespan?,
+    val timestamp: String?,
+    val value: Double?
 ) : Serializable

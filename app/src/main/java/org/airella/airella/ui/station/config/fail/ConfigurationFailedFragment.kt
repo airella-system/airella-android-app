@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_configuration_succesful.*
 import org.airella.airella.R
 import org.airella.airella.ui.OnBackPressed
+import org.airella.airella.ui.station.config.ConfigViewModel
 
 class ConfigurationFailedFragment : Fragment(), OnBackPressed {
 
+    private val configViewModel: ConfigViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,9 +36,13 @@ class ConfigurationFailedFragment : Fragment(), OnBackPressed {
     }
 
     private fun returnToConfigList() {
-        requireActivity().supportFragmentManager.popBackStack(
-            "config",
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+        if (configViewModel.isWizard.value!!) {
+            requireActivity().supportFragmentManager.popBackStack()
+        } else {
+            requireActivity().supportFragmentManager.popBackStack(
+                "config",
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+        }
     }
 }

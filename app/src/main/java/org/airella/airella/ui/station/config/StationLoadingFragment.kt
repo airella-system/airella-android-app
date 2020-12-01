@@ -9,12 +9,13 @@ import androidx.fragment.app.activityViewModels
 import org.airella.airella.MyApplication
 import org.airella.airella.R
 import org.airella.airella.data.bluetooth.BluetoothCallback
+import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.ui.station.config.main.StationMainFragment
 import org.airella.airella.ui.station.config.wizard.WizardFragment
 import org.airella.airella.utils.FragmentUtils.switchFragment
 import org.airella.airella.utils.PermissionUtils
 
-class StationLoadingFragment() : Fragment() {
+class StationLoadingFragment : Fragment() {
 
     private val viewModel: ConfigViewModel by activityViewModels()
 
@@ -30,9 +31,8 @@ class StationLoadingFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.btDevice.connectGatt(
-            MyApplication.appContext,
-            false,
+        BluetoothService.connectGatt(
+            viewModel.btDevice,
             object : BluetoothCallback(viewModel.getStatusReadRequest()) {
                 override fun onSuccess() {
                     if (viewModel.registered.value!!.isOK()) {

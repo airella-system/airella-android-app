@@ -13,8 +13,9 @@ import org.airella.airella.config.Characteristic
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
+import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.ui.station.config.ConfigViewModel
-import org.airella.airella.ui.station.config.wizard.WizardFragment
+import org.airella.airella.ui.station.config.StationLoadingFragment
 import org.airella.airella.utils.FragmentUtils.clearBackStack
 import org.airella.airella.utils.FragmentUtils.switchFragment
 import org.airella.airella.utils.Log
@@ -44,13 +45,9 @@ class ResetProgressFragment : Fragment() {
             listOf(
                 WriteRequest(Characteristic.CLEAR_DATA, "")
             )
-        ).apply {
-            addAll(viewModel.getFullConfig())
-        }
-
-        viewModel.btDevice.connectGatt(
-            context,
-            false,
+        )
+        BluetoothService.connectGatt(
+            viewModel.btDevice,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onFailToConnect() {
                     Log.d("Failed to connect")
@@ -59,7 +56,7 @@ class ResetProgressFragment : Fragment() {
                 override fun onSuccess() {
                     MyApplication.createToast("Hard reset successful")
                     clearBackStack()
-                    switchFragment(R.id.container, WizardFragment())
+                    switchFragment(R.id.container, StationLoadingFragment())
                 }
 
                 override fun onFailure() {
