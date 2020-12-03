@@ -15,8 +15,9 @@ import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
-import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
+import org.airella.airella.utils.FragmentUtils.btConnectionFailed
+import org.airella.airella.utils.FragmentUtils.configFailed
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import java.util.*
@@ -64,7 +65,6 @@ class AddressProgressFragment : Fragment(), OnBackPressed {
             viewModel.btDevice,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
-                    Log.d("Success")
                     when (viewModel.lastOperationStatus.value) {
                         "address|ok" -> {
                             switchFragmentWithBackStack(
@@ -77,21 +77,9 @@ class AddressProgressFragment : Fragment(), OnBackPressed {
                 }
 
                 override fun onFailure() {
-                    configFailed()
-                }
-
-                override fun onFailToConnect() {
-                    configFailed()
+                    btConnectionFailed()
                 }
             })
-    }
-
-    private fun configFailed() {
-        Log.d("Failed")
-        switchFragmentWithBackStack(
-            R.id.container,
-            ConfigurationFailedFragment()
-        )
     }
 
 }

@@ -127,6 +127,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
 
     protected open fun onFailToConnect() {
         Log.d("Failed to connect")
+        onFailure()
     }
 
     protected open fun onFailure() {

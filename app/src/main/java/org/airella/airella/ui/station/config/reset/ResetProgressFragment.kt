@@ -18,6 +18,7 @@ import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.StationLoadingFragment
 import org.airella.airella.utils.FragmentUtils.clearBackStack
+import org.airella.airella.utils.FragmentUtils.configFailed
 import org.airella.airella.utils.FragmentUtils.switchFragment
 import org.airella.airella.utils.Log
 import java.util.*
@@ -35,7 +36,7 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        configuration_text.text = "Hard reset in progess"
+        configuration_text.text = getString(R.string.hard_reset_progress)
         hardResetDevice()
     }
 
@@ -50,9 +51,6 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
         BluetoothService.connectGatt(
             viewModel.btDevice,
             object : BluetoothCallback(bluetoothRequests) {
-                override fun onFailToConnect() {
-                    Log.d("Failed to connect")
-                }
 
                 override fun onSuccess() {
                     MyApplication.createToast("Hard reset successful")
@@ -61,7 +59,7 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
                 }
 
                 override fun onFailure() {
-                    Log.d("Hard reset failed")
+                    configFailed(getString(R.string.hard_reset_failed))
                 }
             })
     }

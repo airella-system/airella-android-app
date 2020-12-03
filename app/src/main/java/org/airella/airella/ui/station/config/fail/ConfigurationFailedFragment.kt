@@ -30,6 +30,10 @@ class ConfigurationFailedFragment : Fragment(), OnBackPressed {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.getString("fail_text")?.let {
+            secondary_text.text = it
+        }
+
         retry_button.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
