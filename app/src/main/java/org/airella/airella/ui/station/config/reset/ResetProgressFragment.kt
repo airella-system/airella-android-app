@@ -59,7 +59,7 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
                 }
 
                 override fun onFailure() {
-                    configFailed(getString(R.string.hard_reset_failed))
+                    configFailed(R.string.hard_reset_failed)
                 }
             })
     }

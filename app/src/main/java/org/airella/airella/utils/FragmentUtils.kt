@@ -1,5 +1,6 @@
 package org.airella.airella.utils
 
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import org.airella.airella.R
@@ -32,8 +33,9 @@ object FragmentUtils {
         }
     }
 
-    fun Fragment.configSuccessful(message: String) {
+    fun Fragment.configSuccessful(@StringRes messageId: Int) {
         if (!isVisible) return
+        val message = getString(messageId)
         Log.d(message)
         val configurationSuccessfulFragment = ConfigurationSuccessfulFragment()
         configurationSuccessfulFragment.arguments = bundleOf(Pair("success_text", message))
@@ -41,11 +43,12 @@ object FragmentUtils {
     }
 
     fun Fragment.configSuccessful() {
-        configSuccessful(getString(R.string.configuration_successful))
+        configSuccessful(R.string.configuration_successful)
     }
 
-    fun Fragment.configFailed(errorMessage: String) {
+    fun Fragment.configFailed(@StringRes errorMessageId: Int) {
         if (!isVisible) return
+        val errorMessage = getString(errorMessageId)
         Log.w(errorMessage)
         val configurationFailedFragment = ConfigurationFailedFragment()
         configurationFailedFragment.arguments = bundleOf(Pair("fail_text", errorMessage))
@@ -53,14 +56,14 @@ object FragmentUtils {
     }
 
     fun Fragment.configFailed() {
-        configFailed(getString(R.string.failed))
+        configFailed(R.string.failed)
     }
 
     fun Fragment.internetConnectionFailed() {
-        configFailed(getString(R.string.internet_connection_failed))
+        configFailed(R.string.station_internet_connection_failed)
     }
 
     fun Fragment.btConnectionFailed() {
-        configFailed(getString(R.string.bt_connection_failed))
+        configFailed(R.string.bt_connection_failed)
     }
 }

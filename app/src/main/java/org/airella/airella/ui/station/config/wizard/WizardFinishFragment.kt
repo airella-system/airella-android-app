@@ -80,8 +80,8 @@ class WizardFinishFragment : Fragment(), OnBackPressed {
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     when {
-                        viewModel.registered.value!!.isOK() -> configSuccessful(getString(R.string.register_success))
-                        else -> configFailed(getString(R.string.registration_failed))
+                        viewModel.registered.value!!.isOK() -> configSuccessful(R.string.register_success)
+                        else -> configFailed(R.string.registration_failed)
                     }
                 }
 

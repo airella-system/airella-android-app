@@ -12,9 +12,6 @@ import kotlinx.android.synthetic.main.fragment_configuration_succesful.back_butt
 import org.airella.airella.R
 import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
-import org.airella.airella.ui.station.config.main.StationMainFragment
-import org.airella.airella.utils.FragmentUtils.clearBackStack
-import org.airella.airella.utils.FragmentUtils.switchFragment
 
 class ConfigurationFailedFragment : Fragment(), OnBackPressed {
 
@@ -44,20 +41,14 @@ class ConfigurationFailedFragment : Fragment(), OnBackPressed {
     }
 
     override fun onBackPressed(): Boolean {
-        if (configViewModel.isWizard.value!!) {
-            requireActivity().supportFragmentManager.popBackStack()
-            requireActivity().supportFragmentManager.popBackStack()
-        } else {
-            returnToConfigList()
-        }
+        returnToConfigList()
         return true
     }
 
     private fun returnToConfigList() {
         if (configViewModel.isWizard.value!!) {
-            configViewModel.isWizard.value = false
-            clearBackStack()
-            switchFragment(R.id.container, StationMainFragment())
+            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
         } else {
             requireActivity().supportFragmentManager.popBackStack(
                 "config",

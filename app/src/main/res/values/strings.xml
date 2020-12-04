@@ -119,7 +119,7 @@
     <string name="weather_sensor">Weather sensor</string>
     <string name="retry">Retry</string>
     <string name="wifi_connect_failed">Connection to WiFi failed</string>
-    <string name="internet_connection_failed">Failed to connect to Internet</string>
+    <string name="station_internet_connection_failed">Station failed to connect to Internet</string>
     <string name="bt_connection_failed">Bluetooth connection error</string>
     <string name="registration_failed">Registration failed</string>
     <string name="hard_reset_failed">Hard reset failed</string>
