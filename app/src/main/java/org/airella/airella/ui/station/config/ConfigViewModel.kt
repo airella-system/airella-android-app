@@ -3,13 +3,13 @@ package org.airella.airella.ui.station.config
 import android.bluetooth.BluetoothDevice
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.airella.airella.MyApplication
 import org.airella.airella.config.Characteristic
 import org.airella.airella.config.InternetConnectionType
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.ReadRequest
 import org.airella.airella.data.model.station.Status
+import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.utils.Log
 import java.util.*
 
@@ -45,6 +45,7 @@ open class ConfigViewModel : ViewModel() {
     val weatherStatus: MutableLiveData<Status> = MutableLiveData()
     val lastOperationStatus: MutableLiveData<String> = MutableLiveData()
 
+    val isWizard: MutableLiveData<Boolean> = MutableLiveData(false)
     
     fun getLastOperationStateReadRequest(): Queue<BluetoothRequest> = LinkedList(
         listOf(
@@ -115,20 +116,16 @@ open class ConfigViewModel : ViewModel() {
         )
     )
 
+    fun getFullConfig(): Queue<BluetoothRequest> = LinkedList<BluetoothRequest>().apply {
+        addAll(getStatusReadRequest())
+        addAll(getStationNameReadRequest())
+        addAll(getInternetReadRequests())
+        addAll(getAddressReadRequests())
+        addAll(getLocationReadRequests())
+    }
 
     fun getStationConfig() {
-        val bluetoothRequests: Queue<BluetoothRequest> = LinkedList<BluetoothRequest>().apply {
-            addAll(getStatusReadRequest())
-            addAll(getStationNameReadRequest())
-            addAll(getInternetReadRequests())
-            addAll(getAddressReadRequests())
-            addAll(getLocationReadRequests())
-        }
-        btDevice.connectGatt(
-            MyApplication.appContext,
-            false,
-            BluetoothCallback(bluetoothRequests)
-        )
+        BluetoothService.connectGatt(btDevice, BluetoothCallback(getFullConfig()))
     }
 
 

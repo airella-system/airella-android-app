@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_bt_list.*
 import org.airella.airella.R
-import org.airella.airella.data.service.BluetoothService
+import org.airella.airella.data.service.BluetoothScanService
 import org.airella.airella.utils.PermissionUtils
 
 class BTListFragment : Fragment() {
@@ -34,7 +34,7 @@ class BTListFragment : Fragment() {
         bt_list.layoutManager = LinearLayoutManager(requireContext())
         bt_list.adapter = viewModel.adapter
 
-        BluetoothService.isScanning.observe(viewLifecycleOwner, {
+        BluetoothScanService.isScanning.observe(viewLifecycleOwner, {
             loading.visibility = if (it) View.VISIBLE else View.GONE
         })
     }

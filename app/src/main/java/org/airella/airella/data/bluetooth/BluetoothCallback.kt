@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattService
 import org.airella.airella.MyApplication.Companion.runOnUiThread
 import org.airella.airella.config.Config
+import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.utils.Log
 import java.util.*
 
@@ -30,6 +31,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
         } else {
             runOnUiThread {
                 onFailToConnect()
+                onFinish()
             }
             gatt.close()
         }
@@ -47,7 +49,9 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 Log.w("Service is null")
                 runOnUiThread {
                     onFailure()
+                    onFinish()
                 }
+                gatt.close()
             }
         }
     }
@@ -73,11 +77,12 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 }
             }
             else -> {
-                gatt.close()
                 Log.w("Saving characteristic failed, status: $status")
                 runOnUiThread {
                     onFailure()
+                    onFinish()
                 }
+                gatt.close()
             }
         }
     }
@@ -106,11 +111,12 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
                 }
             }
             else -> {
-                gatt.close()
                 Log.w("Reading characteristic failed, status: $status")
                 runOnUiThread {
                     onFailure()
+                    onFinish()
                 }
+                gatt.close()
             }
         }
     }
@@ -121,6 +127,7 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
 
     protected open fun onFailToConnect() {
         Log.d("Failed to connect")
+        onFailure()
     }
 
     protected open fun onFailure() {
@@ -131,16 +138,21 @@ open class BluetoothCallback(private val requests: Queue<BluetoothRequest>) :
         Log.d("Success")
     }
 
+    private fun onFinish() {
+        BluetoothService.connectFinished()
+    }
+
 
     private fun executeNextRequest(gatt: BluetoothGatt) {
         if (requests.isNotEmpty()) {
             currentRequest = requests.remove()
             currentRequest.execute(gatt, gattService)
         } else {
-            gatt.close()
             runOnUiThread {
                 onSuccess()
+                onFinish()
             }
+            gatt.close()
         }
     }
 

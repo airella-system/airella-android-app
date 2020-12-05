@@ -15,10 +15,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_location.*
 import org.airella.airella.R
 import org.airella.airella.data.model.common.Location
+import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.wizard.WizardFinishFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.PermissionUtils
 
 class LocationFragment : Fragment() {
+
+    private val configViewModel: ConfigViewModel by activityViewModels()
 
     private val locationViewModel: LocationViewModel by activityViewModels()
 
@@ -36,7 +40,6 @@ class LocationFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        btn_continue.setText(R.string.action_save)
 
         locationViewModel.location.observe(viewLifecycleOwner, {
             btn_continue.isEnabled = it != null
@@ -44,9 +47,15 @@ class LocationFragment : Fragment() {
             location_text.text = text
         })
 
+        btn_continue.setText(if (configViewModel.isWizard.value!!) R.string.action_register else R.string.action_save)
+
         btn_continue.setOnClickListener {
             if (locationViewModel.location.value != null) {
-                switchFragmentWithBackStack(R.id.container, LocationProgressFragment())
+                if (configViewModel.isWizard.value!!) {
+                    switchFragmentWithBackStack(R.id.container, WizardFinishFragment())
+                } else {
+                    switchFragmentWithBackStack(R.id.container, LocationProgressFragment())
+                }
             }
         }
 

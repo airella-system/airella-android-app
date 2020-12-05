@@ -14,8 +14,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_wifi_list.*
 import org.airella.airella.R
+import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.address.AddressFragment
+import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 
 class WifiListFragment : Fragment() {
+
+    private val configViewModel: ConfigViewModel by activityViewModels()
 
     private val wifiViewModel: WifiViewModel by activityViewModels()
 
@@ -59,6 +64,11 @@ class WifiListFragment : Fragment() {
     fun setWifiConfig(wifiSSID: String, wifiPassword: String) {
         wifiViewModel.wifiSSID.value = wifiSSID
         wifiViewModel.wifiPassword.value = wifiPassword
+        if (configViewModel.isWizard.value!!) {
+            switchFragmentWithBackStack(R.id.container, AddressFragment())
+        } else {
+            switchFragmentWithBackStack(R.id.container, WifiProgressFragment())
+        }
     }
 
     @Suppress("DEPRECATION")

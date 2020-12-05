@@ -12,14 +12,16 @@ import org.airella.airella.config.RefreshAction
 import org.airella.airella.data.bluetooth.BluetoothCallback
 import org.airella.airella.data.bluetooth.BluetoothRequest
 import org.airella.airella.data.bluetooth.WriteRequest
+import org.airella.airella.data.service.BluetoothService
+import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
-import org.airella.airella.ui.station.config.fail.ConfigurationFailedFragment
-import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
-import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
+import org.airella.airella.utils.FragmentUtils.btConnectionFailed
+import org.airella.airella.utils.FragmentUtils.configFailed
+import org.airella.airella.utils.FragmentUtils.configSuccessful
 import org.airella.airella.utils.Log
 import java.util.*
 
-class LocationProgressFragment : Fragment() {
+class LocationProgressFragment : Fragment(), OnBackPressed {
 
     private val viewModel: ConfigViewModel by activityViewModels()
 
@@ -52,39 +54,21 @@ class LocationProgressFragment : Fragment() {
             addAll(viewModel.getLocationReadRequests())
             addAll(viewModel.getLastOperationStateReadRequest())
         }
-        viewModel.btDevice.connectGatt(
-            context,
-            false,
+        BluetoothService.connectGatt(
+            viewModel.btDevice,
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     Log.d("Success")
                     when (viewModel.lastOperationStatus.value) {
-                        "location|ok" -> {
-                            switchFragmentWithBackStack(
-                                R.id.container,
-                                ConfigurationSuccessfulFragment()
-                            )
-                        }
+                        "location|ok" -> configSuccessful()
                         else -> configFailed()
                     }
                 }
 
                 override fun onFailure() {
-                    configFailed()
-                }
-
-                override fun onFailToConnect() {
-                    configFailed()
+                    btConnectionFailed()
                 }
             })
-    }
-
-    private fun configFailed() {
-        Log.d("Failed")
-        switchFragmentWithBackStack(
-            R.id.container,
-            ConfigurationFailedFragment()
-        )
     }
 
 }

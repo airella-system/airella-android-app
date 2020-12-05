@@ -6,6 +6,6 @@ import java.io.Serializable
 @JsonClass(generateAdapter = true)
 data class Sensor(
     val id: String,
-    val measurements: List<Measurement>,
-    val status: Int
+    val measurements: List<Measurement>?,
+    val status: Double?
 ) : Serializable

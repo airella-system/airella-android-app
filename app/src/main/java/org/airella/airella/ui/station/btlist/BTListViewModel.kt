@@ -6,7 +6,7 @@ import android.bluetooth.le.ScanResult
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import org.airella.airella.R
-import org.airella.airella.data.service.BluetoothService
+import org.airella.airella.data.service.BluetoothScanService
 import org.airella.airella.exception.BluetoothDisabledException
 import org.airella.airella.ui.permission.BluetoothEnableFragment
 import org.airella.airella.utils.FragmentUtils.switchFragment
@@ -45,7 +45,7 @@ class BTListViewModel : ViewModel() {
 
     fun startBtScan(fragment: Fragment) {
         try {
-            BluetoothService.scanBTDevices(scanCallback, true)
+            BluetoothScanService.scanBTDevices(scanCallback, true)
         } catch (e: BluetoothDisabledException) {
             fragment.switchFragment(R.id.container, BluetoothEnableFragment(fragment))
         }
@@ -53,7 +53,7 @@ class BTListViewModel : ViewModel() {
 
     fun stopBtScan() {
         try {
-            BluetoothService.scanBTDevices(scanCallback, false)
+            BluetoothScanService.scanBTDevices(scanCallback, false)
         } catch (e: BluetoothDisabledException) {
             Log.w("Tried to stop scan but Bluetooth is disabled")
         }

@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_address.*
 import org.airella.airella.R
 import org.airella.airella.data.model.common.Address
 import org.airella.airella.ui.station.config.ConfigViewModel
+import org.airella.airella.ui.station.config.location.LocationFragment
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 
 class AddressFragment : Fragment() {
@@ -33,7 +34,7 @@ class AddressFragment : Fragment() {
         street.setText(configViewModel.stationStreet.value)
         houseNo.setText(configViewModel.stationHouseNo.value)
 
-        btn_continue.setText(R.string.action_save)
+        btn_continue.setText(if (configViewModel.isWizard.value!!) R.string.action_continue else R.string.action_save)
 
         btn_continue.setOnClickListener {
             addressViewModel.address.value = Address(
@@ -42,7 +43,11 @@ class AddressFragment : Fragment() {
                 street.text.toString(),
                 houseNo.text.toString()
             )
-            switchFragmentWithBackStack(R.id.container, AddressProgressFragment())
+            if (configViewModel.isWizard.value!!) {
+                switchFragmentWithBackStack(R.id.container, LocationFragment())
+            } else {
+                switchFragmentWithBackStack(R.id.container, AddressProgressFragment())
+            }
         }
     }
 
