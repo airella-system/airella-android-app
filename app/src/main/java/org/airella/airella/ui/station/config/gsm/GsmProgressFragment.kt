@@ -17,6 +17,7 @@ import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
 import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
+import org.airella.airella.ui.station.config.wifi.WifiViewModel
 import org.airella.airella.utils.FragmentUtils.btConnectionFailed
 import org.airella.airella.utils.FragmentUtils.internetConnectionFailed
 import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
@@ -29,6 +30,8 @@ class GsmProgressFragment : Fragment(), OnBackPressed {
 
     private val gsmViewModel: GsmViewModel by activityViewModels()
 
+    private val wifiViewModel: WifiViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +41,9 @@ class GsmProgressFragment : Fragment(), OnBackPressed {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //HACK
+        wifiViewModel.wifiSSID.value = null
+
         val apn = gsmViewModel.apn.value!!
         val gmsUsername = gsmViewModel.username.value!!
         val gsmPassword = gsmViewModel.password.value!!
