@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_settings"
-        android:name="org.airella.airella.ui.settings.SettingsFragment"
-        android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" />
-
-    <fragment
         android:id="@+id/nav_logout"
         android:name="org.airella.airella.ui.logout.LogoutFragment"
         android:label="@string/logout" />
