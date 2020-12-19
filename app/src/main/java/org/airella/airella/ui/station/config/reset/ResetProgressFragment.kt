@@ -53,7 +53,7 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
             object : BluetoothCallback(bluetoothRequests) {
 
                 override fun onSuccess() {
-                    MyApplication.createToast("Hard reset successful")
+                    MyApplication.createToast(getString(R.string.clear_data_success))
                     clearBackStack()
                     switchFragment(R.id.container, StationLoadingFragment())
                 }
