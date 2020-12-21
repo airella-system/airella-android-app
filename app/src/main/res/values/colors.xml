@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#3BA6D6</color>
     <color name="colorAccent">#4fc3f7</color>
     <color name="gray">#707070</color>
+    <color name="light_gray">#aaaaaa</color>
 
     <color name="colorButtonBlack">#111111</color>
     <color name="colorTextBlack">#222222</color>
