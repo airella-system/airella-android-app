@@ -46,7 +46,7 @@
 
     <string name="status_label">"Status: "</string>
     <string name="bond_device">Bond with device</string>
-    <string name="hard_reset">Hard reset</string>
+    <string name="clear_data">Clear data</string>
     <string name="location_required_rejected">You must allow Location permission to scan nearby BT devices</string>
     <string name="turn_on_bluetooth">Turn on Bluetooth</string>
     <string name="turn_on_bluetooth_long">Please turn on Bluetooth in order to connect to station</string>
@@ -64,7 +64,6 @@
     <string name="refresh_location">Refresh location</string>
     <string name="set_location_manually">Set location manually</string>
     <string name="logo">Logo</string>
-    <string name="loading_text">Patience! This is difficult, you know…</string>
     <string name="station_name">Station name</string>
     <string name="country">Country</string>
     <string name="city">City</string>
@@ -123,6 +122,7 @@
     <string name="station_internet_connection_failed">Station failed to connect to Internet</string>
     <string name="bt_connection_failed">Bluetooth connection error</string>
     <string name="registration_failed">Registration failed</string>
-    <string name="hard_reset_failed">Hard reset failed</string>
-    <string name="hard_reset_progress">Hard reset in progress</string>
+    <string name="clear_data_failed">Failed to clear data</string>
+    <string name="clear_data_progress">Clearing data in progress</string>
+    <string name="clear_data_success">Successfully cleared data</string>
 </resources>

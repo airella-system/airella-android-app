@@ -9,10 +9,6 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_settings"
-            android:title="@string/menu_settings" />
-        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_close_black_24dp"
             android:title="@string/logout" />

@@ -36,7 +36,7 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        configuration_text.text = getString(R.string.hard_reset_progress)
+        configuration_text.text = getString(R.string.clear_data_progress)
         hardResetDevice()
     }
 
@@ -53,13 +53,13 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
             object : BluetoothCallback(bluetoothRequests) {
 
                 override fun onSuccess() {
-                    MyApplication.createToast("Hard reset successful")
+                    MyApplication.createToast(getString(R.string.clear_data_success))
                     clearBackStack()
                     switchFragment(R.id.container, StationLoadingFragment())
                 }
 
                 override fun onFailure() {
-                    configFailed(R.string.hard_reset_failed)
+                    configFailed(R.string.clear_data_failed)
                 }
             })
     }
