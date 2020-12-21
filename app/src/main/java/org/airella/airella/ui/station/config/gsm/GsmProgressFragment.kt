@@ -16,11 +16,10 @@ import org.airella.airella.data.bluetooth.WriteRequest
 import org.airella.airella.data.service.BluetoothService
 import org.airella.airella.ui.OnBackPressed
 import org.airella.airella.ui.station.config.ConfigViewModel
-import org.airella.airella.ui.station.config.success.ConfigurationSuccessfulFragment
 import org.airella.airella.ui.station.config.wifi.WifiViewModel
 import org.airella.airella.utils.FragmentUtils.btConnectionFailed
+import org.airella.airella.utils.FragmentUtils.configSuccessful
 import org.airella.airella.utils.FragmentUtils.internetConnectionFailed
-import org.airella.airella.utils.FragmentUtils.switchFragmentWithBackStack
 import org.airella.airella.utils.Log
 import java.util.*
 
@@ -78,17 +77,16 @@ class GsmProgressFragment : Fragment(), OnBackPressed {
             object : BluetoothCallback(bluetoothRequests) {
                 override fun onSuccess() {
                     when (viewModel.lastOperationStatus.value) {
-                        "gsm|ok" -> {
-                            switchFragmentWithBackStack(
-                                R.id.container,
-                                ConfigurationSuccessfulFragment()
-                            )
-                        }
+                        "gsm|ok" -> configSuccessful()
                         else -> internetConnectionFailed()
                     }
                 }
 
                 override fun onFailure() {
+                    configSuccessful()
+                }
+
+                override fun onFailToConnect() {
                     btConnectionFailed()
                 }
             }
