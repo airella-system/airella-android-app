@@ -139,7 +139,7 @@ class StationConfigFragment : Fragment() {
 
         hard_reset.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Hard Reset")
+                .setTitle(getString(R.string.clear_data))
                 .setMessage("Are you sure you want to reset all configuration?")
                 .setPositiveButton(android.R.string.yes) { _, _ ->
                     goToConfigFragment(ResetProgressFragment())

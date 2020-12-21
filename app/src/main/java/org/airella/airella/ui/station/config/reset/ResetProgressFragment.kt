@@ -36,7 +36,7 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        configuration_text.text = getString(R.string.hard_reset_progress)
+        configuration_text.text = getString(R.string.clear_data_progress)
         hardResetDevice()
     }
 
@@ -59,7 +59,7 @@ class ResetProgressFragment : Fragment(), OnBackPressed {
                 }
 
                 override fun onFailure() {
-                    configFailed(R.string.hard_reset_failed)
+                    configFailed(R.string.clear_data_failed)
                 }
             })
     }

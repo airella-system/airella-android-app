@@ -280,5 +280,5 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="#ED5E68"
-        android:text="@string/hard_reset" />
+        android:text="@string/clear_data" />
 </LinearLayout>
