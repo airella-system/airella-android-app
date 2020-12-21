@@ -46,7 +46,9 @@ open class ConfigViewModel : ViewModel() {
     val lastOperationStatus: MutableLiveData<String> = MutableLiveData()
 
     val isWizard: MutableLiveData<Boolean> = MutableLiveData(false)
-    
+
+    fun isWizard() = isWizard.value!!
+
     fun getLastOperationStateReadRequest(): Queue<BluetoothRequest> = LinkedList(
         listOf(
             ReadRequest(Characteristic.LAST_OPERATION_STATUS) {
@@ -129,8 +131,7 @@ open class ConfigViewModel : ViewModel() {
     }
 
 
-    private
-    val apnRegex: Regex = """"(.*?)","(.*?)",(.*?)"""".toRegex()
+    private val apnRegex: Regex = """"(.*?)","(.*?)",(.*?)"""".toRegex()
 
     private fun setApnConfig(config: String) {
         apnRegex.find(config)?.let {

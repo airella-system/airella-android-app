@@ -34,14 +34,14 @@ class GsmConfigFragment : Fragment() {
         gsm_password_edit.setText(configViewModel.gsmPassword.value)
         gsm_extender_edit.setText(configViewModel.gsmExtenderUrl.value)
 
-        btn_continue.setText(if (configViewModel.isWizard.value!!) R.string.action_continue else R.string.action_save)
+        btn_continue.setText(if (configViewModel.isWizard()) R.string.action_continue else R.string.action_save)
 
         btn_continue.setOnClickListener {
             gsmViewModel.apn.value = apn_edit.text.toString()
             gsmViewModel.username.value = gsm_username_edit.text.toString()
             gsmViewModel.password.value = gsm_password_edit.text.toString()
             gsmViewModel.extenderUrl.value = gsm_extender_edit.text.toString()
-            if (configViewModel.isWizard.value!!) {
+            if (configViewModel.isWizard()) {
                 switchFragmentWithBackStack(R.id.container, AddressFragment())
             } else {
                 switchFragmentWithBackStack(R.id.container, GsmProgressFragment())

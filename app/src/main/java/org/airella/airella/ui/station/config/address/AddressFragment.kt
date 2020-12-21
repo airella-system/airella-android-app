@@ -34,7 +34,7 @@ class AddressFragment : Fragment() {
         street.setText(configViewModel.stationStreet.value)
         houseNo.setText(configViewModel.stationHouseNo.value)
 
-        btn_continue.setText(if (configViewModel.isWizard.value!!) R.string.action_continue else R.string.action_save)
+        btn_continue.setText(if (configViewModel.isWizard()) R.string.action_continue else R.string.action_save)
 
         btn_continue.setOnClickListener {
             addressViewModel.address.value = Address(
@@ -43,7 +43,7 @@ class AddressFragment : Fragment() {
                 street.text.toString(),
                 houseNo.text.toString()
             )
-            if (configViewModel.isWizard.value!!) {
+            if (configViewModel.isWizard()) {
                 switchFragmentWithBackStack(R.id.container, LocationFragment())
             } else {
                 switchFragmentWithBackStack(R.id.container, AddressProgressFragment())
