@@ -42,7 +42,7 @@ class ConfigurationSuccessfulFragment : Fragment(), OnBackPressed {
     }
 
     private fun returnToConfigList() {
-        if (configViewModel.isWizard.value!!) {
+        if (configViewModel.isWizard()) {
             configViewModel.isWizard.value = false
             clearBackStack()
             switchFragment(R.id.container, StationMainFragment())

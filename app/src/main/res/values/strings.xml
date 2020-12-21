@@ -125,4 +125,5 @@
     <string name="clear_data_failed">Failed to clear data</string>
     <string name="clear_data_progress">Clearing data in progress</string>
     <string name="clear_data_success">Successfully cleared data</string>
+    <string name="gsm_disabled_registration">GSM is currently disabled\n for station registration</string>
 </resources>

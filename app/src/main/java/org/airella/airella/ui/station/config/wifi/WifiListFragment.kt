@@ -64,7 +64,7 @@ class WifiListFragment : Fragment() {
     fun setWifiConfig(wifiSSID: String, wifiPassword: String) {
         wifiViewModel.wifiSSID.value = wifiSSID
         wifiViewModel.wifiPassword.value = wifiPassword
-        if (configViewModel.isWizard.value!!) {
+        if (configViewModel.isWizard()) {
             switchFragmentWithBackStack(R.id.container, AddressFragment())
         } else {
             switchFragmentWithBackStack(R.id.container, WifiProgressFragment())

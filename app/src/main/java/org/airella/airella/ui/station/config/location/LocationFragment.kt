@@ -47,11 +47,11 @@ class LocationFragment : Fragment() {
             location_text.text = text
         })
 
-        btn_continue.setText(if (configViewModel.isWizard.value!!) R.string.action_register else R.string.action_save)
+        btn_continue.setText(if (configViewModel.isWizard()) R.string.action_register else R.string.action_save)
 
         btn_continue.setOnClickListener {
             if (locationViewModel.location.value != null) {
-                if (configViewModel.isWizard.value!!) {
+                if (configViewModel.isWizard()) {
                     switchFragmentWithBackStack(R.id.container, WizardFinishFragment())
                 } else {
                     switchFragmentWithBackStack(R.id.container, LocationProgressFragment())

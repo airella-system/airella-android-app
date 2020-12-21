@@ -35,59 +35,40 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header"
-        app:layout_constraintVertical_bias="0.45">
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/leftConstraintLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rightConstraintLayout"
+        <ImageButton
+            android:id="@+id/wifi_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/round_background"
+            android:padding="25dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_wifi_white_70dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.22"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageButton
-                android:id="@+id/wifi_button"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/round_background"
-                android:padding="25dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_wifi_white_70dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/wifi"
-                android:textAllCaps="true"
-                android:textColor="@color/colorButtonBlack"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/wifi_button" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/rightConstraintLayout"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/leftConstraintLayout"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginTop="8dp"
+            android:text="@string/wifi"
+            android:textAllCaps="true"
+            android:textColor="@color/colorButtonBlack"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/wifi_button"
+            app:layout_constraintStart_toStartOf="@+id/wifi_button"
+            app:layout_constraintTop_toBottomOf="@+id/wifi_button" />
 
             <ImageButton
                 android:id="@+id/gsm_button"
@@ -97,22 +78,35 @@
                 android:padding="25dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_signal_cellular_alt_white_18dp"
+                app:layout_constraintHorizontal_bias="0.78"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/gsm"
-                android:textAllCaps="true"
-                android:textColor="@color/colorButtonBlack"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/gsm_button" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/text_gsm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/gsm"
+            android:textAllCaps="true"
+            android:textColor="@color/colorButtonBlack"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/gsm_button"
+            app:layout_constraintStart_toStartOf="@+id/gsm_button"
+            app:layout_constraintTop_toBottomOf="@+id/gsm_button" />
+
+        <TextView
+            android:id="@+id/text_disabled_gsm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gsm_disabled_registration"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/text_gsm"
+            app:layout_constraintStart_toStartOf="@+id/gsm_button"
+            app:layout_constraintEnd_toEndOf="@+id/gsm_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

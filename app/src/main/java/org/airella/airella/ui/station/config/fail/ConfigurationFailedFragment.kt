@@ -46,7 +46,7 @@ class ConfigurationFailedFragment : Fragment(), OnBackPressed {
     }
 
     private fun returnToConfigList() {
-        if (configViewModel.isWizard.value!!) {
+        if (configViewModel.isWizard()) {
             requireActivity().supportFragmentManager.popBackStack()
             requireActivity().supportFragmentManager.popBackStack()
         } else {
