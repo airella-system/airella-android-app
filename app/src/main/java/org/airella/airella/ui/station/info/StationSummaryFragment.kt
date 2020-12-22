@@ -1,5 +1,6 @@
 package org.airella.airella.ui.station.info
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -68,10 +69,18 @@ class StationSummaryFragment : Fragment() {
         })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateStationInfo() {
         name.text = viewModel.station.name
         aqi.text = viewModel.station.aqi.toString()
         address.text = viewModel.station.address.toString()
+
+        val latitude = viewModel.station.location?.latitude?.toString()
+        val longitude = viewModel.station.location?.longitude?.toString()
+
+        if (latitude != null && longitude != null) {
+            location.text = "$latitude, $longitude"
+        }
     }
 
     private fun connectToDevice() {

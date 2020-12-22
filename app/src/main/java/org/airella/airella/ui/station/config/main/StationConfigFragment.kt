@@ -108,8 +108,10 @@ class StationConfigFragment : Fragment() {
         })
 
         fun setLocation() {
-            station_location_view.text =
-                "${viewModel.stationLatitude.value ?: ""}, ${viewModel.stationLongitude.value ?: ""}"
+            if (viewModel.stationLatitude.value != null && viewModel.stationLongitude.value != null) {
+                station_location_view.text =
+                    "${viewModel.stationLatitude.value}, ${viewModel.stationLongitude.value}"
+            }
         }
 
         viewModel.stationLatitude.observe(viewLifecycleOwner, {

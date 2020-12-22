@@ -126,4 +126,7 @@
     <string name="clear_data_progress">Clearing data in progress</string>
     <string name="clear_data_success">Successfully cleared data</string>
     <string name="gsm_disabled_registration">GSM is currently disabled\n for station registration</string>
+    <string name="aqi">AQI</string>
+    <string name="location">Location</string>
+    <string name="location_2">%1$.4f., %2$.4f.</string>
 </resources>
